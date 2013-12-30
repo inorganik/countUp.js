@@ -30,7 +30,7 @@ function countUp(target, endVal, decimals, duration) {
         var progress = timestamp - self.startTime;
         
         // easing
-        self.frameVal = easeOutExpo(progress, 0, endVal, self.duration);
+        self.frameVal = self.easeOutExpo(progress, 0, endVal, self.duration);
         
         // decimal
         if (self.dec > 0) {
@@ -38,13 +38,13 @@ function countUp(target, endVal, decimals, duration) {
             self.frameVal = (self.frameVal > endVal) ? endVal : self.frameVal;
         } 
         
-        self.d.innerHTML = self.frameVal.toFixed(decimals);
+        self.d.innerHTML = self.addCommas(self.frameVal.toFixed(decimals));
                 
         if (progress < self.duration) {
             requestAnimationFrame(self.stepUp);
         } else {
             // bc easing prevents endVal being reached
-            self.d.innerHTML = endVal.toFixed(decimals);
+            self.d.innerHTML = self.addCommas(endVal.toFixed(decimals));
         }
     }  
     this.start = function() {
@@ -52,6 +52,17 @@ function countUp(target, endVal, decimals, duration) {
     }    
     this.reset = function() {
         this.d.innerHTML = 0;
+    }
+    this.addCommas = function(nStr) {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
     }
 }
 // Example:

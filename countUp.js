@@ -48,8 +48,15 @@ function countUp(target, endVal, decimals, duration) {
         }
     }  
     this.start = function() {
-        requestAnimationFrame(self.stepUp);
-    }    
+        // make sure endVal is a number
+        if (!isNaN(endVal) && endVal !== null) {
+            requestAnimationFrame(self.stepUp);
+        } else {
+            console.log('countUp error: endVal is not a number');
+            self.d.innerHTML = '--';
+        }
+        return false;
+    }   
     this.reset = function() {
         this.d.innerHTML = 0;
     }

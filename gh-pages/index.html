@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="robots" content="index,follow"> 
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>countUp.js</title>
+
+    <link rel="stylesheet" type="text/css" href="../../inorganik.github.io/assets/style.css">
+
+    <script type="text/javascript" src="../countUp.js"></script>
+    <script type="text/javascript">
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-7742845-9', 'inorganik.github.io');
+    ga('send', 'pageview');
+
+
+    </script>
+</head>
+
+<body>
+
+    <div id="wrap">
+        <header>
+            <div class="leaderLine">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</div>
+            <div id="logo"></div>
+        </header>
+        <section>
+            <h1>countUp.js</h1>
+            <p>countUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create number counting animations.</p>
+        </section>
+        <section>
+            <h1 class="jumbo" id="myTargetElement">0</h1>
+        </section>
+        <section>
+            <form>
+                <div class="inlineLeft marginRight">
+                    <input type="text" value="94.62" id="num">
+                    <label class="inlineLabel">Value</label>
+                </div>
+                <div class="inlineLeft marginRight">
+                    <input type="number" value="2" id="decimals" step="1">
+                    <label class="inlineLabel">Decimals</label>
+                </div>
+                <div class="inlineLeft marginRight">
+                    <input type="number" value="2.5" id="duration" step=".1">
+                    <label class="inlineLabel">Duration</label>
+                </div>
+                <div class="inlineLeft">
+                    <input type="button" value="Go" onClick="createCountUp()" style="width:80px;">
+                </div>
+            </form>
+        </section>
+        <section class="noBorder">
+            <h3 class="marginTop"><a class="lime weight700" href="https://github.com/inorganik/countUp.js">Download on Github</a></h3>
+        </section>
+    </div>
+
+</body>
+<script type="text/javascript">
+
+
+    // create instance
+    var demoAnim = new countUp("myTargetElement", 94.62, 2, 2.5);
+
+    window.onload = function() {
+        
+        // fire animation
+        demoAnim.start();
+        
+    }
+
+    // for demo:
+    function createCountUp() {
+
+        var endVal = document.getElementById("num").value;
+        endVal = Number(endVal.replace(',','').replace(' ',''));
+        var decimals = document.getElementById("decimals").value;
+        var duration = document.getElementById("duration").value;
+
+        demoAnim = new countUp("myTargetElement", endVal, decimals, duration);
+        demoAnim.start();
+    }
+
+    </script>
+</html>

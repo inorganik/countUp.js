@@ -17,15 +17,22 @@ window.requestAnimationFrame =
 
 countUp = (target, endVal, decimals, duration) ->
 
+  decimals = Math.max(0, decimals or 0)
+
   @doc = document.getElementById(target)
-  @dec = decimals * 10 or 0
+  @dec = Math.pow(10, decimals)
   @duration = duration * 1000 or 2000
   @startTime = null
   @frameVal = 0
 
+  endVal = Number endVal
+
   # Robert Penner's easeOutExpo
   @easeOutExpo = (t, b, c, d) ->
-    c * (-Math.pow(2, -10 * t / d ) + 1) + b
+    # modified from:
+    # c * (-Math.pow(2, -10 * t / d) + 1) + b
+    # thanks to @lifthrasiir's "exact easing" commit
+    c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b
 
   @stepUp = (timestamp) ->
     @startTime = timestamp if @startTime is null
@@ -40,10 +47,9 @@ countUp = (target, endVal, decimals, duration) ->
       @frameVal = Math.round(@frameVal * @dec) / @dec
       @frameVal = if (@frameVal > endVal) then endVal else @frameVal
     
-    @d.innerHTML = @addCommas @frameVal.toFixed decimals
+    @d.innerHTML = @addCommas @frameVal.toFixed(decimals)
             
     requestAnimationFrame @stepUp if progress < @duration
-    else @d.innerHTML = @addCommas endVal.toFixed(decimals)
 
   @start = () ->
     # make sure endVal is a number
@@ -60,7 +66,7 @@ countUp = (target, endVal, decimals, duration) ->
     nStr += ''
     x = nStr.split('.')
     x1 = x[0]
-    x2 = if x.length > 1 then "." + x[1] else ""
+    x2 = if x.length > 1 then "." + x[1] else ''
     rgx = /(\d+)(\d{3})/
 
     while rgx.test(x1)

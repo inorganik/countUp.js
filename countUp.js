@@ -13,7 +13,9 @@ function countUp(target, endVal, decimals, duration) {
     
     var self = this;
     this.d = document.getElementById(target);
-    this.dec = decimals * 10 || 0;
+
+    decimals = Math.max(0, decimals || 0);
+    this.dec = Math.pow(10, decimals);
     this.duration = duration * 1000 || 2000;
 
     this.startTime = null;

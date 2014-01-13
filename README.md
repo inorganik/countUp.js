@@ -8,4 +8,4 @@ countUp.js is a dependency-free, lightweight JavaScript "class" that can be used
     numAnim.start()
 
 
-##[Try the demo](//inorganik.github.io/countUp.js)
+##[Try the demo](http://inorganik.github.io/countUp.js)

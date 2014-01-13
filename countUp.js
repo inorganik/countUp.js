@@ -21,7 +21,7 @@ function countUp(target, endVal, decimals, duration) {
     
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
-        return c * (-Math.pow(2, -10 * t / d) + 1) + b;
+        return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
     }
     this.stepUp = function(timestamp) {
         

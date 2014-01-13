@@ -20,9 +20,14 @@ function countUp(target, endVal, decimals, duration) {
 
     this.startTime = null;
     this.frameVal = 0;
+
+    endVal = Number(endVal);
     
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
+        // modified from:
+        // return c * (-Math.pow(2, -10 * t / d) + 1) + b;
+        // thanks to @lifthrasiir's "exact easing" commit
         return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
     }
     this.stepUp = function(timestamp) {
@@ -44,10 +49,7 @@ function countUp(target, endVal, decimals, duration) {
                 
         if (progress < self.duration) {
             requestAnimationFrame(self.stepUp);
-        } else {
-            // bc easing prevents endVal being reached
-            self.d.innerHTML = self.addCommas(endVal.toFixed(decimals));
-        }
+        } 
     }  
     this.start = function() {
         // make sure endVal is a number
@@ -64,10 +66,11 @@ function countUp(target, endVal, decimals, duration) {
     }
     this.addCommas = function(nStr) {
         nStr += '';
+        var x, x1, x2, rgx;
         x = nStr.split('.');
         x1 = x[0];
         x2 = x.length > 1 ? '.' + x[1] : '';
-        var rgx = /(\d+)(\d{3})/;
+        rgx = /(\d+)(\d{3})/;
         while (rgx.test(x1)) {
             x1 = x1.replace(rgx, '$1' + ',' + '$2');
         }

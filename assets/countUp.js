@@ -12,13 +12,15 @@
   window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
   countUp = function(target, endVal, decimals, duration) {
+    decimals = Math.max(0, decimals || 0);
     this.doc = document.getElementById(target);
-    this.dec = decimals * 10 || 0;
+    this.dec = Math.pow(10, decimals);
     this.duration = duration * 1000 || 2000;
     this.startTime = null;
     this.frameVal = 0;
+    endVal = Number(endVal);
     this.easeOutExpo = function(t, b, c, d) {
-      return c * (-Math.pow(2, -10 * t / d) + 1) + b;
+      return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
     };
     this.stepUp = function(timestamp) {
       var progress;
@@ -32,7 +34,9 @@
         this.frameVal = this.frameVal > endVal ? endVal : this.frameVal;
       }
       this.d.innerHTML = this.addCommas(this.frameVal.toFixed(decimals));
-      return requestAnimationFrame(this.stepUp(progress < this.duration ? void 0 : this.d.innerHTML = this.addCommas(endVal.toFixed(decimals))));
+      if (progress < this.duration) {
+        return requestAnimationFrame(this.stepUp);
+      }
     };
     this.start = function() {
       requestAnimationFrame(this.stepUp(!(isNaN(endVal) && endVal !== null) ? void 0 : (console.log('countUp error: endVal is not a number'), this.d.innerHTML = '--')));
@@ -46,7 +50,7 @@
       nStr += '';
       x = nStr.split('.');
       x1 = x[0];
-      x2 = x.length > 1 ? "." + x[1] : "";
+      x2 = x.length > 1 ? "." + x[1] : '';
       rgx = /(\d+)(\d{3})/;
       while (rgx.test(x1)) {
         x1 = x1.replace(rgx, '$1' + ',' + '$2');

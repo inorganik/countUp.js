@@ -11,6 +11,7 @@ window.requestAnimationFrame =
   window.msRequestAnimationFrame
 
 # target = id of Html element where counting occurs
+# startVal = the value you want to start at
 # endVal = the value you want to arrive at
 # decimals = number of decimal places in number, default 0
 # duration = duration in seconds, default 2

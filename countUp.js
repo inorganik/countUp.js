@@ -49,7 +49,6 @@ function countUp(target, startVal, endVal, decimals, duration) {
             } else {
                 self.frameVal = self.easeOutExpo(progress, startVal, endVal - startVal, self.duration);
             }
-            console.log(self.frameVal);
         } else {
             if (self.countDown) {
                 var i = (startVal - endVal) * (progress / self.duration);

@@ -11,21 +11,28 @@ window.requestAnimationFrame =
   window.msRequestAnimationFrame
 
 # target = id of Html element where counting occurs
+# startVal = the value you want to start at
 # endVal = the value you want to arrive at
 # decimals = number of decimal places in number, default 0
 # duration = duration in seconds, default 2
 
-countUp = (target, endVal, decimals, duration) ->
-
-  decimals = Math.max(0, decimals or 0)
+countUp = (target, startVal, endVal, decimals, duration) ->
 
   @doc = document.getElementById(target)
+  
+  startVal = Number startVal  
+  endVal = Number endVal
+  @countDown = if (startVal > endVal) then true else false
+
+  #toggle easing
+  @useEasing = true
+
+  decimals = Math.max(0, decimals or 0)
   @dec = Math.pow(10, decimals)
   @duration = duration * 1000 or 2000
-  @startTime = null
-  @frameVal = 0
 
-  endVal = Number endVal
+  @startTime = null
+  @frameVal = startVal
 
   # Robert Penner's easeOutExpo
   @easeOutExpo = (t, b, c, d) ->
@@ -34,33 +41,51 @@ countUp = (target, endVal, decimals, duration) ->
     # thanks to @lifthrasiir's "exact easing" commit
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b
 
-  @stepUp = (timestamp) ->
+  @count = (timestamp) ->
     @startTime = timestamp if @startTime is null
 
     progress = timestamp - @startTime
       
-    # easing
-    @frameVal = @easeOutExpo progress, 0, endVal, @duration
-      
+    # to ease or not to ease is the question
+    if @.useEasing
+      if @.countDown
+        i = @.easeOutExpo progress, 0, startVal - endVal, @.duration
+        @.frameVal = startVal - i
+      else
+        @.frameVal = @.easeOutExpo(progress, startVal, endVal - startVal, @.duration)
+      console.log @.frameVal
+    else
+      if @.countDown
+        i = (startVal - endVal) * (progress / @.duration)
+        @.frameVal = startVal - i
+      else
+        @.frameVal = startVal + (endVal - startVal) * (progress / @.duration)
+        
     # decimal
-    if @dec > 0
-      @frameVal = Math.round(@frameVal * @dec) / @dec
-      @frameVal = if (@frameVal > endVal) then endVal else @frameVal
-    
-    @d.innerHTML = @addCommas @frameVal.toFixed(decimals)
-            
-    requestAnimationFrame @stepUp if progress < @duration
+    @frameVal = Math.round(@frameVal * @dec) / @doc
+
+    # don't go past enVal since progress can exceed duration in last grame   
+    if @countDown
+      @frameVal = if (@framVal < endVal) then endVal else @frameVal
+    else
+      @frameVal = if (@framVal > endVal) then endVal else @frameVal
+
+    # formate and print value
+    @doc.innerHTML = @addCommas @frameVal.toFixed(decimals)
+
+    # weather to continue
+    requestAnimationFrame @scount if progress < @duration
 
   @start = () ->
     # make sure endVal is a number
-    requestAnimationFrame @stepUp unless isNaN(endVal) and endVal isnt null
+    requestAnimationFrame @count unless isNaN(endVal) and isNan(startVal) isnt null
     else
-      console.log('countUp error: endVal is not a number')
-      @d.innerHTML = '--'
+      console.log('countUp error: startVal or endVal is not a number')
+      @doc.innerHTML = '--'
     false
 
   @reset = () ->
-    @d.innerHTML = 0
+    @doc.innerHTML = 0
 
   @addCommas = (nStr) ->
     nStr += ''

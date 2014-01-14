@@ -1,0 +1,13 @@
+{
+    "name": "countUp.js",
+    "version": "0.0.1",
+    "main": "assests/countUp.js",
+    "author": "inorganik",
+    "ignore": [
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "countUp.coffee",
+        "component.json",
+        "index.html"
+    ]
+}

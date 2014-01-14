@@ -44,15 +44,20 @@
         <section>
             <form>
                 <div class="inlineLeft marginRight">
-                    <input type="text" value="94.62" id="num">
-                    <label class="inlineLabel">Value</label>
+                    <input type="text" value="24.02" id="startVal">
+                    <label class="inlineLabel">Start</label>
+                </div>
+                <input type="button" class="inlineLeft marginRight" value="Swap" onClick="swapValues()" style="width:80px;">
+                <div class="inlineLeft marginRight">
+                    <input type="text" value="94.62" id="endVal">
+                    <label class="inlineLabel">End</label>
                 </div>
                 <div class="inlineLeft marginRight">
-                    <input type="number" value="2" id="decimals" step="1">
+                    <input type="number" value="2" id="decimals" step="1" style="width:50px">
                     <label class="inlineLabel">Decimals</label>
                 </div>
                 <div class="inlineLeft marginRight">
-                    <input type="number" value="2.5" id="duration" step=".1">
+                    <input type="number" value="2.5" id="duration" step=".1" style="width:50px">
                     <label class="inlineLabel">Duration</label>
                 </div>
                 <div class="inlineLeft">
@@ -70,7 +75,7 @@
 
 
     // create instance
-    var demoAnim = new countUp("myTargetElement", 94.62, 2, 2.5);
+    var demoAnim = new countUp("myTargetElement", 24.02, 94.62, 2, 2.5);
 
     window.onload = function() {
         
@@ -80,14 +85,22 @@
     }
 
     // for demo:
+    function swapValues() {
+        var oldStartVal = document.getElementById("startVal").value;
+        var oldEndVal = document.getElementById("endVal").value;
+        document.getElementById("startVal").value = oldEndVal;
+        document.getElementById("endVal").value = oldStartVal;
+    }
     function createCountUp() {
 
-        var endVal = document.getElementById("num").value;
+        var startVal = document.getElementById("startVal").value;
+        startVal = Number(startVal.replace(',','').replace(' ',''));
+        var endVal = document.getElementById("endVal").value;
         endVal = Number(endVal.replace(',','').replace(' ',''));
         var decimals = document.getElementById("decimals").value;
         var duration = document.getElementById("duration").value;
 
-        demoAnim = new countUp("myTargetElement", endVal, decimals, duration);
+        demoAnim = new countUp("myTargetElement", startVal, endVal, decimals, duration);
         demoAnim.start();
     }
 

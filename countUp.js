@@ -1,8 +1,10 @@
-window.requestAnimationFrame =
-    window.requestAnimationFrame || 
-    window.mozRequestAnimationFrame ||
-    window.webkitRequestAnimationFrame || 
-    window.msRequestAnimationFrame;
+/*
+
+    countUp.js
+    by @inorganik
+    v 0.0.4
+
+*/
 
 // target = id of Html element where counting occurs
 // startVal = the value you want to begin at
@@ -13,6 +15,26 @@ window.requestAnimationFrame =
 function countUp(target, startVal, endVal, decimals, duration) {
     
     var self = this;
+
+    var lastTime = 0; // for rAF polyfil
+
+    // make sure requestAnimationFrame is defined
+    window.requestAnimationFrame =
+        window.requestAnimationFrame || 
+        window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame || 
+        window.msRequestAnimationFrame ||
+        // polyfill for browsers without native support
+        // by Opera engineer Erik Möller
+        function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            self.lastTime = currTime + timeToCall;
+            return id;
+        };
+
     this.d = document.getElementById(target);
     
     startVal = Number(startVal);
@@ -31,9 +53,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
     
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
-        // return c * (-Math.pow(2, -10 * t / d) + 1) + b;
         return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
-       
     }
     this.count = function(timestamp) {
         
@@ -74,8 +94,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
         // whether to continue
         if (progress < self.duration) {
             requestAnimationFrame(self.count);
-        }else{
-            console.log("Count up End.");
+        } else {
             if (self.callback != null) self.callback();
         }
     }  
@@ -107,5 +126,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
     }
 }
 // Example:
-// var numAnim = new countUp("SomeElementYouWantToAnimate", 99.99, 2, 1.5);
+// var numAnim = new countUp("SomeElementYouWantToAnimate", 0, 99.99, 2, 1.5);
 // numAnim.start();
+// with optional callback
+// numAnim.start(someMethodToCallOnComplete);

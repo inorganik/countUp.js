@@ -74,10 +74,13 @@ function countUp(target, startVal, endVal, decimals, duration) {
         // whether to continue
         if (progress < self.duration) {
             requestAnimationFrame(self.count);
-        } 
+        }else{
+            console.log("Count up End.");
+            if (self.callback != null) self.callback();
+        }
     }  
-    this.start = function() {
-
+    this.start = function(callback) {
+        self.callback = callback;
         // make sure values are valid
         if (!isNaN(endVal) && !isNaN(startVal)) {
             requestAnimationFrame(self.count);

@@ -44,20 +44,20 @@
         <section>
             <form>
                 <div class="inlineLeft marginRight">
-                    <input type="text" value="24.02" id="startVal" style="width:160px">
+                    <input type="text" value="24.02" id="startVal" style="width:160px" onkeyup="updateCodeVisualizer()">
                     <label class="inlineLabel">Start</label>
                 </div>
                 <input type="button" class="inlineLeft marginRight" value="Swap" onClick="swapValues()" style="width:80px;">
                 <div class="inlineLeft marginRight">
-                    <input type="text" value="94.62" id="endVal" style="width:160px">
+                    <input type="text" value="94.62" id="endVal" style="width:160px" onkeyup="updateCodeVisualizer()">
                     <label class="inlineLabel">End</label>
                 </div>
                 <div class="inlineLeft marginRight marginLeft">
-                    <input type="number" value="2" id="decimals" step="1" style="width:50px">
+                    <input type="number" value="2" id="decimals" step="1" style="width:50px" onkeyup="updateCodeVisualizer()">
                     <label class="inlineLabel">Decimals</label>
                 </div>
                 <div class="inlineLeft marginRight marginLeft">
-                    <input type="number" value="2.5" id="duration" step=".1" style="width:50px">
+                    <input type="number" value="2.5" id="duration" step=".1" style="width:50px" onkeyup="updateCodeVisualizer()">
                     <label class="inlineLabel">Duration</label>
                 </div>
             </form>
@@ -108,6 +108,7 @@
         var oldEndVal = document.getElementById("endVal").value;
         document.getElementById("startVal").value = oldEndVal;
         document.getElementById("endVal").value = oldStartVal;
+        updateCodeVisualizer();
     }
     var code;
     function createCountUp() {
@@ -123,18 +124,13 @@
         // but I do here in case user changes values in demo.
         demo = new countUp("myTargetElement", startVal, endVal, decimals, duration);
 
-        code = 'var demo = new countUp("myTargetElement", '+startVal+', '+endVal+', '+decimals+', '+duration+');<br>';
         if (useOnComplete) {
-
-            code += 'demo.start(methodToCallOnComplete);';
             demo.start(methodToCallOnComplete);
-
         } else {
-            code += 'demo.start();';
             demo.start();
         }
-        document.getElementById("codeVisualizer").innerHTML = code;
 
+        updateCodeVisualizer();
     }
     function showCodeAndStop() {
         code = 'demo.stop();';
@@ -153,16 +149,30 @@
 
         if (checkbox.checked) {
             useOnComplete = true;
-            code = 'demo.start(methodToCallOnComplete);';
         } else {
             useOnComplete = true;
-            code = 'demo.start();';
         }
-        document.getElementById("codeVisualizer").innerHTML = code;
+        updateCodeVisualizer();
     }
     function methodToCallOnComplete() {
         console.log('COMPLETE!');
         alert('COMPLETE!');
+    }
+    function updateCodeVisualizer() {
+        var startVal = document.getElementById("startVal").value;
+        startVal = Number(startVal.replace(',','').replace(' ',''));
+        var endVal = document.getElementById("endVal").value;
+        endVal = Number(endVal.replace(',','').replace(' ',''));
+        var decimals = document.getElementById("decimals").value;
+        var duration = document.getElementById("duration").value;
+
+        code = 'var demo = new countUp("myTargetElement", '+startVal+', '+endVal+', '+decimals+', '+duration+');<br>';
+        if (useOnComplete) {
+            code += 'demo.start(methodToCallOnComplete);';
+        } else {
+            code += 'demo.start();';
+        }
+        document.getElementById("codeVisualizer").innerHTML = code;
     }
     </script>
 </html>

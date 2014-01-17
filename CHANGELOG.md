@@ -1,5 +1,11 @@
 # Changelog
 
+### v 0.0.5 (1/17/14)
+
+- added stop method
+- fixed reset method
+- improved demo to include stop, reset, callback and code visualization
+
 ### v 0.0.4 (1/16/14)
 
 - added callback thanks to @retasretas

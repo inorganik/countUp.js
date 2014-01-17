@@ -2,7 +2,7 @@
 
     countUp.js
     by @inorganik
-    v 0.0.4
+    v 0.0.5
 
 */
 
@@ -14,27 +14,34 @@
 
 function countUp(target, startVal, endVal, decimals, duration) {
     
-    var self = this;
-
-    var lastTime = 0; // for rAF polyfil
-
-    // make sure requestAnimationFrame is defined
-    window.requestAnimationFrame =
-        window.requestAnimationFrame || 
-        window.mozRequestAnimationFrame ||
-        window.webkitRequestAnimationFrame || 
-        window.msRequestAnimationFrame ||
-        // polyfill for browsers without native support
-        // by Opera engineer Erik Möller
-        function(callback, element) {
+    // make sure requestAnimationFrame and cancelAnimationFrame are defined
+    // polyfill for browsers without native support
+    // by Opera engineer Erik Möller
+    var lastTime = 0;
+    var vendors = ['webkit', 'moz', 'ms'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame =
+          window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+    if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = function(callback, element) {
             var currTime = new Date().getTime();
             var timeToCall = Math.max(0, 16 - (currTime - lastTime));
             var id = window.setTimeout(function() { callback(currTime + timeToCall); },
               timeToCall);
-            self.lastTime = currTime + timeToCall;
+            lastTime = currTime + timeToCall;
             return id;
-        };
+        }
+    }
+    if (!window.cancelAnimationFrame) {
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        }
+    }
 
+    var self = this;
+    
     this.d = document.getElementById(target);
     
     startVal = Number(startVal);
@@ -50,6 +57,8 @@ function countUp(target, startVal, endVal, decimals, duration) {
 
     this.startTime = null;
     this.frameVal = startVal;
+
+    this.rAF = null;
     
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
@@ -93,7 +102,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
                
         // whether to continue
         if (progress < self.duration) {
-            requestAnimationFrame(self.count);
+            self.rAF = requestAnimationFrame(self.count);
         } else {
             if (self.callback != null) self.callback();
         }
@@ -108,9 +117,13 @@ function countUp(target, startVal, endVal, decimals, duration) {
             self.d.innerHTML = '--';
         }
         return false;
-    }   
+    }
+    this.stop = function() {
+        cancelAnimationFrame(self.rAF);
+    }
     this.reset = function() {
-        this.d.innerHTML = 0;
+        cancelAnimationFrame(self.rAF);
+        this.d.innerHTML = startVal;
     }
     this.addCommas = function(nStr) {
         nStr += '';

@@ -52,18 +52,37 @@
                     <input type="text" value="94.62" id="endVal" style="width:160px">
                     <label class="inlineLabel">End</label>
                 </div>
-                <div class="inlineLeft marginRight">
+                <div class="inlineLeft marginRight marginLeft">
                     <input type="number" value="2" id="decimals" step="1" style="width:50px">
                     <label class="inlineLabel">Decimals</label>
                 </div>
-                <div class="inlineLeft marginRight">
+                <div class="inlineLeft marginRight marginLeft">
                     <input type="number" value="2.5" id="duration" step=".1" style="width:50px">
                     <label class="inlineLabel">Duration</label>
                 </div>
-                <div class="inlineLeft">
-                    <input type="button" value="Go" onClick="createCountUp()" style="width:80px;">
+            </form>
+        </section>
+        <section>
+            <form>
+                <div class="inlineLeft marginRight">
+                    <input type="button" value="Start" onClick="createCountUp()" style="width:80px;">
+                </div>
+                <div class="inlineLeft marginRight">
+                    <input type="button" value="Stop" onClick="showCodeAndStop()" style="width:80px;">
+                </div>
+                <div class="inlineLeft marginRight">
+                    <input type="button" value="Reset" onClick="showCodeAndReset()" style="width:80px;">
+                </div>
+                <div class="inlineLeft marginRight">
+                    <input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
                 </div>
             </form>
+            <div class="col full marginBottom">
+                <div class="code-contain">
+                    <code id="codeVisualizer" class="indigo">var demo = new countUp("myTargetElement", 24.02, 94.62, 2, 2.5);<br>
+                    demo.start(); </code>
+                </div>
+            </div>
         </section>
         <section class="noBorder">
             <h3 class="marginTop"><a class="lime weight700" href="https://github.com/inorganik/countUp.js">Download on Github</a></h3>
@@ -74,14 +93,13 @@
 <script type="text/javascript">
 
 
+    
     // create instance
-    var demoAnim = new countUp("myTargetElement", 24.02, 94.62, 2, 2.5);
+    var demo = new countUp("myTargetElement", 24.02, 94.62, 2, 2.5);
 
     window.onload = function() {
-        
         // fire animation
-        demoAnim.start();
-        
+        demo.start();
     }
 
     // for demo:
@@ -91,6 +109,7 @@
         document.getElementById("startVal").value = oldEndVal;
         document.getElementById("endVal").value = oldStartVal;
     }
+    var code;
     function createCountUp() {
 
         var startVal = document.getElementById("startVal").value;
@@ -100,9 +119,50 @@
         var decimals = document.getElementById("decimals").value;
         var duration = document.getElementById("duration").value;
 
-        demoAnim = new countUp("myTargetElement", startVal, endVal, decimals, duration);
-        demoAnim.start();
-    }
+        // you don't have to create a new instance of countUp every time you start an animation,
+        // but I do here in case user changes values in demo.
+        demo = new countUp("myTargetElement", startVal, endVal, decimals, duration);
 
+        code = 'var demo = new countUp("myTargetElement", '+startVal+', '+endVal+', '+decimals+', '+duration+');<br>';
+        if (useOnComplete) {
+
+            code += 'demo.start(methodToCallOnComplete);';
+            demo.start(methodToCallOnComplete);
+
+        } else {
+            code += 'demo.start();';
+            demo.start();
+        }
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+    }
+    function showCodeAndStop() {
+        code = 'demo.stop();';
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+        demo.stop();
+    }
+    function showCodeAndReset() {
+        code = 'demo.reset();';
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+        demo.reset();
+    }
+    var useOnComplete = false;
+    function toggleOnComplete(checkbox) {
+
+        if (checkbox.checked) {
+            useOnComplete = true;
+            code = 'demo.start(methodToCallOnComplete);';
+        } else {
+            useOnComplete = true;
+            code = 'demo.start();';
+        }
+        document.getElementById("codeVisualizer").innerHTML = code;
+    }
+    function methodToCallOnComplete() {
+        console.log('COMPLETE!');
+        alert('COMPLETE!');
+    }
     </script>
 </html>

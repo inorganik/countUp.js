@@ -1,7 +1,13 @@
 ###
+# 
+# countUp.js
+# by @inorganik
+# v 0.0.5
+#
 # Example:
-# var numAnim = new countUp("SomeElementYouWantToAnimate", 99.99, 2, 1.5)
+# numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5
 # numAnim.start()
+#
 ###
 
 window.requestAnimationFrame =
@@ -18,7 +24,14 @@ window.requestAnimationFrame =
 
 countUp = (target, startVal, endVal, decimals, duration) ->
 
-  @doc = document.getElementById(target)
+  lastTime = 0
+  vendors = [
+    'webkit'
+    'moz'
+    'ms'
+  ]
+
+  @doc = document.getElementById target
   
   startVal = Number startVal  
   endVal = Number endVal
@@ -33,6 +46,32 @@ countUp = (target, startVal, endVal, decimals, duration) ->
 
   @startTime = null
   @frameVal = startVal
+
+  @.rAF = null
+
+  # make sure requestAnimationFrame and cancelAnimationFrame are defined
+  # polyfill for browsers without native support
+  # by Opera engineer Erik Möller
+  while x < vendors.length and not window.requestAnimationFrame
+    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
+    window.cancelAnimationFrame =
+      window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame']
+
+  unless window.requestAnimationFrame
+    window.requestAnimationFrame = (callback, element) ->
+      currTime = new Date().getTime()
+      timeToCall = Math.max 0, 16 - (currTime - lastTime)
+
+      id = window.setTimeout(->
+        callback currTime + timeToCall
+      , timeToCall)
+
+      lastTime = currTime + timeToCall
+      id
+
+  unless window.cancelAnimationFrame
+    window.cancelAnimationFrame = (id) ->
+      clearTimeout id
 
   # Robert Penner's easeOutExpo
   @easeOutExpo = (t, b, c, d) ->
@@ -62,7 +101,7 @@ countUp = (target, startVal, endVal, decimals, duration) ->
         @.frameVal = startVal + (endVal - startVal) * (progress / @.duration)
         
     # decimal
-    @frameVal = Math.round(@frameVal * @dec) / @doc
+    @frameVal = Math.round(@frameVal * @dec) / @dec
 
     # don't go past enVal since progress can exceed duration in last grame   
     if @countDown
@@ -74,7 +113,10 @@ countUp = (target, startVal, endVal, decimals, duration) ->
     @doc.innerHTML = @addCommas @frameVal.toFixed(decimals)
 
     # weather to continue
-    requestAnimationFrame @scount if progress < @duration
+    if progress < self.duration
+      self.rAF = requestAnimationFrame self.count
+    else
+      self.callback() if self.callback?
 
   @start = () ->
     # make sure endVal is a number
@@ -84,8 +126,12 @@ countUp = (target, startVal, endVal, decimals, duration) ->
       @doc.innerHTML = '--'
     false
 
+  @stop = () ->
+    cancelAnimationFrame @rAF
+
   @reset = () ->
-    @doc.innerHTML = 0
+    cancelAnimationFrame @rAF
+    @doc.innerHTML = startVal
 
   @addCommas = (nStr) ->
     nStr += ''

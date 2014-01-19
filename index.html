@@ -120,8 +120,6 @@
         var decimals = document.getElementById("decimals").value;
         var duration = document.getElementById("duration").value;
 
-        // you don't have to create a new instance of countUp every time you start an animation,
-        // but I do here in case user changes values in demo.
         demo = new countUp("myTargetElement", startVal, endVal, decimals, duration);
 
         if (useOnComplete) {

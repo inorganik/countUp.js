@@ -16,4 +16,10 @@ with optional callback:
 numAnim.start(someMethodToCallOnComplete);
 ```
 
+other methods:
+```js
+numAnim.stop(); //stops the counter
+numAnim.resume(); //restarts the counter after being stopped
+```
+
 ##[Try the demo](http://inorganik.github.io/countUp.js)

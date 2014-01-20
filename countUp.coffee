@@ -129,6 +129,9 @@ countUp = (target, startVal, endVal, decimals, duration) ->
   @stop = () ->
     cancelAnimationFrame @rAF
 
+  @resume = () ->
+    requestAnimationFrame @count
+
   @reset = () ->
     cancelAnimationFrame @rAF
     @doc.innerHTML = startVal

@@ -71,6 +71,9 @@
                     <input type="button" value="Stop" onClick="showCodeAndStop()" style="width:80px;">
                 </div>
                 <div class="inlineLeft marginRight">
+                    <input type="button" value="Restart" onClick="showCodeAndRestart()" style="width:80px;">
+                </div>
+                <div class="inlineLeft marginRight">
                     <input type="button" value="Reset" onClick="showCodeAndReset()" style="width:80px;">
                 </div>
                 <div class="inlineLeft marginRight">
@@ -136,6 +139,14 @@
 
         demo.stop();
     }
+
+    function showCodeAndRestart() {
+        code = 'demo.restart();';
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+        demo.restart();
+    }
+
     function showCodeAndReset() {
         code = 'demo.reset();';
         document.getElementById("codeVisualizer").innerHTML = code;

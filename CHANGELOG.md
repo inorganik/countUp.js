@@ -1,5 +1,9 @@
 # Changelog
 
+### v 0.0.6 (1/20/14)
+
+- added restart method
+
 ### v 0.0.5 (1/17/14)
 
 - added stop method

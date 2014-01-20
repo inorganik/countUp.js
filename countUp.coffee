@@ -129,7 +129,7 @@ countUp = (target, startVal, endVal, decimals, duration) ->
   @stop = () ->
     cancelAnimationFrame @rAF
 
-  @restart = () ->
+  @resume = () ->
     requestAnimationFrame @count
 
   @reset = () ->

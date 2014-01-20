@@ -71,7 +71,7 @@
                     <input type="button" value="Stop" onClick="showCodeAndStop()" style="width:80px;">
                 </div>
                 <div class="inlineLeft marginRight">
-                    <input type="button" value="Restart" onClick="showCodeAndRestart()" style="width:80px;">
+                    <input type="button" value="Resume" onClick="showCodeAndResume()" style="width:80px;">
                 </div>
                 <div class="inlineLeft marginRight">
                     <input type="button" value="Reset" onClick="showCodeAndReset()" style="width:80px;">
@@ -140,11 +140,11 @@
         demo.stop();
     }
 
-    function showCodeAndRestart() {
-        code = 'demo.restart();';
+    function showCodeAndResume() {
+        code = 'demo.resume();';
         document.getElementById("codeVisualizer").innerHTML = code;
 
-        demo.restart();
+        demo.resume();
     }
 
     function showCodeAndReset() {

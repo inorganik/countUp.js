@@ -121,7 +121,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
     this.stop = function() {
         cancelAnimationFrame(self.rAF);
     }
-    this.restart = function() {
+    this.resume = function() {
         requestAnimationFrame(self.count);
     }
     this.reset = function() {

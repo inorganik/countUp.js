@@ -123,7 +123,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
     }
     this.reset = function() {
         cancelAnimationFrame(self.rAF);
-        this.d.innerHTML = startVal;
+        this.d.innerHTML = self.initStartVal(startVal,decimals);
     }
     this.addCommas = function(nStr) {
         nStr += '';
@@ -136,6 +136,22 @@ function countUp(target, startVal, endVal, decimals, duration) {
             x1 = x1.replace(rgx, '$1' + ',' + '$2');
         }
         return x1 + x2;
+    }
+    this.initStartVal = function(startVal,decimals){
+        startVal += '';
+        var x;
+        x = startVal.split('.');
+        if(x[1].length > decimals){
+            return self.addCommas(x[0] + '.' + x[1].substring(0,decimals));
+        }
+        if(x[1].length < decimals){
+            while(x[1].length < decimals){
+                x[1] += '0';
+            }
+            console.log(self.addCommas(x[0] + '.' + x[1]))
+            return self.addCommas(x[0] + '.' + x[1]);
+        }
+        return startVal;
     }
 }
 // Example:

@@ -2,19 +2,13 @@
 # 
 # countUp.js
 # by @inorganik
-# v 0.0.5
+# v 0.0.6
 #
 # Example:
 # numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5
 # numAnim.start()
 #
 ###
-
-window.requestAnimationFrame =
-  window.requestAnimationFrame or 
-  window.mozRequestAnimationFrame or
-  window.webkitRequestAnimationFrame or 
-  window.msRequestAnimationFrame
 
 # target = id of Html element where counting occurs
 # startVal = the value you want to start at
@@ -31,23 +25,20 @@ countUp = (target, startVal, endVal, decimals, duration) ->
     'ms'
   ]
 
-  @doc = document.getElementById target
-  
-  startVal = Number startVal  
-  endVal = Number endVal
-  @countDown = if (startVal > endVal) then true else false
-
   #toggle easing
   @useEasing = true
 
+  @doc = document.getElementById target  
+  startVal = Number startVal  
+  endVal = Number endVal
+  @countDown = if (startVal > endVal) then true else false
   decimals = Math.max(0, decimals or 0)
   @dec = Math.pow(10, decimals)
   @duration = duration * 1000 or 2000
-
   @startTime = null
+  @remaining = null
   @frameVal = startVal
-
-  @.rAF = null
+  @rAF = null
 
   # make sure requestAnimationFrame and cancelAnimationFrame are defined
   # polyfill for browsers without native support
@@ -75,30 +66,28 @@ countUp = (target, startVal, endVal, decimals, duration) ->
 
   # Robert Penner's easeOutExpo
   @easeOutExpo = (t, b, c, d) ->
-    # modified from:
-    # c * (-Math.pow(2, -10 * t / d) + 1) + b
-    # thanks to @lifthrasiir's "exact easing" commit
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b
 
   @count = (timestamp) ->
     @startTime = timestamp if @startTime is null
 
+    @timestamp = timestamp
+
     progress = timestamp - @startTime
       
     # to ease or not to ease is the question
-    if @.useEasing
-      if @.countDown
-        i = @.easeOutExpo progress, 0, startVal - endVal, @.duration
-        @.frameVal = startVal - i
+    if @useEasing
+      if @countDown
+        i = @easeOutExpo progress, 0, startVal - endVal, @duration
+        @frameVal = startVal - i
       else
-        @.frameVal = @.easeOutExpo(progress, startVal, endVal - startVal, @.duration)
-      console.log @.frameVal
+        @frameVal = @easeOutExpo(progress, startVal, endVal - startVal, @duration)
     else
-      if @.countDown
-        i = (startVal - endVal) * (progress / @.duration)
-        @.frameVal = startVal - i
+      if @countDown
+        i = (startVal - endVal) * (progress / @duration)
+        @frameVal = startVal - i
       else
-        @.frameVal = startVal + (endVal - startVal) * (progress / @.duration)
+        @frameVal = startVal + (endVal - startVal) * (progress / @duration)
         
     # decimal
     @frameVal = Math.round(@frameVal * @dec) / @dec
@@ -113,12 +102,13 @@ countUp = (target, startVal, endVal, decimals, duration) ->
     @doc.innerHTML = @addCommas @frameVal.toFixed(decimals)
 
     # weather to continue
-    if progress < self.duration
-      self.rAF = requestAnimationFrame self.count
+    if progress < @duration
+      @rAF = requestAnimationFrame @count
     else
-      self.callback() if self.callback?
+      @callback() if @callback?
 
-  @start = () ->
+  @start = (callback) ->
+    @callback = callback
     # make sure endVal is a number
     requestAnimationFrame @count unless isNaN(endVal) and isNan(startVal) isnt null
     else
@@ -131,7 +121,13 @@ countUp = (target, startVal, endVal, decimals, duration) ->
 
   @reset = () ->
     cancelAnimationFrame @rAF
-    @doc.innerHTML = startVal
+    @doc.innerHTML = @addCommas startVal.toFixed(decimals)
+
+  @resume = () ->
+    @startTime = null
+    @duration = @remaining
+    @startVal = @framVal
+    requestAnimationFrame @count
 
   @addCommas = (nStr) ->
     nStr += ''
@@ -144,3 +140,6 @@ countUp = (target, startVal, endVal, decimals, duration) ->
       x1 = x1.replace(rgx, '$1' + ',' + '$2')
 
     x1 + x2
+
+  # format startVal on initialization
+  @doc.innerHTML = @addCommas startVal.toFixed(decimals)

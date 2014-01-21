@@ -27,7 +27,7 @@
 </head>
 
 <body>
-
+    <a href="https://github.com/inorganik/countUp.js"><img style="position: absolute; bottom: 0; right: 0; border: 0;" src="../images/forkme_custom_indigo.png" alt="Fork me on GitHub"></a>
     <div id="wrap">
         <header>
             <div id="github"><a class="block" href="https://github.com/inorganik"></a></div>
@@ -64,18 +64,11 @@
         </section>
         <section>
             <form>
-                <div class="inlineLeft marginRight">
-                    <input type="button" value="Start" onClick="createCountUp()" style="width:80px;">
-                </div>
-                <div class="inlineLeft marginRight">
-                    <input type="button" value="Stop" onClick="showCodeAndStop()" style="width:80px;">
-                </div>
-                <div class="inlineLeft marginRight">
-                    <input type="button" value="Reset" onClick="showCodeAndReset()" style="width:80px;">
-                </div>
-                <div class="inlineLeft marginRight">
-                    <input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
-                </div>
+                <input type="button" value="Start" onClick="createCountUp()" class="inlineLeft marginRight" style="width:80px;">
+                <input type="button" value="Stop" onClick="showCodeAndStop()" class="inlineLeft marginRight" style="width:80px;">
+                <input type="button" value="Resume" onClick="showCodeAndResume()" class="inlineLeft marginRight" style="width:80px;">
+                <input type="button" value="Reset" onClick="showCodeAndReset()" class="inlineLeft marginRight" style="width:80px;">
+                <input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
             </form>
             <div class="col full marginBottom">
                 <div class="code-contain">
@@ -91,8 +84,6 @@
 
 </body>
 <script type="text/javascript">
-
-
     
     // create instance
     var demo = new countUp("myTargetElement", 24.02, 94.62, 2, 2.5);
@@ -120,6 +111,8 @@
         var decimals = document.getElementById("decimals").value;
         var duration = document.getElementById("duration").value;
 
+        // you don't have to create a new instance of countUp every time you start an animation,
+        // but I do here in case user changes values in demo.
         demo = new countUp("myTargetElement", startVal, endVal, decimals, duration);
 
         if (useOnComplete) {
@@ -142,13 +135,19 @@
 
         demo.reset();
     }
+    function showCodeAndResume() {
+        code = 'demo.resume();';
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+        demo.resume();
+    }
     var useOnComplete = false;
     function toggleOnComplete(checkbox) {
 
         if (checkbox.checked) {
             useOnComplete = true;
         } else {
-            useOnComplete = false;
+            useOnComplete = true;
         }
         updateCodeVisualizer();
     }

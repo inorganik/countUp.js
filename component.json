@@ -1,9 +1,9 @@
 {
   "name": "countUp.js",
   "repo": "inorganik/countUp.js",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "scripts": ["countUp.min.js"],
-  "demo": "//inorganik.github.io/countUp.js",
-  "author": "inorganik",
+  "demo": "http://inorganik.github.io/countUp.js",
+  "author": "Jamie Perkins",
   "license": "MIT"
 }

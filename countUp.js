@@ -2,7 +2,7 @@
 
     countUp.js
     by @inorganik
-    v 0.0.6
+    v 1.0.0
 
 */
 

@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.0.0 (1/23/14)
+
+- no changes, just officially made it a production version
+
 ### v 0.0.6 (1/17/14)
 
 - added resume method

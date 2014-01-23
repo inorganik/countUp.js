@@ -2,7 +2,7 @@
 # 
 # countUp.js
 # by @inorganik
-# v 0.0.6
+# v 1.0.0
 #
 # Example:
 # numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5

@@ -2,7 +2,7 @@
 # 
 # countUp.js
 # by @inorganik
-# v 1.0.0
+# v 1.0.1
 #
 # Example:
 # numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5
@@ -29,7 +29,7 @@ countUp = (target, startVal, endVal, decimals, duration) ->
   @useEasing = true
 
   @doc = document.getElementById target  
-  startVal = Number startVal  
+  @startVal = Number startVal  
   endVal = Number endVal
   @countDown = if (startVal > endVal) then true else false
   decimals = Math.max(0, decimals or 0)
@@ -37,7 +37,7 @@ countUp = (target, startVal, endVal, decimals, duration) ->
   @duration = duration * 1000 or 2000
   @startTime = null
   @remaining = null
-  @frameVal = startVal
+  @frameVal = @startVal
   @rAF = null
 
   # make sure requestAnimationFrame and cancelAnimationFrame are defined
@@ -78,16 +78,16 @@ countUp = (target, startVal, endVal, decimals, duration) ->
     # to ease or not to ease is the question
     if @useEasing
       if @countDown
-        i = @easeOutExpo progress, 0, startVal - endVal, @duration
-        @frameVal = startVal - i
+        i = @easeOutExpo progress, 0, @startVal - endVal, @duration
+        @frameVal = @startVal - i
       else
-        @frameVal = @easeOutExpo(progress, startVal, endVal - startVal, @duration)
+        @frameVal = @easeOutExpo(progress, @startVal, endVal - @startVal, @duration)
     else
       if @countDown
         i = (startVal - endVal) * (progress / @duration)
-        @frameVal = startVal - i
+        @frameVal = @startVal - i
       else
-        @frameVal = startVal + (endVal - startVal) * (progress / @duration)
+        @frameVal = @startVal + (endVal - @startVal) * (progress / @duration)
         
     # decimal
     @frameVal = Math.round(@frameVal * @dec) / @dec
@@ -121,7 +121,7 @@ countUp = (target, startVal, endVal, decimals, duration) ->
 
   @reset = () ->
     cancelAnimationFrame @rAF
-    @doc.innerHTML = @addCommas startVal.toFixed(decimals)
+    @doc.innerHTML = @addCommas @startVal.toFixed(decimals)
 
   @resume = () ->
     @startTime = null
@@ -142,4 +142,4 @@ countUp = (target, startVal, endVal, decimals, duration) ->
     x1 + x2
 
   # format startVal on initialization
-  @doc.innerHTML = @addCommas startVal.toFixed(decimals)
+  @doc.innerHTML = @addCommas @startVal.toFixed(decimals)

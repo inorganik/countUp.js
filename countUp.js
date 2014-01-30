@@ -2,7 +2,7 @@
 
     countUp.js
     by @inorganik
-    v 1.0.0
+    v 1.0.1
 
 */
 
@@ -55,7 +55,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
     this.startTime = null;
     this.timestamp = null;
     this.remaining = null;
-    this.frameVal = startVal;
+    this.frameVal = self.startVal;
     this.rAF = null;
     
     // Robert Penner's easeOutExpo
@@ -75,7 +75,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
         if (self.useEasing) {
             if (self.countDown) {
                 var i = self.easeOutExpo(progress, 0, self.startVal - endVal, self.duration);
-                self.frameVal = startVal - i;
+                self.frameVal = self.startVal - i;
             } else {
                 self.frameVal = self.easeOutExpo(progress, self.startVal, endVal - self.startVal, self.duration);
             }
@@ -148,8 +148,9 @@ function countUp(target, startVal, endVal, decimals, duration) {
     // format startVal on initialization
     self.d.innerHTML = self.addCommas(startVal.toFixed(decimals));
 }
+
 // Example:
 // var numAnim = new countUp("SomeElementYouWantToAnimate", 0, 99.99, 2, 1.5);
 // numAnim.start();
-// with optional callback
+// with optional callback:
 // numAnim.start(someMethodToCallOnComplete);

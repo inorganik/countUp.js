@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.0.1 (1/30/14)
+
+- fixed a bug that caused the resume method not to work if counting down
+
 ### v 1.0.0 (1/23/14)
 
 - no changes, just officially made it a production version

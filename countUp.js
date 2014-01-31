@@ -45,7 +45,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
     // toggle easing
     this.useEasing = true;
     
-    this.d = document.getElementById(target);
+    this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     self.startVal = Number(startVal);
     endVal = Number(endVal);
     this.countDown = (startVal > endVal) ? true : false;

@@ -2,11 +2,11 @@
 
     countUp.js
     by @inorganik
-    v 1.0.1
+    v 1.0.2
 
 */
 
-// target = id of Html element where counting occurs
+// target = id of html element or var of previously selected html element where counting occurs
 // startVal = the value you want to begin at
 // endVal = the value you want to arrive at
 // decimals = number of decimal places in number, default 0

@@ -2,7 +2,7 @@
 # 
 # countUp.js
 # by @inorganik
-# v 1.0.1
+# v 1.0.2
 #
 # Example:
 # numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5
@@ -27,8 +27,7 @@ countUp = (target, startVal, endVal, decimals, duration) ->
 
   #toggle easing
   @useEasing = true
-
-  @doc = document.getElementById target  
+  @doc = if (typeof target == 'string') then document.getElementById target else target
   @startVal = Number startVal  
   endVal = Number endVal
   @countDown = if (startVal > endVal) then true else false

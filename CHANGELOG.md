@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.0.2 (1/30/14)
+
+- now allows target to be either an id or var of a previously selected html element thanks to @jackrugile
+
 ### v 1.0.1 (1/30/14)
 
 - fixed a bug that caused the resume method not to work if counting down

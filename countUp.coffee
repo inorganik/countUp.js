@@ -2,7 +2,7 @@
 # 
 # countUp.js
 # by @inorganik
-# v 1.0.2
+# v 1.0.3
 #
 # Example:
 # numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5
@@ -119,6 +119,7 @@ countUp = (target, startVal, endVal, decimals, duration) ->
     cancelAnimationFrame @rAF
 
   @reset = () ->
+    @startTime = null
     cancelAnimationFrame @rAF
     @doc.innerHTML = @addCommas @startVal.toFixed(decimals)
 

@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.0.3 (2/7/14)
+
+- fixed bug that caused start() not to work if reset() was previously called (oops)
+
 ### v 1.0.2 (1/30/14)
 
 - now allows target to be either an id or var of a previously selected html element thanks to @jackrugile

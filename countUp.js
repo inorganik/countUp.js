@@ -2,7 +2,7 @@
 
     countUp.js
     by @inorganik
-    v 1.0.2
+    v 1.0.3
 
 */
 
@@ -123,6 +123,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
         cancelAnimationFrame(self.rAF);
     }
     this.reset = function() {
+        self.startTime = null;
         cancelAnimationFrame(self.rAF);
         self.d.innerHTML = self.addCommas(startVal.toFixed(decimals));
     }

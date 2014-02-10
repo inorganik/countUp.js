@@ -100,7 +100,22 @@ function countUp(target, startVal, endVal, decimals, duration) {
         
         // format and print value
         self.d.innerHTML = self.addCommas(self.frameVal.toFixed(decimals));
-               
+        
+        // triggers
+        for (var i = 0; i < self.triggers.length; i++) {
+            if (self.countDown) {
+                if (self.frameVal <= self.triggers[i].value && !self.triggers[i].triggered) {
+                    self.onTrigger(self.triggers[i].value);
+                    self.triggers[i].triggered = true;
+                }
+            } else {
+                if (self.frameVal >= self.triggers[i].value && !self.triggers[i].triggered) {
+                    self.onTrigger(self.triggers[i].value);
+                    self.triggers[i].triggered = true;
+                }
+            }
+        }
+       
         // whether to continue
         if (progress < self.duration) {
             self.rAF = requestAnimationFrame(self.count);
@@ -145,7 +160,26 @@ function countUp(target, startVal, endVal, decimals, duration) {
         }
         return x1 + x2;
     }
-
+    this.addTriggers = function (values, callback) {
+        self.triggers = new Array();
+        if (typeof values === "number") {
+            self.triggers.push({
+                value: values,
+                triggered: false
+            });
+        } else {
+            for (var i = 0; i < values.length; i++) {
+                if (!isNaN(values[i])) {
+                    self.triggers.push({
+                        value: values[i],
+                        triggered: false
+                    });
+                }
+            }
+        }
+        self.onTrigger = callback;
+    }
+    
     // format startVal on initialization
     self.d.innerHTML = self.addCommas(startVal.toFixed(decimals));
 }

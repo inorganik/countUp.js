@@ -17,6 +17,7 @@ Params:
 - `endVal` = the value you want to arrive at
 - `decimals` = number of decimal places in number, default 0
 - `duration` = duration in seconds, default 2
+- `options` = (optional) object that determines number formatting and toggles easing - see demo
 
 ```js
 var numAnim = new countUp("SomeElementYouWantToAnimate", 24.02, 99.99, 2, 1.5);

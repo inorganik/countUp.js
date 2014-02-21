@@ -1,5 +1,11 @@
 # Changelog
 
+### v 1.1.0 (2/21/14)
+
+- now accepts an optional options object that allows for globalized number formatting
+- you can now optionally set the character of the separator and the decimal
+- grouping (ie, 1,000,000 vs 1000000) is now optional
+
 ### v 1.0.3 (2/7/14)
 
 - fixed bug that caused start() not to work if reset() was previously called (oops)

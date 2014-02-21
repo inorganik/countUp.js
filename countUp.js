@@ -2,17 +2,26 @@
 
     countUp.js
     by @inorganik
-    v 1.0.3
+    v 1.1.0
 
 */
 
 // target = id of html element or var of previously selected html element where counting occurs
 // startVal = the value you want to begin at
 // endVal = the value you want to arrive at
-// decimals = number of decimal places in number, default 0
-// duration = duration in seconds, default 2
+// decimals = number of decimal places, default 0
+// duration = duration of animation in seconds, default 2
+// options = optional object of options (see below)
 
-function countUp(target, startVal, endVal, decimals, duration) {
+function countUp(target, startVal, endVal, decimals, duration, options) {
+
+    // default options
+    this.options = options || {
+        useEasing : true, // toggle easing
+        useGrouping : true, // 1,000,000 vs 1000000
+        separator : ',', // character to use as a separator
+        decimal : '.' // character to use as a decimal
+    }
     
     // make sure requestAnimationFrame and cancelAnimationFrame are defined
     // polyfill for browsers without native support
@@ -41,22 +50,19 @@ function countUp(target, startVal, endVal, decimals, duration) {
     }
 
     var self = this;
-
-    // toggle easing
-    this.useEasing = true;
     
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
-    self.startVal = Number(startVal);
-    endVal = Number(endVal);
-    this.countDown = (startVal > endVal) ? true : false;
-    decimals = Math.max(0, decimals || 0);
-    this.dec = Math.pow(10, decimals);
-    this.duration = duration * 1000 || 2000;
+    this.startVal = Number(startVal);
+    this.endVal = Number(endVal);
+    this.countDown = (this.startVal > this.endVal) ? true : false;
     this.startTime = null;
     this.timestamp = null;
     this.remaining = null;
-    this.frameVal = self.startVal;
+    this.frameVal = this.startVal;
     this.rAF = null;
+    this.decimals = Math.max(0, decimals || 0);
+    this.dec = Math.pow(10, this.decimals);
+    this.duration = duration * 1000 || 2000;
     
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
@@ -72,19 +78,19 @@ function countUp(target, startVal, endVal, decimals, duration) {
         self.remaining = self.duration - progress;
         
         // to ease or not to ease
-        if (self.useEasing) {
+        if (self.options.useEasing) {
             if (self.countDown) {
-                var i = self.easeOutExpo(progress, 0, self.startVal - endVal, self.duration);
+                var i = self.easeOutExpo(progress, 0, self.startVal - self.endVal, self.duration);
                 self.frameVal = self.startVal - i;
             } else {
-                self.frameVal = self.easeOutExpo(progress, self.startVal, endVal - self.startVal, self.duration);
+                self.frameVal = self.easeOutExpo(progress, self.startVal, self.endVal - self.startVal, self.duration);
             }
         } else {
             if (self.countDown) {
-                var i = (self.startVal - endVal) * (progress / self.duration);
+                var i = (self.startVal - self.endVal) * (progress / self.duration);
                 self.frameVal = self.startVal - i;
             } else {
-                self.frameVal = self.startVal + (endVal - self.startVal) * (progress / self.duration);
+                self.frameVal = self.startVal + (self.endVal - self.startVal) * (progress / self.duration);
             }
         }
         
@@ -93,13 +99,13 @@ function countUp(target, startVal, endVal, decimals, duration) {
         
         // don't go past endVal since progress can exceed duration in the last frame
         if (self.countDown) {
-            self.frameVal = (self.frameVal < endVal) ? endVal : self.frameVal;
+            self.frameVal = (self.frameVal < self.endVal) ? self.endVal : self.frameVal;
         } else {
-            self.frameVal = (self.frameVal > endVal) ? endVal : self.frameVal;
+            self.frameVal = (self.frameVal > self.endVal) ? self.endVal : self.frameVal;
         }
         
         // format and print value
-        self.d.innerHTML = self.addCommas(self.frameVal.toFixed(decimals));
+        self.d.innerHTML = self.formatNumber(self.frameVal.toFixed(self.decimals));
                
         // whether to continue
         if (progress < self.duration) {
@@ -111,7 +117,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
     this.start = function(callback) {
         self.callback = callback;
         // make sure values are valid
-        if (!isNaN(endVal) && !isNaN(startVal)) {
+        if (!isNaN(self.endVal) && !isNaN(self.startVal)) {
             self.rAF = requestAnimationFrame(self.count);
         } else {
             console.log('countUp error: startVal or endVal is not a number');
@@ -125,7 +131,7 @@ function countUp(target, startVal, endVal, decimals, duration) {
     this.reset = function() {
         self.startTime = null;
         cancelAnimationFrame(self.rAF);
-        self.d.innerHTML = self.addCommas(startVal.toFixed(decimals));
+        self.d.innerHTML = self.formatNumber(self.startVal.toFixed(self.decimals));
     }
     this.resume = function() {
         self.startTime = null;
@@ -133,25 +139,27 @@ function countUp(target, startVal, endVal, decimals, duration) {
         self.startVal = self.frameVal;
         requestAnimationFrame(self.count);
     }
-    this.addCommas = function(nStr) {
+    this.formatNumber = function(nStr) {
         nStr += '';
         var x, x1, x2, rgx;
         x = nStr.split('.');
         x1 = x[0];
-        x2 = x.length > 1 ? '.' + x[1] : '';
+        x2 = x.length > 1 ? self.options.decimal + x[1] : '';
         rgx = /(\d+)(\d{3})/;
-        while (rgx.test(x1)) {
-            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        if (self.options.useGrouping) {
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
+            }
         }
         return x1 + x2;
     }
 
     // format startVal on initialization
-    self.d.innerHTML = self.addCommas(startVal.toFixed(decimals));
+    self.d.innerHTML = self.formatNumber(self.startVal.toFixed(self.decimals));
 }
 
 // Example:
-// var numAnim = new countUp("SomeElementYouWantToAnimate", 0, 99.99, 2, 1.5);
+// var numAnim = new countUp("SomeElementYouWantToAnimate", 0, 99.99, 2, 2.5);
 // numAnim.start();
 // with optional callback:
 // numAnim.start(someMethodToCallOnComplete);

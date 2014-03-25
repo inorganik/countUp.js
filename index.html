@@ -43,8 +43,8 @@
         </section>
         <section>
             <form>
-                <h4 class="inlineLeft marginRight weight300">Params:</h4>
-                <div class="inlineLeft marginRight">
+                <h4 class="inlineLeft noMargin weight300">Params:</h4>
+                <div class="inlineLeft marginLeft marginRight">
                     <input type="text" value="24.02" id="startVal" style="width:160px" onkeyup="updateCodeVisualizer()">
                     <label class="inlineLabel">Start</label>
                 </div>
@@ -65,8 +65,8 @@
         </section>
         <section>
             <form>
-                <h4 class="inlineLeft marginRight weight300">Options:</h4>
-                <div class="inlineLeft marginRight">
+                <h4 class="inlineLeft noMargin weight300">Options:</h4>
+                <div class="inlineLeft marginLeft marginRight">
                     <input type="checkbox" onClick="toggleEasing(this)" checked><label class="inlineLabel">Use easing</label>
                 </div>
                 <div class="inlineLeft marginRight">
@@ -84,17 +84,17 @@
         </section>
         <section>
             <form>
-                <h4 class="inlineLeft marginRight weight300">Methods:</h4>
-                <input type="button" value="Start" onClick="createCountUp()" class="inlineLeft marginRight" style="width:80px;">
+                <h4 class="inlineLeft noMargin weight300">Methods:</h4>
+                <input type="button" value="Start" onClick="createCountUp()" class="inlineLeft marginLeft marginRight" style="width:80px;">
                 <input type="button" value="Stop" onClick="showCodeAndStop()" class="inlineLeft marginRight" style="width:80px;">
                 <input type="button" value="Resume" onClick="showCodeAndResume()" class="inlineLeft marginRight" style="width:80px;">
                 <input type="button" value="Reset" onClick="showCodeAndReset()" class="inlineLeft marginRight" style="width:80px;">
                 <input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
             </form>
         </section>
-        <section>
+        <section class="marginBottom">
             <div class="col full marginBottom marginTop">
-                <div class="code-contain">
+                <div class="code-contain marginBottom">
                     <code id="codeVisualizer" class="indigo">var options = {<br>
                         &emsp;&emsp;useEasing : true, <br>
                         &emsp;&emsp;useGrouping : true, <br>

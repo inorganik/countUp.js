@@ -1,5 +1,12 @@
 # Changelog
 
+### v 1.1.1 (5/13/14)
+
+- Fixes a bug where an empty separator (“”) specified in the options
+object would cause the browser tab to become unresponsive if the endVal
+was a 4+ digit number. Special thanks to @sgtmercs for finding this bug
+and creating an issue.
+
 ### v 1.1.0 (2/21/14)
 
 - now accepts an optional options object that allows for globalized number formatting

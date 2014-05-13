@@ -2,7 +2,7 @@
 # 
 # countUp.js
 # by @inorganik
-# v 1.1.0
+# v 1.1.1
 #
 # Example:
 # numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5
@@ -20,12 +20,13 @@
 countUp = (target, startVal, endVal, decimals, duration, options) ->
 
   # default options
-  @options = option || { 
+  @options = options || { 
     useEasing: true # toggle easing
     useGrouping: true # 1,000,000 vs 1000000
     separator: ',' # character to use as a separator
     decimal: '.' # character to use as a decimal
   }
+  if @options.separator == '' then @options.useGrouping = false;
 
   lastTime = 0
   vendors = [
@@ -69,6 +70,8 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
   unless window.cancelAnimationFrame
     window.cancelAnimationFrame = (id) ->
       clearTimeout id
+
+  @version = () -> '1.1.1'
 
   # Robert Penner's easeOutExpo
   @easeOutExpo = (t, b, c, d) ->

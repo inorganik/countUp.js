@@ -2,8 +2,8 @@
 
     countUp.js
     by @inorganik
-    v 1.1.0
-
+    v 1.1.1
+    
 */
 
 // target = id of html element or var of previously selected html element where counting occurs
@@ -15,14 +15,6 @@
 
 function countUp(target, startVal, endVal, decimals, duration, options) {
 
-    // default options
-    this.options = options || {
-        useEasing : true, // toggle easing
-        useGrouping : true, // 1,000,000 vs 1000000
-        separator : ',', // character to use as a separator
-        decimal : '.' // character to use as a decimal
-    }
-    
     // make sure requestAnimationFrame and cancelAnimationFrame are defined
     // polyfill for browsers without native support
     // by Opera engineer Erik Möller
@@ -49,8 +41,17 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         }
     }
 
+     // default options
+    this.options = options || {
+        useEasing : true, // toggle easing
+        useGrouping : true, // 1,000,000 vs 1000000
+        separator : ',', // character to use as a separator
+        decimal : '.' // character to use as a decimal
+    }
+    if (this.options.separator == '') this.options.useGrouping = false;
+
     var self = this;
-    
+
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
     this.endVal = Number(endVal);
@@ -63,6 +64,8 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.decimals = Math.max(0, decimals || 0);
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
+
+    this.version = function () { return '1.1.1' }
     
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {

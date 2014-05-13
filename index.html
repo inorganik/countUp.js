@@ -34,7 +34,7 @@
             <div id="logo"><a class="block" href="http://inorganik.github.io"></a></div>
         </header>
         <section>
-            <h1>countUp.js &nbsp;<small class="lt-gray">v1.1.0</small></h1>
+            <h1>countUp.js &nbsp;<small id="version" class="lt-gray"></small></h1>
             <p>countUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.</p>
             <h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/countUp.js">Download on Github</a></h3>
         </section>
@@ -129,6 +129,9 @@
         // var element = document.querySelector('.jumbo');
         var demo = new countUp('myTargetElement', 24.02, 94.62, 2, 2.5, options);
         demo.start();
+
+        // display version (no hassling with markup!)
+        document.getElementById('version').innerHTML = 'v'+demo.version();
     }
 
     // for demo:

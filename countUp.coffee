@@ -85,7 +85,7 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
     progress = timestamp - @startTime
       
     # to ease or not to ease is the question
-    if @options.Easing
+    if @options.useEasing
       if @countDown
         i = @easeOutExpo progress, 0, @startVal - @endVal, @duration
         @frameVal = @startVal - i

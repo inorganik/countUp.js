@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.1.2 (6/9/14)
+
+- Fixes a bug where start() -> stop() -> resume() -> reset() would reset to the number stopped at. Thanks to @youxiachai for finding this one
+
 ### v 1.1.1 (5/13/14)
 
 - Fixes a bug where an empty separator (“”) specified in the options

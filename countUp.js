@@ -54,7 +54,6 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
 
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
-    this.originStartVal = Number(startVal);
     this.endVal = Number(endVal);
     this.countDown = (this.startVal > this.endVal) ? true : false;
     this.startTime = null;
@@ -136,17 +135,13 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startTime = null;
         self.startVal = startVal;
         cancelAnimationFrame(self.rAF);
-        self.startVal = self.originStartVal;
-        self.frameVal = self.originStartVal;
         self.d.innerHTML = self.formatNumber(self.startVal.toFixed(self.decimals));
     }
     this.resume = function() {
-        if (self.remaining && self.frameVal != self.originStartVal){
-            self.startTime = null;
-            self.duration = self.remaining;
-            self.startVal = self.frameVal;
-            requestAnimationFrame(self.count);   
-        }
+        self.startTime = null;
+        self.duration = self.remaining;
+        self.startVal = self.frameVal;
+        requestAnimationFrame(self.count);
     }
     this.formatNumber = function(nStr) {
         nStr += '';

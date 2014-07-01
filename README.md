@@ -49,3 +49,12 @@ Reset an animation:
 ```js
 numAnim.reset();
 ```
+
+Using with a CDN:
+-----------------
+
+CDN provided by [jsDelivr CDN](http://www.jsdelivr.com/#!countupjs)
+
+```
+<script src="//cdn.jsdelivr.net/countupjs/1.1.0/countUp.min.js"></script>
+```

@@ -51,7 +51,8 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     if (this.options.separator == '') this.options.useGrouping = false;
 
     var self = this;
-
+    
+    
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
     this.endVal = Number(endVal);
@@ -66,6 +67,18 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.duration = duration * 1000 || 2000;
 
     this.version = function () { return '1.1.2' }
+    
+    // Print value to target
+    this.formatPrint = function() {
+        //if target is input change the value
+        if (this.d.tagName == "INPUT"){
+            this.d.value = this.formatNumber(this.frameVal.toFixed(this.decimals));
+        }
+        //else change the innerHTML element
+        else{
+            this.d.innerHTML = this.formatNumber(this.frameVal.toFixed(this.decimals));
+        }
+    }
     
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
@@ -108,7 +121,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         }
         
         // format and print value
-        self.d.innerHTML = self.formatNumber(self.frameVal.toFixed(self.decimals));
+        self.formatPrint();
                
         // whether to continue
         if (progress < self.duration) {
@@ -124,7 +137,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
             self.rAF = requestAnimationFrame(self.count);
         } else {
             console.log('countUp error: startVal or endVal is not a number');
-            self.d.innerHTML = '--';
+            self.formatPrint();
         }
         return false;
     }
@@ -135,7 +148,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startTime = null;
         self.startVal = startVal;
         cancelAnimationFrame(self.rAF);
-        self.d.innerHTML = self.formatNumber(self.startVal.toFixed(self.decimals));
+        self.formatPrint();
     }
     this.resume = function() {
         self.startTime = null;
@@ -158,8 +171,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         return x1 + x2;
     }
 
-    // format startVal on initialization
-    self.d.innerHTML = self.formatNumber(self.startVal.toFixed(self.decimals));
+    
 }
 
 // Example:

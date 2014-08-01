@@ -46,7 +46,9 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         useEasing : true, // toggle easing
         useGrouping : true, // 1,000,000 vs 1000000
         separator : ',', // character to use as a separator
-        decimal : '.' // character to use as a decimal
+        decimal : '.', // character to use as a decimal
+        prefix : '', 
+        suffix : ''
     }
     if (this.options.separator == '') this.options.useGrouping = false;
 
@@ -73,11 +75,11 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         if (is_error == false) {
             //if target is input change the value
             if (this.d.tagName == "INPUT"){
-                this.d.value = this.formatNumber(this.frameVal.toFixed(this.decimals));
+                this.d.value = this.options.prefix + this.formatNumber(this.frameVal.toFixed(this.decimals)) + this.options.suffix;
             }
             //else change the innerHTML element
             else{
-                this.d.innerHTML = this.formatNumber(this.frameVal.toFixed(this.decimals));
+                this.d.innerHTML = this.options.prefix + this.formatNumber(this.frameVal.toFixed(this.decimals)) + this.options.suffix;
             }
         }
         else{

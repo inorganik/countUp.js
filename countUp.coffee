@@ -1,5 +1,5 @@
 ###
-# 
+#
 # countUp.js
 # by @inorganik
 # v 1.1.2
@@ -20,11 +20,13 @@
 countUp = (target, startVal, endVal, decimals, duration, options) ->
 
   # default options
-  @options = options || { 
+  @options = options || {
     useEasing: true # toggle easing
     useGrouping: true # 1,000,000 vs 1000000
     separator: ',' # character to use as a separator
     decimal: '.' # character to use as a decimal
+    prefix: null # text that will be prepended at the start
+    suffix: null # text that will be appended at the end
   }
   if @options.separator == '' then @options.useGrouping = false;
 
@@ -36,7 +38,7 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
   ]
 
   @doc = if (typeof target == 'string') then document.getElementById target else target
-  @startVal = Number @startVal  
+  @startVal = Number @startVal
   @endVal = Number @endVal
   @countDown = if (@startVal > @endVal) then true else false
   @startTime = null
@@ -83,7 +85,7 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
     @timestamp = timestamp
 
     progress = timestamp - @startTime
-      
+
     # to ease or not to ease is the question
     if @options.useEasing
       if @countDown
@@ -97,11 +99,11 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
         @frameVal = @startVal - i
       else
         @frameVal = @startVal + (@endVal - @startVal) * (progress / @duration)
-        
+
     # decimal
     @frameVal = Math.round(@frameVal * @dec) / @dec
 
-    # don't go past enVal since progress can exceed duration in last grame   
+    # don't go past enVal since progress can exceed duration in last grame
     if @countDown
       @frameVal = if (@framVal < @endVal) then @endVal else @frameVal
     else
@@ -151,7 +153,13 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
       while rgx.test(x1)
         x1 = x1.replace(rgx, '$1' + @options.separator + '$2')
 
-    x1 + x2
+    output = x1 + x2
+
+    if @options.prefix
+      output = @options.prefix + output
+    if @options.suffix
+      output += @options.suffox
+    output
 
   # format @startVal on initialization
   @doc.innerHTML = @formatNumber @startVal.toFixed(decimals)

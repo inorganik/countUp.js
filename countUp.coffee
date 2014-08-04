@@ -2,7 +2,6 @@
 #
 # countUp.js
 # by @inorganik
-# v 1.1.2
 #
 # Example:
 # numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5
@@ -25,17 +24,10 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
     useGrouping: true # 1,000,000 vs 1000000
     separator: ',' # character to use as a separator
     decimal: '.' # character to use as a decimal
-    prefix: null # text that will be prepended at the start
-    suffix: null # text that will be appended at the end
   }
   if @options.separator == '' then @options.useGrouping = false;
-
-  lastTime = 0
-  vendors = [
-    'webkit'
-    'moz'
-    'ms'
-  ]
+  if @options.prefix == null then @options.prefix = '';
+  if @options.suffix == null then @options.suffix = '';
 
   @doc = if (typeof target == 'string') then document.getElementById target else target
   @startVal = Number @startVal
@@ -52,6 +44,14 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
   # make sure requestAnimationFrame and cancelAnimationFrame are defined
   # polyfill for browsers without native support
   # by Opera engineer Erik Möller
+
+  lastTime = 0
+  vendors = [
+    'webkit'
+    'moz'
+    'ms'
+  ]
+
   while x < vendors.length and not window.requestAnimationFrame
     window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
     window.cancelAnimationFrame =
@@ -73,7 +73,8 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
     window.cancelAnimationFrame = (id) ->
       clearTimeout id
 
-  @version = () -> '1.1.2'
+  # begin regular countUp functions
+  @version = () -> '1.2.0'
 
   # Robert Penner's easeOutExpo
   @easeOutExpo = (t, b, c, d) ->
@@ -153,13 +154,8 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
       while rgx.test(x1)
         x1 = x1.replace(rgx, '$1' + @options.separator + '$2')
 
-    output = x1 + x2
+    @options.prefix + x1 + x2 + @options.suffix
 
-    if @options.prefix
-      output = @options.prefix + output
-    if @options.suffix
-      output += @options.suffox
-    output
 
   # format @startVal on initialization
   @doc.innerHTML = @formatNumber @startVal.toFixed(decimals)

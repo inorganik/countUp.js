@@ -2,7 +2,6 @@
 
     countUp.js
     by @inorganik
-    v 1.1.2
 
 */
 
@@ -47,10 +46,10 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         useGrouping : true, // 1,000,000 vs 1000000
         separator : ',', // character to use as a separator
         decimal : '.', // character to use as a decimal
-        prefix: null, // text that will be prepended at the start
-        suffix: null // text that will be appended at the end
     }
     if (this.options.separator == '') this.options.useGrouping = false;
+    if (this.options.prefix == null) this.options.prefix = '';
+    if (this.options.suffix == null) this.options.suffix = '';
 
     var self = this;
 
@@ -67,7 +66,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
 
-    this.version = function () { return '1.1.2' }
+    this.version = function () { return '1.2.0' }
 
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
@@ -157,15 +156,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
                 x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
             }
         }
-
-        var output = x1 + x2;
-        if (self.options.prefix) {
-            output = self.options.prefix + output;
-        }
-        if (self.options.suffix) {
-            output += self.options.suffix;
-        }
-        return output;
+        return self.options.prefix + x1 + x2 + self.options.suffix;
     }
 
     // format startVal on initialization

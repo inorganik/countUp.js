@@ -1,8 +1,7 @@
 ###
-# 
+#
 # countUp.js
 # by @inorganik
-# v 1.1.2
 #
 # Example:
 # numAnim = new countUp "SomeElementYouWantToAnimate", 99.99, 2, 1.5
@@ -20,23 +19,18 @@
 countUp = (target, startVal, endVal, decimals, duration, options) ->
 
   # default options
-  @options = options || { 
+  @options = options || {
     useEasing: true # toggle easing
     useGrouping: true # 1,000,000 vs 1000000
     separator: ',' # character to use as a separator
     decimal: '.' # character to use as a decimal
   }
   if @options.separator == '' then @options.useGrouping = false;
-
-  lastTime = 0
-  vendors = [
-    'webkit'
-    'moz'
-    'ms'
-  ]
+  if @options.prefix == null then @options.prefix = '';
+  if @options.suffix == null then @options.suffix = '';
 
   @doc = if (typeof target == 'string') then document.getElementById target else target
-  @startVal = Number @startVal  
+  @startVal = Number @startVal
   @endVal = Number @endVal
   @countDown = if (@startVal > @endVal) then true else false
   @startTime = null
@@ -50,6 +44,14 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
   # make sure requestAnimationFrame and cancelAnimationFrame are defined
   # polyfill for browsers without native support
   # by Opera engineer Erik Möller
+
+  lastTime = 0
+  vendors = [
+    'webkit'
+    'moz'
+    'ms'
+  ]
+
   while x < vendors.length and not window.requestAnimationFrame
     window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
     window.cancelAnimationFrame =
@@ -71,7 +73,8 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
     window.cancelAnimationFrame = (id) ->
       clearTimeout id
 
-  @version = () -> '1.1.2'
+  # begin regular countUp functions
+  @version = () -> '1.2.0'
 
   # Robert Penner's easeOutExpo
   @easeOutExpo = (t, b, c, d) ->
@@ -83,7 +86,7 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
     @timestamp = timestamp
 
     progress = timestamp - @startTime
-      
+
     # to ease or not to ease is the question
     if @options.useEasing
       if @countDown
@@ -97,11 +100,11 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
         @frameVal = @startVal - i
       else
         @frameVal = @startVal + (@endVal - @startVal) * (progress / @duration)
-        
+
     # decimal
     @frameVal = Math.round(@frameVal * @dec) / @dec
 
-    # don't go past enVal since progress can exceed duration in last grame   
+    # don't go past enVal since progress can exceed duration in last grame
     if @countDown
       @frameVal = if (@framVal < @endVal) then @endVal else @frameVal
     else
@@ -151,7 +154,8 @@ countUp = (target, startVal, endVal, decimals, duration, options) ->
       while rgx.test(x1)
         x1 = x1.replace(rgx, '$1' + @options.separator + '$2')
 
-    x1 + x2
+    @options.prefix + x1 + x2 + @options.suffix
+
 
   # format @startVal on initialization
   @doc.innerHTML = @formatNumber @startVal.toFixed(decimals)

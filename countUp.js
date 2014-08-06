@@ -161,7 +161,14 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startTime = null;
         self.startVal = startVal;
         cancelAnimationFrame(self.rAF);
-        self.formatPrint(is_error=false);
+        if (this.d.tagName == "INPUT"){
+            this.d.value = this.formatNumber(this.startVal.toFixed(this.decimals));
+        }
+        //else change the innerHTML element
+        else{
+            this.d.innerHTML = this.formatNumber(this.startVal.toFixed(this.decimals));
+        }
+
     }
     this.resume = function() {
         self.startTime = null;
@@ -184,7 +191,14 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         return x1 + x2;
     }
 
-    
+     //format startVal on initialization
+    if (this.d.tagName == "INPUT"){
+        this.d.value = this.formatNumber(this.startVal.toFixed(this.decimals));
+    }
+    //else change the innerHTML element
+    else{
+        this.d.innerHTML = this.formatNumber(this.startVal.toFixed(this.decimals));
+    }
 }
 
 // Example:

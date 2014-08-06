@@ -46,9 +46,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         useEasing : true, // toggle easing
         useGrouping : true, // 1,000,000 vs 1000000
         separator : ',', // character to use as a separator
-        decimal : '.', // character to use as a decimal
-        prefix : '', 
-        suffix : ''
+        decimal : '.' // character to use as a decimal
     }
     if (this.options.separator == '') this.options.useGrouping = false;
 
@@ -71,15 +69,28 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.version = function () { return '1.1.2' }
     
     // Print value to target
-    this.formatPrint = function() {
-        //if target is input change the value
-        if (this.d.tagName == "INPUT"){
-            this.d.value = this.formatNumber(this.frameVal.toFixed(this.decimals));
+    this.formatPrint = function(is_error) {
+        if (is_error == false) {
+            //if target is input change the value
+            if (this.d.tagName == "INPUT"){
+                this.d.value = this.formatNumber(this.frameVal.toFixed(this.decimals));
+            }
+            //else change the innerHTML element
+            else{
+                this.d.innerHTML = this.formatNumber(this.frameVal.toFixed(this.decimals));
+            }
         }
-        //else change the innerHTML element
         else{
-            this.d.innerHTML = this.formatNumber(this.frameVal.toFixed(this.decimals));
+            //if target is input change the value
+            if (this.d.tagName == "INPUT"){
+                this.d.value = '--';
+            }
+            //else change the innerHTML element
+            else{
+                this.d.innerHTML = '--';
+            }
         }
+        
     }
     
     // Robert Penner's easeOutExpo
@@ -123,7 +134,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         }
         
         // format and print value
-        self.formatPrint();
+        self.formatPrint(is_error=false);
                
         // whether to continue
         if (progress < self.duration) {
@@ -139,7 +150,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
             self.rAF = requestAnimationFrame(self.count);
         } else {
             console.log('countUp error: startVal or endVal is not a number');
-            self.formatPrint();
+            self.formatPrint(is_error=true);
         }
         return false;
     }
@@ -150,7 +161,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startTime = null;
         self.startVal = startVal;
         cancelAnimationFrame(self.rAF);
-        self.formatPrint();
+        self.formatPrint(is_error=false);
     }
     this.resume = function() {
         self.startTime = null;

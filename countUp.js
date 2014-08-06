@@ -71,28 +71,15 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.version = function () { return '1.1.2' }
     
     // Print value to target
-    this.formatPrint = function(is_error) {
-        if (is_error == false) {
-            //if target is input change the value
-            if (this.d.tagName == "INPUT"){
-                this.d.value = this.options.prefix + this.formatNumber(this.frameVal.toFixed(this.decimals)) + this.options.suffix;
-            }
-            //else change the innerHTML element
-            else{
-                this.d.innerHTML = this.options.prefix + this.formatNumber(this.frameVal.toFixed(this.decimals)) + this.options.suffix;
-            }
+    this.formatPrint = function() {
+        //if target is input change the value
+        if (this.d.tagName == "INPUT"){
+            this.d.value = this.formatNumber(this.frameVal.toFixed(this.decimals));
         }
+        //else change the innerHTML element
         else{
-            //if target is input change the value
-            if (this.d.tagName == "INPUT"){
-                this.d.value = '--';
-            }
-            //else change the innerHTML element
-            else{
-                this.d.innerHTML = '--';
-            }
+            this.d.innerHTML = this.formatNumber(this.frameVal.toFixed(this.decimals));
         }
-        
     }
     
     // Robert Penner's easeOutExpo
@@ -136,7 +123,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         }
         
         // format and print value
-        self.formatPrint(is_error=false);
+        self.formatPrint();
                
         // whether to continue
         if (progress < self.duration) {
@@ -152,7 +139,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
             self.rAF = requestAnimationFrame(self.count);
         } else {
             console.log('countUp error: startVal or endVal is not a number');
-            self.formatPrint(is_error=true);
+            self.formatPrint();
         }
         return false;
     }
@@ -163,7 +150,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startTime = null;
         self.startVal = startVal;
         cancelAnimationFrame(self.rAF);
-        self.formatPrint(is_error=false);
+        self.formatPrint();
     }
     this.resume = function() {
         self.startTime = null;

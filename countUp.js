@@ -2,8 +2,7 @@
 
     countUp.js
     by @inorganik
-    v 1.1.2
-    
+
 */
 
 // target = id of html element or var of previously selected html element where counting occurs
@@ -46,9 +45,11 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         useEasing : true, // toggle easing
         useGrouping : true, // 1,000,000 vs 1000000
         separator : ',', // character to use as a separator
-        decimal : '.' // character to use as a decimal
+        decimal : '.', // character to use as a decimal
     }
     if (this.options.separator == '') this.options.useGrouping = false;
+    if (this.options.prefix == null) this.options.prefix = '';
+    if (this.options.suffix == null) this.options.suffix = '';
 
     var self = this;
     
@@ -66,7 +67,8 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
 
-    this.version = function () { return '1.1.2' }
+
+    this.version = function () { return '1.2.0' }
     
     // Print value to target
     this.formatPrint = function(is_error) {
@@ -93,19 +95,20 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         
     }
     
+
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
         return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
     }
     this.count = function(timestamp) {
-        
+
         if (self.startTime === null) self.startTime = timestamp;
 
         self.timestamp = timestamp;
 
         var progress = timestamp - self.startTime;
         self.remaining = self.duration - progress;
-        
+
         // to ease or not to ease
         if (self.options.useEasing) {
             if (self.countDown) {
@@ -122,17 +125,17 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
                 self.frameVal = self.startVal + (self.endVal - self.startVal) * (progress / self.duration);
             }
         }
-        
+
         // decimal
         self.frameVal = Math.round(self.frameVal*self.dec)/self.dec;
-        
+
         // don't go past endVal since progress can exceed duration in the last frame
         if (self.countDown) {
             self.frameVal = (self.frameVal < self.endVal) ? self.endVal : self.frameVal;
         } else {
             self.frameVal = (self.frameVal > self.endVal) ? self.endVal : self.frameVal;
         }
-        
+
         // format and print value
         self.formatPrint(is_error=false);
                
@@ -142,7 +145,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         } else {
             if (self.callback != null) self.callback();
         }
-    }  
+    }
     this.start = function(callback) {
         self.callback = callback;
         // make sure values are valid
@@ -188,7 +191,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
                 x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
             }
         }
-        return x1 + x2;
+        return self.options.prefix + x1 + x2 + self.options.suffix;
     }
 
      //format startVal on initialization

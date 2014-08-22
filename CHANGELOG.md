@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.3.0 (8/21/14)
+
+- Adds support for inputs thanks to @kmclaugh
+
 ### v 1.2.0 (6/9/14)
 
 - Adds prefixes and suffixes (such as "$" and "%") thanks to @marjan-georgiev

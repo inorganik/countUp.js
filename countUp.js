@@ -18,7 +18,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     // polyfill for browsers without native support
     // by Opera engineer Erik Möller
     var lastTime = 0;
-    var vendors = ['webkit', 'moz', 'ms'];
+    var vendors = ['webkit', 'moz', 'ms', 'o'];
     for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
         window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
         window.cancelAnimationFrame =
@@ -52,7 +52,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     if (this.options.suffix == null) this.options.suffix = '';
 
     var self = this;
-
+    
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
     this.endVal = Number(endVal);
@@ -66,7 +66,17 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
 
-    this.version = function () { return '1.2.0' }
+    this.version = function () { return '1.3.0' }
+    
+    // Print value to target
+    this.printValue = function(value) {
+        var result = (value) ? self.formatNumber(value) : '--';
+        if (self.d.tagName == 'INPUT') {
+            this.d.value = result;
+        } else {
+            this.d.innerHTML = result;
+        }
+    }
 
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
@@ -109,8 +119,8 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         }
 
         // format and print value
-        self.d.innerHTML = self.formatNumber(self.frameVal.toFixed(self.decimals));
-
+        self.printValue(self.frameVal);
+               
         // whether to continue
         if (progress < self.duration) {
             self.rAF = requestAnimationFrame(self.count);
@@ -125,7 +135,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
             self.rAF = requestAnimationFrame(self.count);
         } else {
             console.log('countUp error: startVal or endVal is not a number');
-            self.d.innerHTML = '--';
+            self.printValue();
         }
         return false;
     }
@@ -136,15 +146,17 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startTime = null;
         self.startVal = startVal;
         cancelAnimationFrame(self.rAF);
-        self.d.innerHTML = self.formatNumber(self.startVal.toFixed(self.decimals));
+        self.printValue(self.startVal);
     }
     this.resume = function() {
+        self.stop();
         self.startTime = null;
         self.duration = self.remaining;
         self.startVal = self.frameVal;
         requestAnimationFrame(self.count);
     }
     this.formatNumber = function(nStr) {
+        nStr = nStr.toFixed(self.decimals);
         nStr += '';
         var x, x1, x2, rgx;
         x = nStr.split('.');
@@ -160,7 +172,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     }
 
     // format startVal on initialization
-    self.d.innerHTML = self.formatNumber(self.startVal.toFixed(self.decimals));
+    self.printValue(self.startVal);
 }
 
 // Example:

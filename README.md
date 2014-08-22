@@ -13,12 +13,14 @@ countUp.js supports all browsers.
 ### Usage:
 
 Params:
-- `target` = id of html element or var of previously selected html element where counting occurs
+- `target` = id of html element, input or var of previously selected element/input where counting occurs
 - `startVal` = the value you want to begin at
 - `endVal` = the value you want to arrive at
 - `decimals` = number of decimal places in number, default 0
 - `duration` = duration in seconds, default 2
-- `options` = (optional) object that determines number formatting and toggles easing - see demo
+- `options` = object that determines number formatting and toggles easing - see demo
+
+Decimals, duration, and options can be left out to use the default values.
 
 ```js
 var numAnim = new countUp("SomeElementYouWantToAnimate", 24.02, 99.99, 2, 1.5);
@@ -29,6 +31,11 @@ with optional callback:
 
 ```js
 numAnim.start(someMethodToCallOnComplete);
+
+// or an anonymous function
+numAnim.start(function() {
+	// do something
+})
 ```
 
 ### Other methods:

@@ -18,7 +18,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     // polyfill for browsers without native support
     // by Opera engineer Erik Möller
     var lastTime = 0;
-    var vendors = ['webkit', 'moz', 'ms'];
+    var vendors = ['webkit', 'moz', 'ms', 'o'];
     for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
         window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
         window.cancelAnimationFrame =
@@ -53,7 +53,6 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
 
     var self = this;
     
-    
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
     this.endVal = Number(endVal);
@@ -67,34 +66,17 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
 
-
-    this.version = function () { return '1.2.0' }
+    this.version = function () { return '1.3.0' }
     
     // Print value to target
-    this.formatPrint = function(is_error) {
-        if (is_error == false) {
-            //if target is input change the value
-            if (this.d.tagName == "INPUT"){
-                this.d.value = this.formatNumber(this.frameVal.toFixed(this.decimals));
-            }
-            //else change the innerHTML element
-            else{
-                this.d.innerHTML = this.formatNumber(this.frameVal.toFixed(this.decimals));
-            }
+    this.printValue = function(value) {
+        var result = (value) ? self.formatNumber(value) : '--';
+        if (self.d.tagName == 'INPUT') {
+            this.d.value = result;
+        } else {
+            this.d.innerHTML = result;
         }
-        else{
-            //if target is input change the value
-            if (this.d.tagName == "INPUT"){
-                this.d.value = '--';
-            }
-            //else change the innerHTML element
-            else{
-                this.d.innerHTML = '--';
-            }
-        }
-        
     }
-    
 
     // Robert Penner's easeOutExpo
     this.easeOutExpo = function(t, b, c, d) {
@@ -137,7 +119,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         }
 
         // format and print value
-        self.formatPrint(is_error=false);
+        self.printValue(self.frameVal);
                
         // whether to continue
         if (progress < self.duration) {
@@ -153,7 +135,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
             self.rAF = requestAnimationFrame(self.count);
         } else {
             console.log('countUp error: startVal or endVal is not a number');
-            self.formatPrint(is_error=true);
+            self.printValue();
         }
         return false;
     }
@@ -164,22 +146,17 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startTime = null;
         self.startVal = startVal;
         cancelAnimationFrame(self.rAF);
-        if (this.d.tagName == "INPUT"){
-            this.d.value = this.formatNumber(this.startVal.toFixed(this.decimals));
-        }
-        //else change the innerHTML element
-        else{
-            this.d.innerHTML = this.formatNumber(this.startVal.toFixed(this.decimals));
-        }
-
+        self.printValue(self.startVal);
     }
     this.resume = function() {
+        self.stop();
         self.startTime = null;
         self.duration = self.remaining;
         self.startVal = self.frameVal;
         requestAnimationFrame(self.count);
     }
     this.formatNumber = function(nStr) {
+        nStr = nStr.toFixed(self.decimals);
         nStr += '';
         var x, x1, x2, rgx;
         x = nStr.split('.');
@@ -194,14 +171,8 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         return self.options.prefix + x1 + x2 + self.options.suffix;
     }
 
-     //format startVal on initialization
-    if (this.d.tagName == "INPUT"){
-        this.d.value = this.formatNumber(this.startVal.toFixed(this.decimals));
-    }
-    //else change the innerHTML element
-    else{
-        this.d.innerHTML = this.formatNumber(this.startVal.toFixed(this.decimals));
-    }
+    // format startVal on initialization
+    self.printValue(self.startVal);
 }
 
 // Example:

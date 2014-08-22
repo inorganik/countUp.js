@@ -131,11 +131,13 @@
     var useEasing = true;
     var useGrouping = true;
 
+    var demo, code;
+
     // create instance
     window.onload = function() {
         // fire animation
         // var element = document.querySelector('.jumbo');
-        var demo = new countUp('myTargetElement', 24.02, 94.62, 2, 2.5, options);
+        demo = new countUp('myTargetElement', 24.02, 94.62, 2, 2.5, options);
         demo.start();
 
         // display version (no hassling with markup!)
@@ -150,7 +152,6 @@
         document.getElementById("endVal").value = oldStartVal;
         updateCodeVisualizer();
     }
-    var code;
     function createCountUp() {
 
         var startVal = document.getElementById("startVal").value;

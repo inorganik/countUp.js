@@ -66,11 +66,11 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
 
-    this.version = function () { return '1.3.0' }
+    this.version = function () { return '1.3.1' }
     
     // Print value to target
     this.printValue = function(value) {
-        var result = (value) ? self.formatNumber(value) : '--';
+        var result = (!isNaN(value)) ? self.formatNumber(value) : '--';
         if (self.d.tagName == 'INPUT') {
             this.d.value = result;
         } else {
@@ -108,15 +108,15 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
             }
         }
 
-        // decimal
-        self.frameVal = Math.round(self.frameVal*self.dec)/self.dec;
-
         // don't go past endVal since progress can exceed duration in the last frame
         if (self.countDown) {
             self.frameVal = (self.frameVal < self.endVal) ? self.endVal : self.frameVal;
         } else {
             self.frameVal = (self.frameVal > self.endVal) ? self.endVal : self.frameVal;
         }
+
+        // decimal
+        self.frameVal = Math.round(self.frameVal*self.dec)/self.dec;
 
         // format and print value
         self.printValue(self.frameVal);

@@ -1,5 +1,10 @@
 # Changelog
 
+### v 1.3.1 (9/1/14)
+
+- Fixed bug where if endVal = 0, countUp would display ‘—‘
+
+
 ### v 1.3.0 (8/21/14)
 
 - Adds support for inputs thanks to @kmclaugh

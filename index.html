@@ -9,6 +9,7 @@
 
     <title>countUp.js</title>
 
+    <!-- ../inorganik.github.io/assets/css/style.css?v=20140820 -->
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=20140820">
 
     <script type="text/javascript" src="countUp.js"></script>
@@ -39,7 +40,8 @@
             <h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/countUp.js">Download on Github</a></h3>
         </section>
         <section>
-            <h1 class="jumbo" id="myTargetElement">24.02</h1>
+            <p style="position:absolute; top:5px; left:0;">Current stars:</p>
+            <h1 class="jumbo" id="myTargetElement">0</h1>
         </section>
         <section>
             <form>
@@ -121,6 +123,7 @@
 <script type="text/javascript">
 
     // set countUp options
+    // you don't need to do this - you can use the default options
     var options = {
         useEasing : true, // toggle easing
         useGrouping : true, // 1,000,000 vs 1000000
@@ -131,14 +134,15 @@
     var useEasing = true;
     var useGrouping = true;
 
-    var demo, code;
+    var demo, code, data, stars;
 
     // create instance
     window.onload = function() {
-        // fire animation
-        // var element = document.querySelector('.jumbo');
-        demo = new countUp('myTargetElement', 24.02, 94.62, 2, 2.5, options);
-        demo.start();
+        // setup countUp object 
+        demo = new countUp('myTargetElement', 0, 94.62, 2, 2.5, options);
+        // you could do demo.start() right here but we are getting actual current star count from github api below
+        // since it is an asynchronous call, we fire start() in the success fn of the XMLHttpRequest object
+        getStars.send();
 
         // display version (no hassling with markup!)
         document.getElementById('version').innerHTML = 'v'+demo.version();
@@ -173,7 +177,7 @@
         }
 
         // you don't have to create a new instance of countUp every time you start an animation,
-        // but I do here in case user changes values in demo.
+        // you can just change the properties individually. But I do here in case user changes values in demo.
         demo = new countUp("myTargetElement", startVal, endVal, decimals, duration, options);
 
         if (useOnComplete) {
@@ -262,5 +266,41 @@
         }
         document.getElementById("codeVisualizer").innerHTML = code;
     }
+
+    // get current star count
+    var repoInfoUrl = 'https://api.github.com/repos/inorganik/countUp.js';
+    var getStars = new XMLHttpRequest();
+    getStars.open('GET', repoInfoUrl, true);
+    getStars.timeout = 5000;
+
+    getStars.onreadystatechange = function() {
+        // 2: received headers,  3: loading, 4: done
+        if (getStars.readyState == 4) {
+            if (getStars.status == 200) {
+                if (getStars.responseText !== 'undefined') {
+                    if (getStars.responseText.length > 0) {
+                        data = JSON.parse(getStars.responseText);
+                        stars = data.stargazers_count;
+                        // change input values
+                        document.getElementById("startVal").value = 0;
+                        document.getElementById("endVal").value = stars;
+                        document.getElementById("decimals").value = 0;
+                        // change code example values
+                        updateCodeVisualizer();
+                        // change the startVal and endVal properties of the demo countUp and run it
+                        demo.startVal = 0;
+                        demo.endVal = stars;
+                        demo.decimals = 0;
+                        demo.start();
+                    }
+                }
+            }
+        }
+    }
+    getStars.onerror = function() {
+        console.log('error: '+getStars.status)
+        demo.start();
+    }
+
     </script>
 </html>

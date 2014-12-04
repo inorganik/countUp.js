@@ -3,7 +3,7 @@ countUp.js
 
 countUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way. 
 
-Despite its name, countUp can count in either direction, depending on the `startVal` and `endVal` params that you pass. Bower and Component .json files are included. 
+Despite its name, countUp can count in either direction, depending on the `startVal` and `endVal` params that you pass.
 <!-- as well as a coffeescript version, thanks to @HHSnopek. -->
 
 countUp.js supports all browsers. 
@@ -13,7 +13,7 @@ countUp.js supports all browsers.
 ### Usage:
 
 Params:
-- `target` = id of html element, input or var of previously selected element/input where counting occurs
+- `target` = id of html element, input, svg text element, or var of previously selected element/input where counting occurs
 - `startVal` = the value you want to begin at
 - `endVal` = the value you want to arrive at
 - `decimals` = number of decimal places in number, default 0
@@ -23,7 +23,7 @@ Params:
 Decimals, duration, and options can be left out to use the default values.
 
 ```js
-var numAnim = new countUp("SomeElementYouWantToAnimate", 24.02, 99.99, 2, 1.5);
+var numAnim = new countUp("SomeElementYouWantToAnimate", 24.02, 99.99);
 numAnim.start();
 ```
 

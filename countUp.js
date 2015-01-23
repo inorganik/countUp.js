@@ -45,7 +45,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         useEasing : true, // toggle easing
         useGrouping : true, // 1,000,000 vs 1000000
         separator : ',', // character to use as a separator
-        decimal : '.', // character to use as a decimal
+        decimal : '.' // character to use as a decimal
     }
     if (this.options.separator == '') this.options.useGrouping = false;
     if (this.options.prefix == null) this.options.prefix = '';

@@ -41,12 +41,20 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     }
 
      // default options
-    this.options = options || {
+    this.options = {
         useEasing : true, // toggle easing
         useGrouping : true, // 1,000,000 vs 1000000
         separator : ',', // character to use as a separator
         decimal : '.', // character to use as a decimal
     }
+    
+    // extend default options with input object
+    for (var key in options) {
+        if (options.hasOwnProperty(key)) {
+            this.options[key] = options[key];
+        }
+    }
+    
     if (this.options.separator == '') this.options.useGrouping = false;
     if (this.options.prefix == null) this.options.prefix = '';
     if (this.options.suffix == null) this.options.suffix = '';

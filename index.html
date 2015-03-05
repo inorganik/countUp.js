@@ -256,10 +256,10 @@
         code += (useEasing) ? '&emsp;&emsp;useEasing : true, <br>' : '&emsp;&emsp;useEasing : false, <br>';
         code += (useGrouping) ? '&emsp;&emsp;useGrouping : true, <br>' : '&emsp;&emsp;useGrouping : false, <br>';
         code += '&emsp;&emsp;separator : \''+separator+'\', <br>';
-        code += '&emsp;&emsp;decimal : \''+decimal+'\' <br>';
-        code += '&emsp;&emsp;prefix : \''+prefix+'\' <br>';
+        code += '&emsp;&emsp;decimal : \''+decimal+'\', <br>';
+        code += '&emsp;&emsp;prefix : \''+prefix+'\', <br>';
         code += '&emsp;&emsp;suffix : \''+suffix+'\' <br>';
-        code += '}<br>';
+        code += '};<br>';
         code += 'var demo = new countUp("myTargetElement", '+startVal+', '+endVal+', '+decimals+', '+duration+', options);<br>';
         if (useOnComplete) {
             code += 'demo.start(methodToCallOnComplete);';

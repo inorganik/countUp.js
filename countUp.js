@@ -159,6 +159,14 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startVal = self.frameVal;
         requestAnimationFrame(self.count);
     }
+    this.update = function (newEndval) {
+        self.stop();
+        self.startTime = null;
+        self.startVal = self.endVal;
+        self.endVal = Number(newEndval);
+        self.countDown = (self.startVal > self.endVal) ? true : false;
+        self.rAF = requestAnimationFrame(self.count);
+    }
     this.formatNumber = function(nStr) {
         nStr = nStr.toFixed(self.decimals);
         nStr += '';
@@ -182,5 +190,6 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
 // Example:
 // var numAnim = new countUp("SomeElementYouWantToAnimate", 0, 99.99, 2, 2.5);
 // numAnim.start();
+// numAnim.update(135);
 // with optional callback:
 // numAnim.start(someMethodToCallOnComplete);

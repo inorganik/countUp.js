@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.3.3 (3/24/15)
+
+- Adds update method to avoid having to re-initialize to count to a new value thanks to @aludvigsen
+
 ### v 1.3.2 (12/4/14)
 
 - Added abillity to count in svg text elements. 

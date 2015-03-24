@@ -66,7 +66,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
 
-    this.version = function () { return '1.3.2' }
+    this.version = function () { return '1.3.3' }
     
     // Print value to target
     this.printValue = function(value) {

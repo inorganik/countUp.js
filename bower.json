@@ -1,6 +1,10 @@
 {
     "name": "countUp.js",
+<<<<<<< HEAD
     "version": "1.5.0",
+=======
+    "version": "1.3.3",
+>>>>>>> commit
     "main": "countUp.js",
     "author": "Jamie Perkins",
     "ignore": [

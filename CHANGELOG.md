@@ -1,5 +1,6 @@
 # Changelog
 
+<<<<<<< HEAD
 ### v 1.5.0 (5/18/15)
 
 - Adds support for AMD (asynchronous module definition) thanks to @vash15
@@ -16,6 +17,11 @@
 
 - Adds update method to avoid having to re-initialize to count to a new value thanks to @aludvigsen
 - Extends options with passed options rather than replacing them thanks to @goddomotfronk 
+=======
+### v 1.3.3 (3/24/15)
+
+- Adds update method to avoid having to re-initialize to count to a new value thanks to @aludvigsen
+>>>>>>> commit
 
 ### v 1.3.2 (12/4/14)
 

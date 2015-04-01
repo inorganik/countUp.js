@@ -1,3 +1,6 @@
+var countUp = (function(window, document) {
+'use strict';
+var undefined;
 /*
 
     countUp.js
@@ -5,76 +8,85 @@
 
 */
 
+// make sure requestAnimationFrame and cancelAnimationFrame are defined
+// polyfill for browsers without native support
+// by Opera engineer Erik Möller
+var lastTime = 0;
+var vendors = ['webkit', 'moz', 'ms', 'o'];
+for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame =
+      window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+}
+if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function(callback) {
+        var currTime = new Date().getTime();
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+          timeToCall);
+        lastTime = currTime + timeToCall;
+        return id;
+    }
+}
+if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = function(id) {
+        clearTimeout(id);
+    }
+}
+
+var requestAnimationFrame = function(fn, thisArg) {
+    return window.requestAnimationFrame(function(ts) { fn.call(thisArg, ts); });
+}
+
 // target = id of html element or var of previously selected html element where counting occurs
 // startVal = the value you want to begin at
 // endVal = the value you want to arrive at
 // decimals = number of decimal places, default 0
 // duration = duration of animation in seconds, default 2
 // options = optional object of options (see below)
-
-function countUp(target, startVal, endVal, decimals, duration, options) {
-
-    // make sure requestAnimationFrame and cancelAnimationFrame are defined
-    // polyfill for browsers without native support
-    // by Opera engineer Erik Möller
-    var lastTime = 0;
-    var vendors = ['webkit', 'moz', 'ms', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame =
-          window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
-    if (!window.requestAnimationFrame) {
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        }
-    }
-    if (!window.cancelAnimationFrame) {
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        }
-    }
-
+/**
+ * @constructor
+ */
+var countUp = function (target, startVal, endVal, decimals, duration, options) {
      // default options
     this.options = options || {
         useEasing : true, // toggle easing
         useGrouping : true, // 1,000,000 vs 1000000
         separator : ',', // character to use as a separator
-        decimal : '.' // character to use as a decimal
+        decimal : '.', // character to use as a decimal
+        startVal: startVal,
+        endVal: endVal
     }
     if (this.options.separator == '') this.options.useGrouping = false;
     if (this.options.prefix == null) this.options.prefix = '';
     if (this.options.suffix == null) this.options.suffix = '';
 
-    var self = this;
-    
+    //var self = this;
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
     this.endVal = Number(endVal);
+
     this.countDown = (this.startVal > this.endVal) ? true : false;
     this.startTime = null;
     this.timestamp = null;
     this.remaining = null;
     this.frameVal = this.startVal;
-    this.rAF = null;
+    this.rAF = -1;
     this.decimals = Math.max(0, decimals || 0);
+    this.callback = null;
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
+}
 
-    this.version = function () { return '1.3.3' }
-    
+    countUp.prototype.version = function () { return '1.3.3' }
+
     // Print value to target
-    this.printValue = function(value) {
-        var result = (!isNaN(value)) ? self.formatNumber(value) : '--';
-        if (self.d.tagName == 'INPUT') {
+    countUp.prototype.printValue = function(value) {
+        var result = (!isNaN(value)) ? this.numberFormatting(value) : '--';
+        if (this.d.tagName == 'INPUT') {
             this.d.value = result;
-        } 
-        else if (self.d.tagName == 'text') {
+        }
+        else if (this.d.tagName == 'text') {
             this.d.textContent = result;
         }
         else {
@@ -83,109 +95,116 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     }
 
     // Robert Penner's easeOutExpo
-    this.easeOutExpo = function(t, b, c, d) {
+    countUp.prototype.easeOutExpo = function(t, b, c, d) {
         return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
     }
-    this.count = function(timestamp) {
+    countUp.prototype.count = function(timestamp) {
 
-        if (self.startTime === null) self.startTime = timestamp;
+        if (this.startTime === null) this.startTime = timestamp;
 
-        self.timestamp = timestamp;
+        this.timestamp = timestamp;
 
-        var progress = timestamp - self.startTime;
-        self.remaining = self.duration - progress;
+        var progress = this.timestamp - this.startTime;
+        this.remaining = this.duration - progress;
 
         // to ease or not to ease
-        if (self.options.useEasing) {
-            if (self.countDown) {
-                var i = self.easeOutExpo(progress, 0, self.startVal - self.endVal, self.duration);
-                self.frameVal = self.startVal - i;
+        if (this.options.useEasing) {
+            if (this.countDown) {
+                var i = this.easeOutExpo(progress, 0, this.startVal - this.endVal, this.duration);
+                this.frameVal = this.startVal - i;
             } else {
-                self.frameVal = self.easeOutExpo(progress, self.startVal, self.endVal - self.startVal, self.duration);
+                this.frameVal = this.easeOutExpo(progress, this.startVal, this.endVal - this.startVal, this.duration);
             }
         } else {
-            if (self.countDown) {
-                var i = (self.startVal - self.endVal) * (progress / self.duration);
-                self.frameVal = self.startVal - i;
+            if (this.countDown) {
+                this.frameVal = this.startVal - (this.startVal - this.endVal) * (progress / this.duration);
             } else {
-                self.frameVal = self.startVal + (self.endVal - self.startVal) * (progress / self.duration);
+                this.frameVal = this.startVal + (this.endVal - this.startVal) * (progress / this.duration);
             }
         }
 
         // don't go past endVal since progress can exceed duration in the last frame
-        if (self.countDown) {
-            self.frameVal = (self.frameVal < self.endVal) ? self.endVal : self.frameVal;
+        if (this.countDown) {
+            this.frameVal = (this.frameVal < this.endVal) ? this.endVal : this.frameVal;
         } else {
-            self.frameVal = (self.frameVal > self.endVal) ? self.endVal : self.frameVal;
+            this.frameVal = (this.frameVal > this.endVal) ? this.endVal : this.frameVal;
         }
 
         // decimal
-        self.frameVal = Math.round(self.frameVal*self.dec)/self.dec;
+        this.frameVal = Math.round(this.frameVal*this.dec)/this.dec;
 
         // format and print value
-        self.printValue(self.frameVal);
-               
+        this.printValue(this.frameVal);
+
         // whether to continue
-        if (progress < self.duration) {
-            self.rAF = requestAnimationFrame(self.count);
+        if (progress < this.duration) {
+            this.rAF = requestAnimationFrame(this.count, this);
         } else {
-            if (self.callback != null) self.callback();
+            if (this.callback) this.callback();
         }
     }
-    this.start = function(callback) {
-        self.callback = callback;
+    countUp.prototype.start = function(callbackFn) {
+        this.callback = callbackFn;
         // make sure values are valid
-        if (!isNaN(self.endVal) && !isNaN(self.startVal)) {
-            self.rAF = requestAnimationFrame(self.count);
+        if (!isNaN(this.endVal) && !isNaN(this.startVal)) {
+            this.rAF = requestAnimationFrame(this.count, this);
         } else {
             console.log('countUp error: startVal or endVal is not a number');
-            self.printValue();
+            this.printValue(this.startVal);
+            this.printValue(this.endVal);
         }
         return false;
     }
-    this.stop = function() {
-        cancelAnimationFrame(self.rAF);
+    countUp.prototype.stop = function() {
+        window.cancelAnimationFrame(this.rAF);
     }
-    this.reset = function() {
-        self.startTime = null;
-        self.startVal = startVal;
-        cancelAnimationFrame(self.rAF);
-        self.printValue(self.startVal);
+    countUp.prototype.reset = function() {
+        this.startTime = null;
+        this.startVal = this.options.startVal;
+        window.cancelAnimationFrame(this.rAF);
+        this.printValue(this.startVal);
     }
-    this.resume = function() {
-        self.stop();
-        self.startTime = null;
-        self.duration = self.remaining;
-        self.startVal = self.frameVal;
-        requestAnimationFrame(self.count);
+    countUp.prototype.resume = function() {
+        this.stop();
+        this.startTime = null;
+        this.duration = this.remaining;
+        this.startVal = this.frameVal;
+        requestAnimationFrame(this.count, this);
     }
-    this.update = function (newEndval) {
-        self.stop();
-        self.startTime = null;
-        self.startVal = self.endVal;
-        self.endVal = Number(newEndval);
-        self.countDown = (self.startVal > self.endVal) ? true : false;
-        self.rAF = requestAnimationFrame(self.count);
-    }
-    this.formatNumber = function(nStr) {
-        nStr = nStr.toFixed(self.decimals);
-        nStr += '';
+    countUp.prototype.numberFormatting = function(nStr) {
+        nStr = Number(nStr).toFixed(this.decimals).toString();
         var x, x1, x2, rgx;
         x = nStr.split('.');
         x1 = x[0];
-        x2 = x.length > 1 ? self.options.decimal + x[1] : '';
+        x2 = x.length > 1 ? this.options.decimal + x[1] : '';
         rgx = /(\d+)(\d{3})/;
-        if (self.options.useGrouping) {
+        if (this.options.useGrouping) {
             while (rgx.test(x1)) {
-                x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
+                x1 = x1.replace(rgx, '$1' + this.options.separator + '$2');
             }
         }
-        return self.options.prefix + x1 + x2 + self.options.suffix;
+        return this.options.prefix + x1 + x2 + this.options.suffix;
+    }
+    countUp.prototype.update = function (newEndval) {
+        this.stop();
+        this.startTime = null;
+        this.startVal = this.endVal;
+        this.endVal = Number(newEndval);
+        this.countDown = (this.startVal > this.endVal) ? true : false;
+        this.rAF = requestAnimationFrame(this.count, this);
     }
 
-    // format startVal on initialization
-    self.printValue(self.startVal);
-}
+    //Expose countUp as either a global variable or a require.js module.
+    if(typeof define === 'function' && define.amd) {
+        define([], function () {
+            return countUp;
+        });
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = countUp;
+    } else {
+        window.countUp = countUp;
+    }
+    return countUp;
 
 // Example:
 // var numAnim = new countUp("SomeElementYouWantToAnimate", 0, 99.99, 2, 2.5);
@@ -193,3 +212,4 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
 // numAnim.update(135);
 // with optional callback:
 // numAnim.start(someMethodToCallOnComplete);
+})(window, document);

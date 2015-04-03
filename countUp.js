@@ -1,6 +1,6 @@
 var countUp = (function(window, document) {
 'use strict';
-var undefined;
+//var undefined;
 /*
 
     countUp.js
@@ -11,8 +11,8 @@ var undefined;
 // make sure requestAnimationFrame and cancelAnimationFrame are defined
 // polyfill for browsers without native support
 // by Opera engineer Erik Möller
-var lastTime = 0;
-var vendors = ['webkit', 'moz', 'ms', 'o'];
+var lastTime = 0,
+    vendors = ['webkit', 'moz', 'ms', 'o'];
 for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
     window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
     window.cancelAnimationFrame =
@@ -26,17 +26,17 @@ if (!window.requestAnimationFrame) {
           timeToCall);
         lastTime = currTime + timeToCall;
         return id;
-    }
+    };
 }
 if (!window.cancelAnimationFrame) {
     window.cancelAnimationFrame = function(id) {
         clearTimeout(id);
-    }
+    };
 }
 
 var requestAnimationFrame = function(fn, thisArg) {
     return window.requestAnimationFrame(function(ts) { fn.call(thisArg, ts); });
-}
+};
 
 // target = id of html element or var of previously selected html element where counting occurs
 // startVal = the value you want to begin at
@@ -56,10 +56,10 @@ var countUp = function (target, startVal, endVal, decimals, duration, options) {
         decimal : '.', // character to use as a decimal
         startVal: startVal,
         endVal: endVal
-    }
-    if (this.options.separator == '') this.options.useGrouping = false;
-    if (this.options.prefix == null) this.options.prefix = '';
-    if (this.options.suffix == null) this.options.suffix = '';
+    };
+    if (this.options.separator === '') { this.options.useGrouping = false; }
+    if (this.options.prefix === null)  { this.options.prefix = ''; }
+    if (this.options.suffix === null)  { this.options.suffix = ''; }
 
     //var self = this;
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
@@ -76,9 +76,9 @@ var countUp = function (target, startVal, endVal, decimals, duration, options) {
     this.callback = null;
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
-}
+};
 
-    countUp.prototype.version = function () { return '1.3.3' }
+    countUp.prototype.version = function () { return '1.3.3'; };
 
     // Print value to target
     countUp.prototype.printValue = function(value) {
@@ -92,15 +92,15 @@ var countUp = function (target, startVal, endVal, decimals, duration, options) {
         else {
             this.d.innerHTML = result;
         }
-    }
+    };
 
     // Robert Penner's easeOutExpo
     countUp.prototype.easeOutExpo = function(t, b, c, d) {
         return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
-    }
+    };
     countUp.prototype.count = function(timestamp) {
 
-        if (this.startTime === null) this.startTime = timestamp;
+        if (this.startTime === null) { this.startTime = timestamp; }
 
         this.timestamp = timestamp;
 
@@ -139,10 +139,10 @@ var countUp = function (target, startVal, endVal, decimals, duration, options) {
         // whether to continue
         if (progress < this.duration) {
             this.rAF = requestAnimationFrame(this.count, this);
-        } else {
-            if (this.callback) this.callback();
+        } else if (this.callback) {
+            this.callback();
         }
-    }
+    };
     countUp.prototype.start = function(callbackFn) {
         this.callback = callbackFn;
         // make sure values are valid
@@ -154,23 +154,23 @@ var countUp = function (target, startVal, endVal, decimals, duration, options) {
             this.printValue(this.endVal);
         }
         return false;
-    }
+    };
     countUp.prototype.stop = function() {
         window.cancelAnimationFrame(this.rAF);
-    }
+    };
     countUp.prototype.reset = function() {
         this.startTime = null;
         this.startVal = this.options.startVal;
         window.cancelAnimationFrame(this.rAF);
         this.printValue(this.startVal);
-    }
+    };
     countUp.prototype.resume = function() {
         this.stop();
         this.startTime = null;
         this.duration = this.remaining;
         this.startVal = this.frameVal;
         requestAnimationFrame(this.count, this);
-    }
+    };
     countUp.prototype.numberFormatting = function(nStr) {
         nStr = Number(nStr).toFixed(this.decimals).toString();
         var x, x1, x2, rgx;
@@ -184,7 +184,7 @@ var countUp = function (target, startVal, endVal, decimals, duration, options) {
             }
         }
         return this.options.prefix + x1 + x2 + this.options.suffix;
-    }
+    };
     countUp.prototype.update = function (newEndval) {
         this.stop();
         this.startTime = null;
@@ -192,7 +192,7 @@ var countUp = function (target, startVal, endVal, decimals, duration, options) {
         this.endVal = Number(newEndval);
         this.countDown = (this.startVal > this.endVal) ? true : false;
         this.rAF = requestAnimationFrame(this.count, this);
-    }
+    };
 
     //Expose countUp as either a global variable or a require.js module.
     if(typeof define === 'function' && define.amd) {

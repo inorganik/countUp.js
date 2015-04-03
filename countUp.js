@@ -57,9 +57,9 @@ var countUp = function (target, startVal, endVal, decimals, duration, options) {
         startVal: startVal,
         endVal: endVal
     };
-    if (this.options.separator === '') { this.options.useGrouping = false; }
-    if (this.options.prefix === null)  { this.options.prefix = ''; }
-    if (this.options.suffix === null)  { this.options.suffix = ''; }
+    if (this.options.separator === '')      { this.options.useGrouping = false; }
+    if (this.options.prefix === undefined)  { this.options.prefix = ''; }
+    if (this.options.suffix === undefined)  { this.options.suffix = ''; }
 
     //var self = this;
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;

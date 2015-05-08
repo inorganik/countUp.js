@@ -1,7 +1,7 @@
 {
-    "name": "CountUp.js",
+    "name": "countUp.js",
     "version": "1.4.0",
-    "main": "CountUp.js",
+    "main": "countUp.js",
     "author": "Jamie Perkins",
     "ignore": [
         "CHANGELOG.md",

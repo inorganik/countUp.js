@@ -20,7 +20,7 @@
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    
+
     ga('create', 'UA-7742845-9', 'inorganik.github.io');
     ga('send', 'pageview');
 
@@ -48,13 +48,17 @@
             <form>
                 <h4 class="inlineLeft noMargin weight300">Params:</h4>
                 <div class="inlineLeft marginLeft marginRight">
-                    <input type="text" value="24.02" id="startVal" style="width:160px" onkeyup="updateCodeVisualizer()">
+                    <input type="text" value="24.02" id="startVal" style="width:50px" onkeyup="updateCodeVisualizer()">
                     <label class="inlineLabel">Start</label>
                 </div>
                 <input type="button" class="inlineLeft marginRight" value="Swap" onClick="swapValues()" style="width:80px;">
                 <div class="inlineLeft marginRight">
-                    <input type="text" value="94.62" id="endVal" style="width:160px" onkeyup="updateCodeVisualizer()">
+                    <input type="text" value="94.62" id="endVal" style="width:50px" onkeyup="updateCodeVisualizer()">
                     <label class="inlineLabel">End</label>
+                </div>
+                <div class="inlineLeft marginRight">
+                    <input type="text" value="6789" id="updateVal" style="width:50px" onkeyup="updateCodeVisualizer()">
+                    <label class="inlineLabel">Update</label>
                 </div>
                 <div class="inlineLeft marginRight">
                     <input type="number" value="2" id="decimals" step="1" style="width:50px" onkeyup="updateCodeVisualizer()" onchange="updateCodeVisualizer()">
@@ -100,6 +104,7 @@
                 <input type="button" value="Stop" onClick="showCodeAndStop()" class="inlineLeft marginRight">
                 <input type="button" value="Resume" onClick="showCodeAndResume()" class="inlineLeft marginRight">
                 <input type="button" value="Reset" onClick="showCodeAndReset()" class="inlineLeft marginRight">
+                <input type="button" value="Update" onClick="showCodeAndUpdate()" class="inlineLeft marginRight">
                 <input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
             </form>
         </section>
@@ -139,7 +144,7 @@
 
     // create instance
     window.onload = function() {
-        // setup countUp object 
+        // setup countUp object
         demo = new countUp('myTargetElement', 0, 94.62, 2, 2.5, options);
         // you could do demo.start() right here but we are getting actual current star count from github api below
         // since it is an asynchronous call, we fire start() in the success fn of the XMLHttpRequest object
@@ -200,6 +205,14 @@
         document.getElementById("codeVisualizer").innerHTML = code;
 
         demo.reset();
+    }
+    function showCodeAndUpdate() {
+        var updateVal = document.getElementById("updateVal").value;
+        var num = updateVal ? updateVal : 0;
+        code = 'demo.update(' + updateVal + ');';
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+        demo.update(num);
     }
     function showCodeAndResume() {
         code = 'demo.resume();';

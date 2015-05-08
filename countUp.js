@@ -1,6 +1,6 @@
 /*
 
-    CountUp.js
+    countUp.js
     by @inorganik
 
 */

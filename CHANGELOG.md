@@ -6,6 +6,7 @@
 - Add pauseResume() method
 - Deprecate stop() and resume() methods
 - Add update() documentation
+- Slight tweaks to update()
 
 ### v 1.3.3 (3/24/15)
 

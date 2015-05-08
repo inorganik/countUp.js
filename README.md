@@ -1,14 +1,14 @@
-countUp.js
+CountUp.js
 ==========
 
-countUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.
+CountUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.
 
-Despite its name, countUp can count in either direction, depending on the `startVal` and `endVal` params that you pass.
+Despite its name, CountUp can count in either direction, depending on the `startVal` and `endVal` params that you pass.
 <!-- as well as a coffeescript version, thanks to @HHSnopek. -->
 
-countUp.js supports all browsers.
+CountUp.js supports all browsers.
 
-##[Try the demo](http://inorganik.github.io/countUp.js)
+##[Try the demo](http://inorganik.github.io/CountUp.js)
 
 ### Usage:
 
@@ -16,14 +16,14 @@ Params:
 - `target` = id of html element, input, svg text element, or var of previously selected element/input where counting occurs
 - `startVal` = the value you want to begin at
 - `endVal` = the value you want to arrive at
-- `decimals` = number of decimal places in number, default 0
-- `duration` = duration in seconds, default 2
-- `options` = object that determines number formatting and toggles easing - see demo
+- `decimals` = number of decimal places in number, default 0 (optional)
+- `duration` = duration in seconds, default 2 (optional)
+- `options` = formatting/easing options object (see demo, optional)
 
 Decimals, duration, and options can be left out to use the default values.
 
 ```js
-var numAnim = new countUp("SomeElementYouWantToAnimate", 24.02, 99.99);
+var numAnim = new CountUp("SomeElementYouWantToAnimate", 24.02, 99.99);
 numAnim.start();
 ```
 
@@ -40,16 +40,10 @@ numAnim.start(function() {
 
 ### Other methods:
 
-Stop an animation in progress:
+Toggle pause/resume:
 
 ```js
-numAnim.stop();
-```
-
-Resume a stopped animation:
-
-```js
-numAnim.resume();
+numAnim.pauseResume();
 ```
 
 Reset an animation:
@@ -58,7 +52,7 @@ Reset an animation:
 numAnim.reset();
 ```
 
-Update an animation to a new value:
+Update the end value and animate:
 
 ```js
 var someValue = 1337;

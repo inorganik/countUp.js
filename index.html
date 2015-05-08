@@ -8,12 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="A javascript class that animates a numerical value by counting to it.">
 
-    <title>countUp.js</title>
+    <title>CountUp.js</title>
 
-    <!-- ../inorganik.github.io/assets/css/style.css?v=20140820 -->
-    <link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=20141210">
+    <!-- ../assets/css/style.css?v=20141210-->
+    <link rel="stylesheet" type="text/css" href="../inorganik.github.io/assets/css/style.css?v=20140820 ">
 
-    <script type="text/javascript" src="countUp.js"></script>
+    <script type="text/javascript" src="CountUp.js"></script>
     <script type="text/javascript">
 
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <a class="forkMe" href="https://github.com/inorganik/countUp.js"><img src="../assets/img/forkme_custom_indigo.png" alt="Fork me on GitHub"></a>
+    <a class="forkMe" href="https://github.com/inorganik/CountUp.js"><img src="../assets/img/forkme_custom_indigo.png" alt="Fork me on GitHub"></a>
     <div id="wrap">
         <header>
             <div id="github"><a class="block" href="https://github.com/inorganik"></a></div>
@@ -36,9 +36,9 @@
             <div id="logo"><a class="block" href="http://inorganik.github.io"></a></div>
         </header>
         <section>
-            <h1>countUp.js &nbsp;<small id="version" class="lt-gray"></small></h1>
-            <p>countUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.</p>
-            <h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/countUp.js">Download on Github</a></h3>
+            <h1>CountUp.js &nbsp;<small id="version" class="lt-gray"></small></h1>
+            <p>CountUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.</p>
+            <h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/CountUp.js">Download on Github</a></h3>
         </section>
         <section>
             <p style="position:absolute; top:5px; left:0;">Current stars:</p>
@@ -55,10 +55,6 @@
                 <div class="inlineLeft marginRight">
                     <input type="text" value="94.62" id="endVal" style="width:50px" onkeyup="updateCodeVisualizer()">
                     <label class="inlineLabel">End</label>
-                </div>
-                <div class="inlineLeft marginRight">
-                    <input type="text" value="6789" id="updateVal" style="width:50px" onkeyup="updateCodeVisualizer()">
-                    <label class="inlineLabel">Update</label>
                 </div>
                 <div class="inlineLeft marginRight">
                     <input type="number" value="2" id="decimals" step="1" style="width:50px" onkeyup="updateCodeVisualizer()" onchange="updateCodeVisualizer()">
@@ -101,10 +97,12 @@
             <form>
                 <h4 class="inlineLeft noMargin weight300">Methods:</h4>
                 <input type="button" value="Start" onClick="createCountUp()" class="inlineLeft marginLeft marginRight">
-                <input type="button" value="Stop" onClick="showCodeAndStop()" class="inlineLeft marginRight">
-                <input type="button" value="Resume" onClick="showCodeAndResume()" class="inlineLeft marginRight">
+                <input type="button" value="Pause/Resume" onClick="showCodeAndPauseResume()" class="inlineLeft marginRight">
                 <input type="button" value="Reset" onClick="showCodeAndReset()" class="inlineLeft marginRight">
-                <input type="button" value="Update" onClick="showCodeAndUpdate()" class="inlineLeft marginRight">
+                <input type="button" value="Update:" onClick="showCodeAndUpdate()" class="inlineLeft" style="margin-right:2px">
+                <div class="inlineLeft marginRight">
+                    <input type="text" value="6789" id="updateVal" style="width:50px" onkeyup="updateCodeVisualizerForUpdate()">
+                </div>
                 <input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
             </form>
         </section>
@@ -114,10 +112,10 @@
                     <code id="codeVisualizer" class="indigo">var options = {<br>
                         &emsp;&emsp;useEasing : true, <br>
                         &emsp;&emsp;useGrouping : true, <br>
-                        &emsp;&emsp;separator : ',', <br>
+                        &emsp;&emsp;separator : ',', <br> 
                         &emsp;&emsp;decimal : '.' <br>
                         }<br>
-                        var demo = new countUp("myTargetElement", 24.02, 94.62, 0, 2, options);<br>
+                        var demo = new CountUp("myTargetElement", 24.02, 94.62, 0, 2, options);<br>
                         demo.start();
                     </code>
                 </div>
@@ -128,24 +126,24 @@
 </body>
 <script type="text/javascript">
 
-    // set countUp options
+    // set CountUp options
     // you don't need to do this - you can use the default options
-    var options = {
-        useEasing : true, // toggle easing
-        useGrouping : true, // 1,000,000 vs 1000000
-        separator : ',', // character to use as a separator
-        decimal : '.', // character to use as a decimal
-    }
-    var useOnComplete = false;
-    var useEasing = true;
-    var useGrouping = true;
+    var useOnComplete = false,
+        useEasing = true,
+        useGrouping = true,
+        options = {
+            useEasing : useEasing, // toggle easing
+            useGrouping : useGrouping, // 1,000,000 vs 1000000
+            separator : ',', // character to use as a separator
+            decimal : '.', // character to use as a decimal
+        }
 
     var demo, code, data, stars;
 
     // create instance
     window.onload = function() {
-        // setup countUp object
-        demo = new countUp('myTargetElement', 0, 94.62, 2, 2.5, options);
+        // setup CountUp object
+        demo = new CountUp('myTargetElement', 0, 94.62, 2, 2.5, options);
         // you could do demo.start() right here but we are getting actual current star count from github api below
         // since it is an asynchronous call, we fire start() in the success fn of the XMLHttpRequest object
         getStars.send();
@@ -168,10 +166,10 @@
         startVal = Number(startVal.replace(',','').replace(' ',''));
         var endVal = document.getElementById("endVal").value;
         endVal = Number(endVal.replace(',','').replace(' ',''));
-        var decimals = document.getElementById("decimals").value;
-        var duration = document.getElementById("duration").value;
-        var prefix = document.getElementById("prefix").value;
-        var suffix = document.getElementById("suffix").value;
+        var decimals = document.getElementById("decimals").value,
+            duration = document.getElementById("duration").value,
+            prefix = document.getElementById("prefix").value,
+            suffix = document.getElementById("suffix").value;
 
         options = {
             useEasing : useEasing,
@@ -182,9 +180,9 @@
             suffix: suffix
         }
 
-        // you don't have to create a new instance of countUp every time you start an animation,
+        // you don't have to create a new instance of CountUp every time you start an animation,
         // you can just change the properties individually. But I do here in case user changes values in demo.
-        demo = new countUp("myTargetElement", startVal, endVal, decimals, duration, options);
+        demo = new CountUp("myTargetElement", startVal, endVal, decimals, duration, options);
 
         if (useOnComplete) {
             demo.start(methodToCallOnComplete);
@@ -194,11 +192,11 @@
 
         updateCodeVisualizer();
     }
-    function showCodeAndStop() {
-        code = 'demo.stop();';
+    function showCodeAndPauseResume() {
+        code = 'demo.pauseResume();';
         document.getElementById("codeVisualizer").innerHTML = code;
 
-        demo.stop();
+        demo.pauseResume();
     }
     function showCodeAndReset() {
         code = 'demo.reset();';
@@ -209,16 +207,8 @@
     function showCodeAndUpdate() {
         var updateVal = document.getElementById("updateVal").value;
         var num = updateVal ? updateVal : 0;
-        code = 'demo.update(' + updateVal + ');';
-        document.getElementById("codeVisualizer").innerHTML = code;
 
         demo.update(num);
-    }
-    function showCodeAndResume() {
-        code = 'demo.resume();';
-        document.getElementById("codeVisualizer").innerHTML = code;
-
-        demo.resume();
     }
     function toggleOnComplete(checkbox) {
 
@@ -272,7 +262,7 @@
         code += '&emsp;&emsp;prefix : \''+prefix+'\', <br>';
         code += '&emsp;&emsp;suffix : \''+suffix+'\' <br>';
         code += '};<br>';
-        code += 'var demo = new countUp("myTargetElement", '+startVal+', '+endVal+', '+decimals+', '+duration+', options);<br>';
+        code += 'var demo = new CountUp("myTargetElement", '+startVal+', '+endVal+', '+decimals+', '+duration+', options);<br>';
         if (useOnComplete) {
             code += 'demo.start(methodToCallOnComplete);';
         } else {
@@ -280,9 +270,15 @@
         }
         document.getElementById("codeVisualizer").innerHTML = code;
     }
+    function updateCodeVisualizerForUpdate() {
+        var updateVal = document.getElementById("updateVal").value;
+        var num = updateVal ? updateVal : 0;
+        code = 'demo.update(' + updateVal + ');';
+        document.getElementById("codeVisualizer").innerHTML = code;
+    }
 
     // get current star count
-    var repoInfoUrl = 'https://api.github.com/repos/inorganik/countUp.js';
+    var repoInfoUrl = 'https://api.github.com/repos/inorganik/CountUp.js';
     var getStars = new XMLHttpRequest();
     getStars.open('GET', repoInfoUrl, true);
     getStars.timeout = 5000;
@@ -301,7 +297,7 @@
                         document.getElementById("decimals").value = 0;
                         // change code example values
                         updateCodeVisualizer();
-                        // change the startVal and endVal properties of the demo countUp and run it
+                        // change the startVal and endVal properties of the demo CountUp and run it
                         demo.startVal = 0;
                         demo.endVal = stars;
                         demo.decimals = 0;

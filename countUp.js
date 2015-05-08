@@ -1,6 +1,6 @@
 /*
 
-    countUp.js
+    CountUp.js
     by @inorganik
 
 */
@@ -12,7 +12,7 @@
 // duration = duration of animation in seconds, default 2
 // options = optional object of options (see below)
 
-function countUp(target, startVal, endVal, decimals, duration, options) {
+function CountUp(target, startVal, endVal, decimals, duration, options) {
 
     // make sure requestAnimationFrame and cancelAnimationFrame are defined
     // polyfill for browsers without native support
@@ -64,7 +64,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
     this.endVal = Number(endVal);
-    this.countDown = (this.startVal > this.endVal) ? true : false;
+    this.countDown = (this.startVal > this.endVal);
     this.startTime = null;
     this.timestamp = null;
     this.remaining = null;
@@ -74,7 +74,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
     this.dec = Math.pow(10, this.decimals);
     this.duration = duration * 1000 || 2000;
 
-    this.version = function () { return '1.3.3' }
+    this.version = function () { return '1.4.0' }
     
     // Print value to target
     this.printValue = function(value) {
@@ -140,6 +140,7 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
             if (self.callback != null) self.callback();
         }
     }
+    // start your animation
     this.start = function(callback) {
         self.callback = callback;
         // make sure values are valid
@@ -151,15 +152,24 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         }
         return false;
     }
+    // toggles pause/resume animation
+    this.pauseResume = function() {
+        if (!self.paused) {
+            self.paused = true;
+            cancelAnimationFrame(self.rAF);
+        } else {
+            self.paused = false;
+            self.startTime = null;
+            self.duration = self.remaining;
+            self.startVal = self.frameVal;
+            requestAnimationFrame(self.count);
+        }
+    }
+    // deprecated - use pauseResume()
     this.stop = function() {
         cancelAnimationFrame(self.rAF);
     }
-    this.reset = function() {
-        self.startTime = null;
-        self.startVal = startVal;
-        cancelAnimationFrame(self.rAF);
-        self.printValue(self.startVal);
-    }
+    // deprecated - use pauseResume()
     this.resume = function() {
         self.stop();
         self.startTime = null;
@@ -167,12 +177,22 @@ function countUp(target, startVal, endVal, decimals, duration, options) {
         self.startVal = self.frameVal;
         requestAnimationFrame(self.count);
     }
-    this.update = function (newEndval) {
-        self.stop();
+    // reset to startVal so animation can be run again
+    this.reset = function() {
+        self.paused = false;
         self.startTime = null;
-        self.startVal = self.endVal;
-        self.endVal = Number(newEndval);
-        self.countDown = (self.startVal > self.endVal) ? true : false;
+        self.startVal = startVal;
+        cancelAnimationFrame(self.rAF);
+        self.printValue(self.startVal);
+    }
+    // pass a new endVal and start animation
+    this.update = function (newEndVal) {
+        cancelAnimationFrame(self.rAF);
+        self.paused = false;
+        self.startTime = null;
+        self.startVal = self.frameVal;
+        self.endVal = Number(newEndVal);
+        self.countDown = (self.startVal > self.endVal);
         self.rAF = requestAnimationFrame(self.count);
     }
     this.formatNumber = function(nStr) {

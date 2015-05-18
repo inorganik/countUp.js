@@ -1,16 +1,7 @@
-CountUp.js
-==========
-
+# CountUp.js
 CountUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.
 
-Despite its name, CountUp can count in either direction, depending on the `startVal` and `endVal` params that you pass.
-
-CountUp.js supports all browsers.
-
-##[Try the demo](http://inorganik.github.io/countUp.js)
-
-### Usage:
-
+## Usage:
 Params:
 - `target` = id of html element, input, svg text element, or var of previously selected element/input where counting occurs
 - `startVal` = the value you want to begin at
@@ -33,12 +24,11 @@ numAnim.start(someMethodToCallOnComplete);
 
 // or an anonymous function
 numAnim.start(function() {
-	// do something
+    // do something
 })
 ```
 
-### Other methods:
-
+## Other methods:
 Toggle pause/resume:
 
 ```js

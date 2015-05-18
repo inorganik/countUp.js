@@ -48,40 +48,12 @@
             }
         }
 
-<<<<<<< HEAD
          // default options
         this.options = {
             useEasing : true, // toggle easing
             useGrouping : true, // 1,000,000 vs 1000000
             separator : ',', // character to use as a separator
             decimal : '.' // character to use as a decimal
-=======
-    var self = this;
-    
-    this.d = (typeof target === 'string') ? document.getElementById(target) : target;
-    this.startVal = Number(startVal);
-    this.endVal = Number(endVal);
-    this.countDown = (this.startVal > this.endVal) ? true : false;
-    this.startTime = null;
-    this.timestamp = null;
-    this.remaining = null;
-    this.frameVal = this.startVal;
-    this.rAF = null;
-    this.decimals = Math.max(0, decimals || 0);
-    this.dec = Math.pow(10, this.decimals);
-    this.duration = duration * 1000 || 2000;
-
-    this.version = function () { return '1.3.3' }
-    
-    // Print value to target
-    this.printValue = function(value) {
-        var result = (!isNaN(value)) ? self.formatNumber(value) : '--';
-        if (self.d.tagName == 'INPUT') {
-            this.d.value = result;
-        } 
-        else if (self.d.tagName == 'text') {
-            this.d.textContent = result;
->>>>>>> commit
         }
         
         // extend default options with input object

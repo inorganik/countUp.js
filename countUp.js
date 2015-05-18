@@ -1,3 +1,39 @@
+<<<<<<< HEAD
+/*
+
+    CountUp.js
+    by @inorganik
+
+*/
+
+// target = id of html element or var of previously selected html element where counting occurs
+// startVal = the value you want to begin at
+// endVal = the value you want to arrive at
+// decimals = number of decimal places, default 0
+// duration = duration of animation in seconds, default 2
+// options = optional object of options (see below)
+
+function CountUp(target, startVal, endVal, decimals, duration, options) {
+
+    // make sure requestAnimationFrame and cancelAnimationFrame are defined
+    // polyfill for browsers without native support
+    // by Opera engineer Erik Möller
+    var lastTime = 0;
+    var vendors = ['webkit', 'moz', 'ms', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame =
+          window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+    if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+=======
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
@@ -31,6 +67,7 @@
             window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
             window.cancelAnimationFrame =
               window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+>>>>>>> master
         }
         if (!window.requestAnimationFrame) {
             window.requestAnimationFrame = function(callback, element) {
@@ -47,6 +84,54 @@
                 clearTimeout(id);
             }
         }
+<<<<<<< HEAD
+    }
+
+     // default options
+    this.options = {
+        useEasing : true, // toggle easing
+        useGrouping : true, // 1,000,000 vs 1000000
+        separator : ',', // character to use as a separator
+        decimal : '.' // character to use as a decimal
+    }
+    
+    // extend default options with input object
+    for (var key in options) {
+        if (options.hasOwnProperty(key)) {
+            this.options[key] = options[key];
+        }
+    }
+    
+    if (this.options.separator == '') this.options.useGrouping = false;
+    if (this.options.prefix == null) this.options.prefix = '';
+    if (this.options.suffix == null) this.options.suffix = '';
+
+    var self = this;
+    
+    this.d = (typeof target === 'string') ? document.getElementById(target) : target;
+    this.startVal = Number(startVal);
+    this.endVal = Number(endVal);
+    this.countDown = (this.startVal > this.endVal);
+    this.startTime = null;
+    this.timestamp = null;
+    this.remaining = null;
+    this.frameVal = this.startVal;
+    this.rAF = null;
+    this.decimals = Math.max(0, decimals || 0);
+    this.dec = Math.pow(10, this.decimals);
+    this.duration = duration * 1000 || 2000;
+
+    this.version = function () { return '1.4.0' }
+    
+    // Print value to target
+    this.printValue = function(value) {
+        var result = (!isNaN(value)) ? self.formatNumber(value) : '--';
+        if (self.d.tagName == 'INPUT') {
+            this.d.value = result;
+        } 
+        else if (self.d.tagName == 'text') {
+            this.d.textContent = result;
+=======
 
          // default options
         this.options = {
@@ -54,6 +139,7 @@
             useGrouping : true, // 1,000,000 vs 1000000
             separator : ',', // character to use as a separator
             decimal : '.' // character to use as a decimal
+>>>>>>> master
         }
         
         // extend default options with input object
@@ -148,6 +234,14 @@
                 if (self.callback != null) self.callback();
             }
         }
+<<<<<<< HEAD
+    }
+    // start your animation
+    this.start = function(callback) {
+        self.callback = callback;
+        // make sure values are valid
+        if (!isNaN(self.endVal) && !isNaN(self.startVal)) {
+=======
         // start your animation
         this.start = function(callback) {
             self.callback = callback;
@@ -201,8 +295,67 @@
             self.startVal = self.frameVal;
             self.endVal = Number(newEndVal);
             self.countDown = (self.startVal > self.endVal);
+>>>>>>> master
             self.rAF = requestAnimationFrame(self.count);
         }
+<<<<<<< HEAD
+        return false;
+    }
+    // toggles pause/resume animation
+    this.pauseResume = function() {
+        if (!self.paused) {
+            self.paused = true;
+            cancelAnimationFrame(self.rAF);
+        } else {
+            self.paused = false;
+            self.startTime = null;
+            self.duration = self.remaining;
+            self.startVal = self.frameVal;
+            requestAnimationFrame(self.count);
+        }
+    }
+    // deprecated - use pauseResume()
+    this.stop = function() {
+        cancelAnimationFrame(self.rAF);
+    }
+    // deprecated - use pauseResume()
+    this.resume = function() {
+        self.stop();
+        self.startTime = null;
+        self.duration = self.remaining;
+        self.startVal = self.frameVal;
+        requestAnimationFrame(self.count);
+    }
+    // reset to startVal so animation can be run again
+    this.reset = function() {
+        self.paused = false;
+        self.startTime = null;
+        self.startVal = startVal;
+        cancelAnimationFrame(self.rAF);
+        self.printValue(self.startVal);
+    }
+    // pass a new endVal and start animation
+    this.update = function (newEndVal) {
+        cancelAnimationFrame(self.rAF);
+        self.paused = false;
+        self.startTime = null;
+        self.startVal = self.frameVal;
+        self.endVal = Number(newEndVal);
+        self.countDown = (self.startVal > self.endVal);
+        self.rAF = requestAnimationFrame(self.count);
+    }
+    this.formatNumber = function(nStr) {
+        nStr = nStr.toFixed(self.decimals);
+        nStr += '';
+        var x, x1, x2, rgx;
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? self.options.decimal + x[1] : '';
+        rgx = /(\d+)(\d{3})/;
+        if (self.options.useGrouping) {
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
+=======
         this.formatNumber = function(nStr) {
             nStr = nStr.toFixed(self.decimals);
             nStr += '';
@@ -215,6 +368,7 @@
                 while (rgx.test(x1)) {
                     x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
                 }
+>>>>>>> master
             }
             return self.options.prefix + x1 + x2 + self.options.suffix;
         }

@@ -1,6 +1,6 @@
 {
-    "name": "countUp.js",
-    "version": "1.5.0",
+    "name": "countup",
+    "version": "1.6.0",
     "main": "countUp.js",
     "author": "Jamie Perkins",
     "ignore": [

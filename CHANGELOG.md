@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.5.0 (5/18/15)
+
+- Adds support for AMD (asynchronous module definition) thanks to @vash15
+
 ### v 1.4.0 (5/8/15)
 
 - Change class name from "countUp" to "CountUp"

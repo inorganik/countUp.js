@@ -82,7 +82,7 @@
         this.dec = Math.pow(10, this.decimals);
         this.duration = duration * 1000 || 2000;
 
-        this.version = function () { return '1.4.0' }
+        this.version = function () { return '1.5.0' }
         
         // Print value to target
         this.printValue = function(value) {

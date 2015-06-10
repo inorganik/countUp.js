@@ -1,5 +1,9 @@
 # Changelog
 
+### v 1.5.1 (6/10/15)
+
+- Some small improvements that clean up the code a little
+
 ### v 1.5.0 (5/18/15)
 
 - Adds support for AMD (asynchronous module definition) thanks to @vash15

@@ -47,3 +47,7 @@ Update the end value and animate:
 var someValue = 1337;
 numAnim.update(someValue);
 ```
+
+## License & Contributing
+- Details on the license [can be found here](LICENSE.md)
+- Details on running tests and contributing [can be found here](contributing.md)

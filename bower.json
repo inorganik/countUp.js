@@ -1,13 +1,14 @@
 {
     "name": "countup",
-    "version": "1.6.0",
-    "main": "countUp.js",
+    "version": "1.5.2",
+    "main": "/dist/countUp.min.js",
     "author": "Jamie Perkins",
     "ignore": [
         "CHANGELOG.md",
         "LICENSE.md",
         "README.md",
-        "countUp.coffee",
+        "contributing.md",
+        "gulpfile.js"
         "component.json",
         "index.html"
     ]

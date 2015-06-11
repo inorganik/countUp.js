@@ -1,7 +1,7 @@
 {
   "name": "countup",
   "description": "Animates a numerical value by counting to it",
-  "version": "1.6.0",
+  "version": "1.5.2",
   "licenses": [
     {
       "type": "Apache License, Version 2.0",

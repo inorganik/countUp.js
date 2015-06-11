@@ -1,14 +1,26 @@
 # CountUp.js
 CountUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.
 
+Despite its name, CountUp can count in either direction, depending on the `startVal` and `endVal` params that you pass.
+
+CountUp.js supports all browsers.
+
+##[Try the demo](http://inorganik.github.io/countUp.js)
+
+## Installation
+
+The only file you need is countUp.js. 
+
+If you want to get fancy with build systems, a gulpfile is included. [Read more here](contributing.md).
+
 ## Usage:
 Params:
 - `target` = id of html element, input, svg text element, or var of previously selected element/input where counting occurs
 - `startVal` = the value you want to begin at
 - `endVal` = the value you want to arrive at
-- `decimals` = number of decimal places in number, default 0 (optional)
-- `duration` = duration in seconds, default 2 (optional)
-- `options` = formatting/easing options object (see demo, optional)
+- `decimals` = (optional) number of decimal places in number, default 0 
+- `duration` = (optional) duration in seconds, default 2 
+- `options` = (see demo, optional) formatting/easing options object 
 
 Decimals, duration, and options can be left out to use the default values.
 

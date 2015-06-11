@@ -8,7 +8,7 @@
         "LICENSE.md",
         "README.md",
         "contributing.md",
-        "gulpfile.js"
+        "gulpfile.js",
         "component.json",
         "index.html"
     ]

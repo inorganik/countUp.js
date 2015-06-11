@@ -13,8 +13,8 @@ gulp.task('umd', ['clean'], function(file) {
     var umdCountup = gulp
         .src('countUp.js')
         .pipe(wrap({
-        	namespace: 'countup',
-            exports: 'countup'
+        	namespace: 'CountUp',
+            exports: 'CountUp'
         }))
         .pipe(gulp.dest('dist/'))
         .pipe(uglify())

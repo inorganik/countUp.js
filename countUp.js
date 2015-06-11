@@ -196,8 +196,6 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     self.printValue(self.startVal);
 };
 
-return CountUp;
-
 // Example:
 // var numAnim = new countUp("SomeElementYouWantToAnimate", 0, 99.99, 2, 2.5);
 // numAnim.start();

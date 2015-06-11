@@ -1,3 +1,14 @@
+
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require, exports, module);
+  } else {
+    root.CountUp = factory();
+  }
+}(this, function(require, exports, module) {
+
 /*
 
     countUp.js
@@ -202,3 +213,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 // numAnim.update(135);
 // with optional callback:
 // numAnim.start(someMethodToCallOnComplete);
+
+return CountUp;
+
+}));

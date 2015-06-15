@@ -1,7 +1,7 @@
 {
     "name": "countup",
     "version": "1.5.2",
-    "main": "/dist/countUp.min.js",
+    "main": "dist/countUp.min.js",
     "author": "Jamie Perkins",
     "ignore": [
         "CHANGELOG.md",

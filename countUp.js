@@ -69,7 +69,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     this.duration = Number(duration) * 1000 || 2000;
     var self = this;
 
-    this.version = function () { return '1.5.2'; };
+    this.version = function () { return '1.5.3'; };
 
     // Print value to target
     this.printValue = function(value) {

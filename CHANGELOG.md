@@ -1,6 +1,6 @@
 # Changelog
 
-### v 1.5.2 (6/11/15)
+### v 1.5.3 (6/11/15)
 
 - Gulp build system added thanks to @HHsnopek
 

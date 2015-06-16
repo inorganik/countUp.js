@@ -1,5 +1,5 @@
 {
-    "name": "countup",
+    "name": "countUp.js",
     "main": "dist/countUp.min.js",
     "author": "Jamie Perkins",
     "ignore": [

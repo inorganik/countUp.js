@@ -1,14 +1,14 @@
 {
-  "name": "countup",
+  "name": "countUp.js",
   "description": "Animates a numerical value by counting to it",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "licenses": [
     {
       "type": "Apache License, Version 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   ],
-  "main": "./dist/countup.js",
+  "main": "./dist/countUp.min.js",
   "repository": {
     "type": "git",
     "url": "git@github.com/inorganik/countUp.js.git"

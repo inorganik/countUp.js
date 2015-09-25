@@ -7,14 +7,14 @@ CountUp.js supports all browsers.
 
 ##[Try the demo](http://inorganik.github.io/countUp.js)
 
-## Angular directive
-Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
-
 ## Installation
 
 The only file you need is countUp.js. 
 
 If you want to get fancy with build systems, a gulpfile is included. [Read more here](contributing.md).
+
+## Angular directive
+Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
 
 ## Usage:
 Params:

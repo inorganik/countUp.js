@@ -7,6 +7,9 @@ CountUp.js supports all browsers.
 
 ##[Try the demo](http://inorganik.github.io/countUp.js)
 
+## Angular directive
+Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
+
 ## Installation
 
 The only file you need is countUp.js. 
@@ -59,8 +62,6 @@ Update the end value and animate:
 var someValue = 1337;
 numAnim.update(someValue);
 ```
-## Angular directive
-Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
 
 ## License & Contributing
 - Details on the license [can be found here](LICENSE.md)

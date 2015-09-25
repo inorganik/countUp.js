@@ -22,6 +22,14 @@ gulp.task('umd', ['clean'], function(file) {
             suffix: '.min'
         }))
         .pipe(gulp.dest('dist/'));
+    var angularCountup = gulp
+        .src('angular-countUp.js')
+        .pipe(gulp.dest('dist/'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('build', ['umd']);

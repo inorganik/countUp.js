@@ -59,9 +59,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
-    if (isNaN(startVal)) this.startVal = Number(startVal.match(/[\d\-]+/g).join('')); // strip non-numerical characters
     this.endVal = Number(endVal);
-    if (isNaN(endVal)) this.endVal = Number(endVal.match(/[\d\-]+/g).join('')); // strip non-numerical characters
     this.countDown = (this.startVal > this.endVal);
     this.frameVal = this.startVal;
     this.decimals = Math.max(0, decimals || 0);

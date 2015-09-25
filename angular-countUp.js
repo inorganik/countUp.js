@@ -60,11 +60,15 @@
 			        this.countDown = (this.startVal > this.endVal);
 			        this.frameVal = this.startVal;
 			        this.duration = duration * 1000 || 2000;
+				    this.decimals = Math.max(0, decimals || 0);
+				    this.dec = Math.pow(10, this.decimals);
 			        var self = this;
 			        
 			        // Print value to target
 			        this.printValue = function(value) {
+			        	console.log(value);
 			            var result = $filter('number')(value, decimals);
+			            console.log(result);
 			            this.d.innerHTML = result;
 			        }
 			        // Robert Penner's easeOutExpo
@@ -95,7 +99,7 @@
 			            }
 
 			            // format and print value
-			            self.frameVal = Math.round(self.frameVal);
+			            self.frameVal = Math.round(self.frameVal*self.dec)/self.dec
 			            self.printValue(self.frameVal);
 			                   
 			            // whether to continue
@@ -107,7 +111,6 @@
 			        }
 			        // start your animation
 			        this.start = function(callback) {
-			        	console.log('start: '+$attrs.id);
 			            self.callback = callback;
 			            // make sure values are valid
 			            if (!isNaN(self.endVal) && !isNaN(self.startVal) && self.startVal !== self.endVal) {
@@ -142,9 +145,9 @@
 			    }
 
 				var sta = $attrs.startVal || 0;
-				if (isNaN(sta)) sta = Number(sta.match(/[\d\-]+/g).join('')); // strip non-numerical characters
+				if (isNaN(sta)) sta = Number(sta.match(/[\d\-\.]+/g).join('')); // strip non-numerical characters
 				var end = $attrs.endVal || 0;
-				if (isNaN(end)) end = Number(end.match(/[\d\-]+/g).join('')); // strip non-numerical characters
+				if (isNaN(end)) end = Number(end.match(/[\d\-\.]+/g).join('')); // strip non-numerical characters
 				var dur = Number($attrs.duration) || 2.5,
 					dec = Number($attrs.decimals) || 0;
 

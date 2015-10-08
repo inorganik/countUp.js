@@ -56,8 +56,15 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     if (this.options.separator === '') this.options.useGrouping = false;
     if (!this.options.prefix) this.options.prefix = '';
     if (!this.options.suffix) this.options.suffix = '';
-
-    this.d = (typeof target === 'string') ? document.getElementById(target) : target;
+    if(typeof target === 'string') {
+        this.d = document.getElementById(target);
+    }
+    else if (target instanceof jQuery) {
+        this.d = target.get(0);
+    }
+    else{
+        this.d = target;
+    }
     this.startVal = Number(startVal);
     this.endVal = Number(endVal);
     this.countDown = (this.startVal > this.endVal);
@@ -194,3 +201,4 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 // numAnim.update(135);
 // with optional callback:
 // numAnim.start(someMethodToCallOnComplete);
+

@@ -12,7 +12,8 @@
 /*
 
     countUp.js
-    by @inorganik
+    (c) 2014-2015 @inorganik
+    Licensed under the MIT license.
 
 */
 

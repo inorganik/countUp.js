@@ -17,7 +17,7 @@ gulp.task('umd', ['clean'], function(file) {
             exports: 'CountUp'
         }))
         .pipe(gulp.dest('dist/'))
-        .pipe(uglify())
+        .pipe(uglify({preserveComments: 'license'}))
         .pipe(rename({
             suffix: '.min'
         }))

@@ -14,18 +14,19 @@ The only file you need is countUp.js.
 If you want to get fancy with build systems, a gulpfile is included. [Read more here](contributing.md).
 
 ## Angular directive
-Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
+Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, and `decimals`. `id` is not needed. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
 
 ## WordPress plugin
 If you want a quick and easy way to use this on your WordPress site, try this plugin by [@4DMedia](https://twitter.com/4dMedia): [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)
 
 ## Usage:
 Params:
-- `startVal` = (optional) the value you want to begin at
-- `endVal` = (required) the value you want to arrive at
+- `target` = id of html element, input, svg text element, or var of previously selected element/input where counting occurs
+- `startVal` = the value you want to begin at
+- `endVal` = the value you want to arrive at
 - `decimals` = (optional) number of decimal places in number, default 0 
 - `duration` = (optional) duration in seconds, default 2 
-- `options` = (optional, see demo) formatting/easing options object 
+- `options` = (see demo, optional) formatting/easing options object 
 
 Decimals, duration, and options can be left out to use the default values.
 

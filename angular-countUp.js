@@ -8,7 +8,6 @@
 	//
 	// Creates a counting animation for numbers
 	// REQUIRED attributes: 
-	// - id
 	// - endVal
 
 	'use strict';
@@ -160,14 +159,13 @@
 				
 				function animate() {
 
+					countUp.reset();
 					if (end > 9999) {
-						countUp.reset();
 						countUp.start(function() {
 							countUp.update(end);
 						});
 					}
 					else {
-						countUp.reset();
 						countUp.start();
 					}
 				}
@@ -178,7 +176,7 @@
 					$scope.$on($attrs.scrollSpyEvent, function (event, data) {
 						if (data === $attrs.id) {
 							animate();
-						}
+						} 
 					});
 				}
 				else {

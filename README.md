@@ -21,12 +21,11 @@ If you want a quick and easy way to use this on your WordPress site, try this pl
 
 ## Usage:
 Params:
-- `target` = id of html element, input, svg text element, or var of previously selected element/input where counting occurs
-- `startVal` = the value you want to begin at
-- `endVal` = the value you want to arrive at
+- `startVal` = (optional) the value you want to begin at
+- `endVal` = (required) the value you want to arrive at
 - `decimals` = (optional) number of decimal places in number, default 0 
 - `duration` = (optional) duration in seconds, default 2 
-- `options` = (see demo, optional) formatting/easing options object 
+- `options` = (optional, see demo) formatting/easing options object 
 
 Decimals, duration, and options can be left out to use the default values.
 

@@ -8,7 +8,6 @@
 	//
 	// Creates a counting animation for numbers
 	// REQUIRED attributes: 
-	// - id
 	// - endVal
 
 	'use strict';
@@ -26,7 +25,7 @@
 		        	- pauseResume() removed
 		        	- $filter used instead of formatNumber()
 		        */
-				function CountUp(target, startVal, endVal, decimals, duration) {
+				function CountUp(startVal, endVal, decimals, duration) {
 
 			        // make sure requestAnimationFrame and cancelAnimationFrame are defined
 			        // polyfill for browsers without native support
@@ -54,7 +53,7 @@
 			            }
 			        }
 
-			        this.d = document.getElementById(target);
+			        this.d = $el[0];
 			        this.startVal = startVal;
 			        this.endVal = endVal;
 			        this.countDown = (this.startVal > this.endVal);
@@ -152,22 +151,21 @@
 					dec = Number($attrs.decimals) || 0;
 
 				// construct countUp 
-				var countUp = new CountUp($attrs.id, sta, end, dec, dur);
+				var countUp = new CountUp(sta, end, dec, dur);
 				if (end > 9999) {
 					// make easing smoother for large numbers
-					countUp = new CountUp($attrs.id, sta, end - 100, dec, dur / 2);
+					countUp = new CountUp(sta, end - 100, dec, dur / 2);
 				}
 				
 				function animate() {
 
+					countUp.reset();
 					if (end > 9999) {
-						countUp.reset();
 						countUp.start(function() {
 							countUp.update(end);
 						});
 					}
 					else {
-						countUp.reset();
 						countUp.start();
 					}
 				}
@@ -178,7 +176,7 @@
 					$scope.$on($attrs.scrollSpyEvent, function (event, data) {
 						if (data === $attrs.id) {
 							animate();
-						}
+						} 
 					});
 				}
 				else {

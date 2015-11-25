@@ -47,11 +47,11 @@ numAnim.start(function() {
 ```
 For angular:
 ```html
-<h2 count-up id="numberAnimation" end-val="873.4" decimals="1" duration="3"></h2>
+<h2 count-up end-val="873.4"></h2>
 ```
 Width angular-scroll-spy:
 ```html
-<h2 count-up id="numberAnimation" end-val="873.4" decimals="1" duration="3" scroll-spy-event="elementFirstScrolledIntoView" scroll-spy></h2>
+<h2 count-up id="numberAnimation" end-val="873.4" scroll-spy-event="elementFirstScrolledIntoView" scroll-spy></h2>
 ```
 
 ## Other methods:

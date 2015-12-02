@@ -14,6 +14,15 @@
 
     var module = angular.module('countUpModule', []);
 
+    /**
+     * count-up attribute directive
+     * 
+     * @param {number} startVal - (optional) The value you want to begin at, default 0
+     * @param {number} endVal - The value you want to arrive at
+     * @param {number} duration - (optional) Duration in seconds, default 2.
+     * @param {number} decimals - (optional) Number of decimal places in number, default 0
+     * @param {boolean} reanimateOnClick - (optional) Config if reanimate on click event, default true.
+     */
     module.directive('countUp', ['$filter',
         function ($filter) {
 
@@ -22,8 +31,8 @@
                 scope: {
                     startVal: "=?",
                     endVal: "=",
-                    duration: "=",
-                    decimals: "=",
+                    duration: "=?",
+                    decimals: "=?",
                     reanimateOnClick: "=?"
                 },
                 link: function ($scope, $el, $attrs) {
@@ -157,7 +166,7 @@
                         if (isNaN(sta)) sta = Number(sta.match(/[\d\-\.]+/g).join('')); // strip non-numerical characters
                         end = end || 0;
                         if (isNaN(end)) end = Number(end.match(/[\d\-\.]+/g).join('')); // strip non-numerical characters
-                        dur = Number(dur) || 2.5,
+                        dur = Number(dur) || 2,
                         dec = Number(dec) || 0;
 
                         // construct countUp 
@@ -196,7 +205,8 @@
                     }
 
                     // re-animate on click
-                    if ($scope.reanimateOnClick) {
+                    let reanimateOnClick = angular.isDefined($scope.reanimateOnClick) ? $scope.reanimateOnClick : true;
+                    if (reanimateOnClick) {
                         $el.on('click', function() {
                             animate();
                         });

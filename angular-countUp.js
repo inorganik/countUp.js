@@ -170,7 +170,7 @@
                         dec = Number(dec) || 0;
 
                         // construct countUp 
-                        let countUp = new CountUp(sta, end, dec, dur);
+                        var countUp = new CountUp(sta, end, dec, dur);
                         if (end > 9999) {
                             // make easing smoother for large numbers
                             countUp = new CountUp(sta, end - 100, dec, dur / 2);
@@ -205,7 +205,7 @@
                     }
 
                     // re-animate on click
-                    let reanimateOnClick = angular.isDefined($scope.reanimateOnClick) ? $scope.reanimateOnClick : true;
+                    var reanimateOnClick = angular.isDefined($scope.reanimateOnClick) ? $scope.reanimateOnClick : true;
                     if (reanimateOnClick) {
                         $el.on('click', function() {
                             animate();

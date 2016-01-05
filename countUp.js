@@ -120,7 +120,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         }
 
         // decimal
-        self.frameVal = Math.round(self.frameVal*self.dec)/self.dec;
+        self.frameVal = Math.floor(self.frameVal*self.dec)/self.dec;
 
         // format and print value
         self.printValue(self.frameVal);

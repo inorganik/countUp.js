@@ -114,7 +114,7 @@
                             }
 
                             // format and print value
-                            self.frameVal = Math.round(self.frameVal*self.dec)/self.dec
+                            self.frameVal = Math.floor(self.frameVal*self.dec)/self.dec
                             self.printValue(self.frameVal);
 
                             // whether to continue

@@ -1,12 +1,12 @@
 {
   "name": "countUp.js",
   "description": "Animates a numerical value by counting to it",
-  "version": "1.5.3",
+  "version": "1.6.1",
   "licenses": "MIT",
   "main": "./dist/countUp.min.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com/inorganik/countUp.js.git"
+    "url": "git+https://github.com/inorganik/countUp.js.git"
   },
   "dependencies": {},
   "devDependencies": {

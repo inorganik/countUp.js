@@ -14,7 +14,7 @@ The only file you need is countUp.js.
 If you want to get fancy with build systems, a gulpfile is included. [Read more here](contributing.md).
 
 ## Angular directive
-Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, and `decimals`. `id` is not needed. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
+Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, and `decimals`. `id` is not needed. You must include both countUp.js and the module to use the angular directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
 
 ## WordPress plugin
 If you want a quick and easy way to use this on your WordPress site, try this plugin by [@4DMedia](https://twitter.com/4dMedia): [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)

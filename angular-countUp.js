@@ -96,9 +96,13 @@
                         return;
                     }
 
-                    countUp = createCountUp($scope.startVal, $scope.endVal, $scope.decimals, $scope.duration);
+                    if(countUp != null) {
+                      countUp.update($scope.endVal);
+                    } else {
+                      countUp = createCountUp($scope.startVal, $scope.endVal, $scope.decimals, $scope.duration);
 
-                    animate();
+                      animate();
+                    }
                 })
             }
         }

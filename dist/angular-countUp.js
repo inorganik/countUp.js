@@ -24,8 +24,9 @@
      * @param {number} duration - (optional) Duration in seconds, default 2.
      * @param {number} decimals - (optional) Number of decimal places in number, default 0
      * @param {boolean} reanimateOnClick - (optional) Config if reanimate on click event, default true.
+     * @param {string} filter - (optional) Filter expression to apply to animated values
      */
-    module.directive('countUp', function () {
+    module.directive('countUp', [ '$filter', function($filter) {
 
         return {
             restrict: 'A',
@@ -34,11 +35,30 @@
                 endVal: "=",
                 duration: "=?",
                 decimals: "=?",
-                reanimateOnClick: "=?"
+                reanimateOnClick: "=?",
+                filter: '@'
             },
             link: function ($scope, $el, $attrs) {
 
+                var filterFunction = null;
+
+                if($scope.filter != null) {
+                    filterFunction = createFilterFunction();
+                }
+
                 var countUp = createCountUp($scope.startVal, $scope.endVal, $scope.decimals, $scope.duration);
+
+                function createFilterFunction() {
+                    var filterParams = $scope.filter.split(':');
+                    var filterName = filterParams.shift();
+
+                    return function(value) {
+                        var filterCallParams = [value];
+                        Array.prototype.push.apply(filterCallParams, filterParams);
+                        var value = $filter(filterName).apply(null, filterCallParams)
+                        return value;
+                    }
+                }
 
                 function createCountUp(sta, end, dec, dur) {
                     sta = sta || 0;
@@ -48,11 +68,15 @@
                     dur = Number(dur) || 2,
                     dec = Number(dec) || 0;
 
+                    var options = {
+                        postFormatter: filterFunction
+                    };
+
                     // construct countUp 
-                    var countUp = new CountUp($el[0], sta, end, dec, dur);
+                    var countUp = new CountUp($el[0], sta, end, dec, dur, options);
                     if (end > 999) {
                         // make easing smoother for large numbers
-                        countUp = new CountUp($el[0], sta, end - 100, dec, dur / 2);
+                        countUp = new CountUp($el[0], sta, end - 100, dec, dur / 2, options);
                     }
 
                     return countUp;
@@ -102,5 +126,5 @@
                 })
             }
         }
-    });
+    }]);
 })(angular);

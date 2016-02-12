@@ -25,6 +25,7 @@
      * @param {number} decimals - (optional) Number of decimal places in number, default 0
      * @param {boolean} reanimateOnClick - (optional) Config if reanimate on click event, default true.
      * @param {string} filter - (optional) Filter expression to apply to animated values
+     * @param {object} options - (optional) Provides for extra configuration, such as easing.
      */
     module.directive('countUp', [ '$filter', function($filter) {
 
@@ -36,7 +37,8 @@
                 duration: "=?",
                 decimals: "=?",
                 reanimateOnClick: "=?",
-                filter: '@'
+                filter: '@',
+                options: "=?"
             },
             link: function ($scope, $el, $attrs) {
 
@@ -44,6 +46,14 @@
 
                 if($scope.filter != null) {
                     filterFunction = createFilterFunction();
+                }
+
+                var options = {
+                    postFormatter: filterFunction
+                };
+
+                if ($scope.options != null) {
+                    angular.extend(options, $scope.options);
                 }
 
                 var countUp = createCountUp($scope.startVal, $scope.endVal, $scope.decimals, $scope.duration);
@@ -67,10 +77,6 @@
                     if (isNaN(end)) end = Number(end.match(/[\d\-\.]+/g).join('')); // strip non-numerical characters
                     dur = Number(dur) || 2,
                     dec = Number(dec) || 0;
-
-                    var options = {
-                        postFormatter: filterFunction
-                    };
 
                     // construct countUp 
                     var countUp = new CountUp($el[0], sta, end, dec, dur, options);

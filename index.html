@@ -106,11 +106,28 @@
                 <input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
             </form>
         </section>
+        <section id="easingSection">
+            <form>
+                <h4 class="inlineLeft noMargin weight300">Custom easing:</h4>
+                <div class="inlineLeft marginLeft">
+                    <select id="easingFnsDropdown">
+                        <option value="easeOutExpo" selected>easeOutExpo (default, built-in)</option>
+                        <option value="outQuintic">outQuintic</option>
+                        <option value="outCubic">outCubic</option>
+                    </select>
+                    <br>
+                    <br>
+                    <input type="button" value="Apply easing" onClick="showCodeAndApplyEasing()">
+                </div>
+                <textarea id="easingFnPreview" class="marginLeft" cols="60" rows="5" readonly></textarea>
+            </form>
+        </section>
         <section class="marginBottom">
             <div class="col full marginBottom marginTop">
                 <div class="code-contain marginBottom">
                     <code id="codeVisualizer" class="indigo">var options = {<br>
                         &emsp;&emsp;useEasing : true, <br>
+                        &emsp;&emsp;easingFn : null, <br>
                         &emsp;&emsp;useGrouping : true, <br>
                         &emsp;&emsp;separator : ',', <br>
                         &emsp;&emsp;decimal : '.' <br>
@@ -130,15 +147,17 @@
     // you don't need to do this - you can use the default options
     var useOnComplete = false,
         useEasing = true,
+        easingFn = null,
         useGrouping = true,
         options = {
             useEasing : useEasing, // toggle easing
+            easingFn : easingFn, // defaults to easeOutExpo, but you can specify your own
             useGrouping : useGrouping, // 1,000,000 vs 1000000
             separator : ',', // character to use as a separator
             decimal : '.', // character to use as a decimal
-        }
+        };
 
-    var demo, code, data, stars;
+    var demo, code, data, stars, easingFunctions;
 
     // create instance
     window.onload = function() {
@@ -150,7 +169,23 @@
 
         // display version (no hassling with markup!)
         document.getElementById('version').innerHTML = 'v'+demo.version();
-    }
+    };
+
+    easingFunctions = {
+        easeOutExpo: function(t, b, c, d) {
+            return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
+        },
+        outQuintic: function(t, b, c, d) {
+            var ts = (t /= d) * t;
+            var tc = ts * t;
+            return b + c * (tc * ts + -5 * ts * ts + 10 * tc + -10 * ts + 5 * t);
+        },
+        outCubic: function(t, b, c, d) {
+            var ts = (t /= d) * t;
+            var tc = ts * t;
+            return b + c * (tc + -3 * ts + 3 * t);
+        }
+    };
 
     // for demo:
     function swapValues() {
@@ -159,6 +194,25 @@
         document.getElementById("startVal").value = oldEndVal;
         document.getElementById("endVal").value = oldStartVal;
         updateCodeVisualizer();
+    }
+    function getEasingFn() {
+        var fn = document.getElementById("easingFnsDropdown").value;
+
+        if (fn === 'easeOutExpo') return null;
+        if (typeof easingFunctions[fn] === 'undefined') return undefined;
+
+        return easingFunctions[fn];
+    }
+    function getEasingFnBody(fn) {
+        fn = typeof fn === 'undefined' ? getEasingFn() : fn;
+
+        if (typeof fn === 'undefined') return 'undefined function';
+
+        if (fn !== null) {
+            return fn.toString().replace(/^ {8}/gm, '');
+        }
+
+        return '';
     }
     function createCountUp() {
 
@@ -169,16 +223,18 @@
         var decimals = document.getElementById("decimals").value,
             duration = document.getElementById("duration").value,
             prefix = document.getElementById("prefix").value,
-            suffix = document.getElementById("suffix").value;
+            suffix = document.getElementById("suffix").value,
+            easingFn = getEasingFn();
 
         options = {
             useEasing : useEasing,
+            easingFn : typeof easingFn === 'undefined' ? null : easingFn,
             useGrouping : useGrouping,
             separator : document.getElementById("separator").value,
             decimal : document.getElementById("decimal").value,
             prefix: prefix,
             suffix: suffix
-        }
+        };
 
         // you don't have to create a new instance of CountUp every time you start an animation,
         // you can just change the properties individually. But I do here in case user changes values in demo.
@@ -210,6 +266,17 @@
 
         demo.update(num);
     }
+    function showCodeAndApplyEasing() {
+        var fnPreview = document.getElementById("easingFnPreview");
+
+        var fnBody = getEasingFnBody();
+
+        fnPreview.readOnly = false;
+        fnPreview.value = fnBody;
+        fnPreview.readOnly = true;
+
+        createCountUp();
+    }
     function toggleOnComplete(checkbox) {
 
         if (checkbox.checked) {
@@ -220,11 +287,16 @@
         updateCodeVisualizer();
     }
     function toggleEasing(checkbox) {
+        var easingSection = document.getElementById("easingSection");
 
         if (checkbox.checked) {
             useEasing = true;
+            easingSection.style.display = "";
+            document.getElementById("easingFnsDropdown").value = "easeOutExpo";
+            document.getElementById("easingFnPreview").value = "";
         } else {
             useEasing = false;
+            easingSection.style.display = "none";
         }
         updateCodeVisualizer();
     }
@@ -253,9 +325,23 @@
         var prefix = document.getElementById("prefix").value;
         var suffix = document.getElementById("suffix").value;
 
+        var easingFn = getEasingFn();
+        var easingFnBody = getEasingFnBody(easingFn);
 
-        var code = 'var options = {<br>';
+        var code = '';
+
+        if (useEasing && easingFn) {
+            code += 'var easingFn = ';
+            var split = easingFnBody.split('\n');
+
+            for (var line in split) {
+                code += split[line].replace(' ', '&nbsp;') + '<br>';
+            }
+        }
+
+        code += 'var options = {<br>';
         code += (useEasing) ? '&emsp;&emsp;useEasing : true, <br>' : '&emsp;&emsp;useEasing : false, <br>';
+        code += (easingFn && useEasing) ? '&emsp;&emsp;easingFn: easingFn, <br>' : '';
         code += (useGrouping) ? '&emsp;&emsp;useGrouping : true, <br>' : '&emsp;&emsp;useGrouping : false, <br>';
         code += '&emsp;&emsp;separator : \''+separator+'\', <br>';
         code += '&emsp;&emsp;decimal : \''+decimal+'\', <br>';

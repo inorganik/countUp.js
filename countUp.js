@@ -41,12 +41,19 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         };
     }
 
+    // Robert Penner's easeOutExpo
+    this.easeOutExpo = function(t, b, c, d) {
+        return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
+    };
+
      // default options
     this.options = {
         useEasing : true, // toggle easing
         useGrouping : true, // 1,000,000 vs 1000000
         separator : ',', // character to use as a separator
-        decimal : '.' // character to use as a decimal
+        decimal : '.', // character to use as a decimal
+        postFormatter: null, // post formatter to run after internal formatting
+        easingFn: null // custom easing closure function, will default to Robert Penner's easeOutExpo
     };
     // extend default options with passed options object
     for (var key in options) {
@@ -57,6 +64,10 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     if (this.options.separator === '') this.options.useGrouping = false;
     if (!this.options.prefix) this.options.prefix = '';
     if (!this.options.suffix) this.options.suffix = '';
+    // establish easing function
+    this.options.easingFn = !this.options.easingFn
+        ? this.easeOutExpo
+        : this.options.easingFn;
 
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
@@ -84,10 +95,6 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         }
     };
 
-    // Robert Penner's easeOutExpo
-    this.easeOutExpo = function(t, b, c, d) {
-        return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
-    };
     this.count = function(timestamp) {
 
         if (!self.startTime) self.startTime = timestamp;
@@ -100,9 +107,21 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         // to ease or not to ease
         if (self.options.useEasing) {
             if (self.countDown) {
-                self.frameVal = self.startVal - self.easeOutExpo(progress, 0, self.startVal - self.endVal, self.duration);
+                self.frameVal = self.startVal - self.options.easingFn.call(
+                        self,
+                        progress,
+                        0,
+                        self.startVal - self.endVal,
+                        self.duration
+                    );
             } else {
-                self.frameVal = self.easeOutExpo(progress, self.startVal, self.endVal - self.startVal, self.duration);
+                self.frameVal = self.options.easingFn.call(
+                    self,
+                    progress,
+                    self.startVal,
+                    self.endVal - self.startVal,
+                    self.duration
+                );
             }
         } else {
             if (self.countDown) {
@@ -182,7 +201,11 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
                 x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
             }
         }
-        return self.options.prefix + x1 + x2 + self.options.suffix;
+        var value = self.options.prefix + x1 + x2 + self.options.suffix;
+        if(self.options.postFormatter != null) {
+            value = self.options.postFormatter(value);
+        }
+        return value;
     };
 
     // format startVal on initialization

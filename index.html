@@ -117,9 +117,8 @@
                     </select>
                     <br>
                     <br>
-                    <input type="button" value="Apply easing" onClick="showCodeAndApplyEasing()">
+                    <input type="button" value="Apply easing" onClick="createCountUp()">
                 </div>
-                <textarea id="easingFnPreview" class="marginLeft" cols="60" rows="5" readonly></textarea>
             </form>
         </section>
         <section class="marginBottom">
@@ -265,17 +264,6 @@
         var num = updateVal ? updateVal : 0;
 
         demo.update(num);
-    }
-    function showCodeAndApplyEasing() {
-        var fnPreview = document.getElementById("easingFnPreview");
-
-        var fnBody = getEasingFnBody();
-
-        fnPreview.readOnly = false;
-        fnPreview.value = fnBody;
-        fnPreview.readOnly = true;
-
-        createCountUp();
     }
     function toggleOnComplete(checkbox) {
 

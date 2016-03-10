@@ -53,7 +53,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         separator : ',', // character to use as a separator
         decimal : '.', // character to use as a decimal
         postFormatter: null, // post formatter to run after internal formatting
-        easingFn: null // custom easing closure function, will default to Robert Penner's easeOutExpo
+        easingFn: null, // custom easing closure function, will default to Robert Penner's easeOutExpo
+        onPrint: null 
     };
     // extend default options with passed options object
     for (var key in options) {
@@ -68,6 +69,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     this.options.easingFn = !this.options.easingFn
         ? this.easeOutExpo
         : this.options.easingFn;
+
+    this.options.onPrint = (typeof this.options.onPrint === 'function') ? this.options.onPrint : function(){};
 
     this.d = (typeof target === 'string') ? document.getElementById(target) : target;
     this.startVal = Number(startVal);
@@ -140,6 +143,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
         // decimal
         self.frameVal = Math.floor(self.frameVal*self.dec)/self.dec;
+
+        self.options.onPrint.call(self, self.frameVal);
 
         // format and print value
         self.printValue(self.frameVal);

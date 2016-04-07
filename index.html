@@ -38,6 +38,7 @@
         <section>
             <h1>CountUp.js &nbsp;<small id="version" class="lt-gray"></small></h1>
             <p>CountUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.</p>
+            <p>Install via npm by running <code class="indigo large">&nbsp;npm install countup.js&nbsp;</code> or</p>
             <h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/CountUp.js">Download on Github</a></h3>
         </section>
         <section>
@@ -110,13 +111,11 @@
             <form>
                 <h4 class="inlineLeft noMargin weight300">Custom easing:</h4>
                 <div class="inlineLeft marginLeft">
-                    <select id="easingFnsDropdown">
+                    <select id="easingFnsDropdown" class="marginRight">
                         <option value="easeOutExpo" selected>easeOutExpo (default, built-in)</option>
                         <option value="outQuintic">outQuintic</option>
                         <option value="outCubic">outCubic</option>
                     </select>
-                    <br>
-                    <br>
                     <input type="button" value="Apply easing" onClick="createCountUp()">
                 </div>
             </form>
@@ -151,7 +150,6 @@
         options = {
             useEasing : useEasing, // toggle easing
             easingFn : easingFn, // defaults to easeOutExpo, but you can specify your own
-            formattingFn : formattingFn, // defaults to null (default formatter), but you can specify your own
             useGrouping : useGrouping, // 1,000,000 vs 1000000
             separator : ',', // character to use as a separator
             decimal : '.', // character to use as a decimal

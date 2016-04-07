@@ -64,7 +64,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         separator : ',', // character to use as a separator
         decimal : '.', // character to use as a decimal
         postFormatter: null, // post formatter to run after internal formatting
-        easingFn: null // custom easing closure function, will default to Robert Penner's easeOutExpo
+        easingFn: null, // custom easing closure function, will default to Robert Penner's easeOutExpo
+        formattingFn: null // custom formatting closure function, in the scenario you need more control over the printed number
     };
     // extend default options with passed options object
     for (var key in options) {
@@ -94,7 +95,12 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
     // Print value to target
     this.printValue = function(value) {
-        var result = (!isNaN(value)) ? self.formatNumber(value) : '--';
+        if(self.options.formattingFn) {
+            var result = self.options.formattingFn(value);
+        } else {
+            var result = (!isNaN(value)) ? self.formatNumber(value) : '--';
+        }
+
         if (self.d.tagName == 'INPUT') {
             this.d.value = result;
         }

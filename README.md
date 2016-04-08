@@ -9,9 +9,9 @@ CountUp.js supports all browsers.
 
 ## Installation
 
-The only file you need is countUp.js.
+Simply include the countUp.js file in your project or install via npm or bower using the package name `countup.js`.
 
-If you want to get fancy with build systems, a gulpfile is included. [Read more here](contributing.md).
+To contribute, please [read more here](contributing.md).
 
 ## Angular directive
 Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, and `decimals`. `id` is not needed. You must include both countUp.js and the module to use the angular directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
@@ -91,7 +91,7 @@ Just don't use any "bouncy" functions, as they tend to cause issues and are cont
 
 If you don't specify a custom easing closure function, the plugin will fall back to the default `easeOutExpo`.
 
-### Example:
+#### Example:
 
 ```js
 var easeOutCubic = function(t, b, c, d) {
@@ -107,6 +107,4 @@ demo.start();
 ```
 
 
-## License & Contributing
-- Details on the license [can be found here](LICENSE.md)
-- Details on running tests and contributing [can be found here](contributing.md)
+## MIT License

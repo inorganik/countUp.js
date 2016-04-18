@@ -44,6 +44,16 @@ numAnim.start(someMethodToCallOnComplete);
 numAnim.start(function() {
     // do something
 })
+
+#### Animating to large numbers
+For large numbers, since the CountUp class has a long way to go in just a few seconds, the animation seems to abruptly stop. The solution is to subtract 100 from your endVal, then use the callback to invoke the `update` method which completes the animation with the same duration with a difference of only 100 to animate:
+```js
+var endVal = 9645.72;
+var numAnim = new CountUp("targetElem", 0, endVal - 100);
+numAnim.start(function() {
+	numAnim.update(endVal);
+});
+
 ```
 For angular:
 ```html

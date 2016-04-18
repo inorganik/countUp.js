@@ -55,7 +55,7 @@ numAnim.start(function() {
 });
 
 ```
-For angular:
+#### Angular
 ```html
 <h2 count-up end-val="873.4"></h2>
 ```

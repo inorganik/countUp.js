@@ -206,7 +206,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         self.rAF = requestAnimationFrame(self.count);
     };
     this.formatNumber = function(nStr) {
-        nStr = nStr.toFixed(self.decimals);
+        var nVal = nStr = nStr.toFixed(self.decimals);
         nStr += '';
         var x, x1, x2, rgx;
         x = nStr.split('.');
@@ -219,8 +219,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
             }
         }
         var value = self.options.prefix + x1 + x2 + self.options.suffix;
-        if(self.options.postFormatter != null) {
-            value = self.options.postFormatter(value);
+        if (typeof self.options.postFormatter === 'function') {
+            value = self.options.postFormatter(value, nVal);
         }
         return value;
     };

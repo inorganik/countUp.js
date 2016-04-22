@@ -20,7 +20,7 @@
      * count-up attribute directive
      * 
      * @param {number} startVal - (optional) The value you want to begin at, default 0
-     * @param {number} endVal - The value you want to arrive at
+     * @param {number} countUp - The value you want to arrive at
      * @param {number} duration - (optional) Duration in seconds, default 2.
      * @param {number} decimals - (optional) Number of decimal places in number, default 0
      * @param {boolean} reanimateOnClick - (optional) Config if reanimate on click event, default true.
@@ -32,27 +32,24 @@
         return {
             restrict: 'A',
             scope: {
-                startVal: "=?",
-                endVal: "=",
-                duration: "=?",
-                decimals: "=?",
-                reanimateOnClick: "=?",
+                startVal: '=?',
+                endVal: '=?',
+                duration: '=?',
+                decimals: '=?',
+                reanimateOnClick: '=?',
                 filter: '@',
-                options: "=?"
+                options: '=?'
             },
             link: function ($scope, $el, $attrs) {
 
-                var filterFunction = null;
+                var options = {};
 
-                if($scope.filter != null) {
-                    filterFunction = createFilterFunction();
+                if ($scope.filter) {
+                    var filterFunction = createFilterFunction();
+                    options.formattingFn = filterFunction;
                 }
 
-                var options = {
-                    postFormatter: filterFunction
-                };
-
-                if ($scope.options != null) {
+                if ($scope.options) {
                     angular.extend(options, $scope.options);
                 }
 
@@ -65,9 +62,9 @@
                     return function(value) {
                         var filterCallParams = [value];
                         Array.prototype.push.apply(filterCallParams, filterParams);
-                        var value = $filter(filterName).apply(null, filterCallParams)
+                        value = $filter(filterName).apply(null, filterCallParams);
                         return value;
-                    }
+                    };
                 }
 
                 function createCountUp(sta, end, dec, dur) {
@@ -75,7 +72,7 @@
                     if (isNaN(sta)) sta = Number(sta.match(/[\d\-\.]+/g).join('')); // strip non-numerical characters
                     end = end || 0;
                     if (isNaN(end)) end = Number(end.match(/[\d\-\.]+/g).join('')); // strip non-numerical characters
-                    dur = Number(dur) || 2,
+                    dur = Number(dur) || 2;
                     dec = Number(dec) || 0;
 
                     // construct countUp 
@@ -122,19 +119,18 @@
                 }
 
                 $scope.$watch('endVal', function (newValue, oldValue) {
-                    if (newValue == null || newValue === oldValue) {
+                    if (newValue === null || newValue === oldValue) {
                         return;
                     }
 
-                    if(countUp != null) {
-                      countUp.update($scope.endVal);
+                    if (countUp !== null) {
+                        countUp.update($scope.endVal);
                     } else {
-                      countUp = createCountUp($scope.startVal, $scope.endVal, $scope.decimals, $scope.duration);
-
-                      animate();
+                        countUp = createCountUp($scope.startVal, $scope.endVal, $scope.decimals, $scope.duration);
+                        animate();
                     }
-                })
+                });
             }
-        }
+        };
     }]);
 })(angular);

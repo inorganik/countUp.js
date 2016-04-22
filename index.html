@@ -12,9 +12,12 @@
 
     <!-- <link rel="stylesheet" type="text/css" href="../inorganik.github.io/assets/css/style.css?v=20140820"> -->
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=20141210">
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script> -->
+    <script src="countUp.js"></script>
+    <!-- <script type="text/javascript" src="angular-countUp.js"></script> -->
+    <script>
 
-    <script type="text/javascript" src="dist/countUp.js"></script>
-    <script type="text/javascript">
+    //var app = angular.module("demoApp",["countUpModule"]);
 
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -27,7 +30,7 @@
     </script>
 </head>
 
-<body>
+<body ng-app="demoApp">
     <a class="forkMe" href="https://github.com/inorganik/CountUp.js"><img src="../assets/img/forkme_custom_indigo.png" alt="Fork me on GitHub"></a>
     <div id="wrap">
         <header>

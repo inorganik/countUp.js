@@ -9,7 +9,7 @@ CountUp.js supports all browsers.
 
 ## Installation
 
-Simply include the countUp.js file in your project or install via npm or bower using the package name `countup.js`.
+Simply include the countUp.js file in your project or install via npm or bower using the package name `countup.js` or `countUp.js` respectively.
 
 Before making a pull request, please [read this](#contributing). MIT License.
 

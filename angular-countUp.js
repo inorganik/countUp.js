@@ -1,4 +1,16 @@
-(function (angular) {
+(function (factory) {
+    'use strict';
+    if (typeof define === 'function' && define.amd) {
+        define(['angular', './countUp'], factory);
+    }
+    else if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') {
+        require('angular');
+        module.exports = factory(angular, require('./countUp'));
+    }
+    else if (window.angular && window.CountUp) {
+        factory(window.angular, window.CountUp);
+    }
+})(function (angular, CountUp) {
 
     // Count-Up directive
     // --------------------------------------------
@@ -27,7 +39,7 @@
      * @param {string} filter - (optional) Filter expression to apply to animated values
      * @param {object} options - (optional) Provides for extra configuration, such as easing.
      */
-    module.directive('countUp', [ '$filter', function($filter) {
+    module.directive('countUp', ['$filter', function ($filter) {
 
         return {
             restrict: 'A',
@@ -59,7 +71,7 @@
                     var filterParams = $scope.filter.split(':');
                     var filterName = filterParams.shift();
 
-                    return function(value) {
+                    return function (value) {
                         var filterCallParams = [value];
                         Array.prototype.push.apply(filterCallParams, filterParams);
                         value = $filter(filterName).apply(null, filterCallParams);
@@ -88,7 +100,7 @@
                 function animate() {
                     countUp.reset();
                     if ($scope.endVal > 999) {
-                        countUp.start(function() {
+                        countUp.start(function () {
                             countUp.update($scope.endVal);
                         });
                     }
@@ -113,7 +125,7 @@
                 // re-animate on click
                 var reanimateOnClick = angular.isDefined($scope.reanimateOnClick) ? $scope.reanimateOnClick : true;
                 if (reanimateOnClick) {
-                    $el.on('click', function() {
+                    $el.on('click', function () {
                         animate();
                     });
                 }
@@ -133,4 +145,4 @@
             }
         };
     }]);
-})(angular);
+})

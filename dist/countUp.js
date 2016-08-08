@@ -113,7 +113,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         if (self.d.tagName === 'INPUT') {
             this.d.value = result;
         }
-        else if (self.d.tagName === 'text' || self.d.tagName === 'tspan') {
+        else if (self.d.tagName === 'text' || self.d.tagName === 'tspan') {
             this.d.textContent = result;
         }
         else {

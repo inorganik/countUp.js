@@ -45,24 +45,6 @@ numAnim.start(function() {
     // do something
 })
 ```
-#### Animating to large numbers
-For large numbers, since CountUp has a long way to go in just a few seconds, the animation seems to abruptly stop. The solution is to subtract 100 from your `endVal`, then use the callback to invoke the `update` method which completes the animation with the same duration with a difference of only 100 to animate:
-```js
-var endVal = 9645.72;
-var numAnim = new CountUp("targetElem", 0, endVal - 100, duration/2);
-numAnim.start(function() {
-	numAnim.update(endVal);
-});
-
-```
-#### Angular
-```html
-<h2 count-up end-val="873.4"></h2>
-```
-Width angular-scroll-spy:
-```html
-<h2 count-up id="numberAnimation" end-val="873.4" scroll-spy-event="elementFirstScrolledIntoView" scroll-spy></h2>
-```
 
 #### Other methods:
 Toggle pause/resume:
@@ -82,6 +64,27 @@ Update the end value and animate:
 ```js
 var someValue = 1337;
 numAnim.update(someValue);
+```
+
+#### Animating to large numbers
+For large numbers, since CountUp has a long way to go in just a few seconds, the animation seems to abruptly stop. The solution is to subtract 100 from your `endVal`, then use the callback to invoke the `update` method which completes the animation with the same duration with a difference of only 100 to animate:
+```js
+var endVal = 9645.72;
+var numAnim = new CountUp("targetElem", 0, endVal - 100, duration/2);
+numAnim.start(function() {
+	numAnim.update(endVal);
+});
+```
+
+#### Angular
+*If* you are using Angular, (not required), create your animation like the examples below. Make sure you include both countUp.js and angular-countUp.js, and inject the `countUpModule`. 
+
+```html
+<h2 count-up end-val="873.4"></h2>
+```
+With [angular-scroll-spy](http://inorganik.github.io/angular-scroll-spy/):
+```html
+<h2 count-up id="numberAnimation" end-val="873.4" scroll-spy-event="elementFirstScrolledIntoView" scroll-spy></h2>
 ```
 
 #### Custom easing:

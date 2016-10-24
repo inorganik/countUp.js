@@ -14,7 +14,7 @@ Simply include the countUp.js file in your project or install via npm or bower u
 Before making a pull request, please [read this](#contributing). MIT License.
 
 ## Angular directive
-Included is an angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, `decimals`, and `options`. `id` is not needed. You must include both countUp.js and the module to use the angular directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy).**
+If you are using Angular, you can use the included Angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the Angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, `decimals`, and `options`. `id` is not needed. You must include both countUp.js and the module to use the Angular directive. **[Check out the angular demo](http://inorganik.github.io/Angular-scroll-spy)** and see usage examples below.
 
 ## WordPress plugin
 If you want a quick and easy way to use this on your WordPress site, try this plugin by [@4DMedia](https://twitter.com/4dMedia): [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)
@@ -77,7 +77,7 @@ numAnim.start(function() {
 ```
 
 #### Angular
-*If* you are using Angular, (not required), create your animation like the examples below. Make sure you include both countUp.js and angular-countUp.js, and inject the `countUpModule`. 
+*If you are using Angular*, (not required), create your animation like the examples below. Make sure you include both countUp.js and angular-countUp.js, and inject the `countUpModule`. 
 
 ```html
 <h2 count-up end-val="873.4"></h2>

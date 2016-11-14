@@ -1,3 +1,12 @@
+/*
+
+    countUp.jquery.js Jquery plugin
+    (c) 2015 @pantrif Leonidas Maroulis
+	based on @inorganik countUp.js
+    Licensed under the MIT license.
+
+*/
+
 // target = id of html element or var of previously selected html element where counting occurs
 // startVal = the value you want to begin at
 // endVal = the value you want to arrive at

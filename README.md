@@ -16,6 +16,10 @@ Before making a pull request, please [read this](#contributing). MIT License.
 ## Angular directive
 If you are using Angular, you can use the included Angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the Angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, `decimals`, and `options`. `id` is not needed. You must include both countUp.js and the module to use the Angular directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy/)** and see usage examples below.
 
+## Angular 2 directive
+An identical Angular 2 version of the directive is also provided. Simply import the directive from `dist/` into the `directives` array of the component you wish to use it in.
+See example below.
+
 ## WordPress plugin
 If you want a quick and easy way to use this on your WordPress site, try this plugin by [@4DMedia](https://twitter.com/4dMedia): [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)
 
@@ -77,7 +81,7 @@ numAnim.start(function() {
 ```
 
 #### Angular
-*If you are using Angular*, (not required), create your animation like the examples below. Make sure you include both countUp.js and angular-countUp.js, and inject the `countUpModule`. 
+*If you are using Angular*, (not required), create your animation like the examples below. Make sure you include both countUp.js and angular-countUp.js, and inject the `countUpModule`.
 
 ```html
 <h2 count-up end-val="873.4"></h2>
@@ -85,6 +89,36 @@ numAnim.start(function() {
 With [angular-scroll-spy](http://inorganik.github.io/angular-scroll-spy/):
 ```html
 <h2 count-up id="numberAnimation" end-val="873.4" scroll-spy-event="elementFirstScrolledIntoView" scroll-spy></h2>
+```
+
+#### Angular 2
+
+Make sure countUp.js is loaded as a global dependency during bootstrapping.
+
+Note the value for the options parameter is passed directly to the directive attribute selector.
+
+```ts
+import {Component} from '@angular/core';
+
+import {CountUpDirective} from 'countup.js/dist/countUp.directive';
+
+@Component({
+   selector: 'counting-header',
+   template: `
+        <h1 countUp="{useEasing: false}"
+            [startVal]="myStartVal"
+            [endVal]="myEndVal"
+            [reanimateOnClick]="false"></h1>
+   `,
+   directives: [CountUpDirective]
+})
+export class CloudCardComponent {
+    @Input()
+    myStartVal: number;
+
+    @Input()
+    myEndVal: number;
+}
 ```
 
 #### Custom easing:
@@ -117,9 +151,9 @@ demo.start();
 
 ## Contributing <a name="contributing"></a>
 
-Before you make a pull request, please be sure to follow these super simple instructions: 
+Before you make a pull request, please be sure to follow these super simple instructions:
 
-1. Do your work on the `countUp.js` and/or `angular-countUp.js` files in the root directory. 
-2. In Terminal, `cd` to the `countUp.js` directory. 
+1. Do your work on the `countUp.js` and/or `angular-countUp.js` files in the root directory.
+2. In Terminal, `cd` to the `countUp.js` directory.
 3. Run `npm install`, which installs gulp and its dependencies.
 4. Run `gulp`, which copies and minifies the .js files to the `dist` folder.

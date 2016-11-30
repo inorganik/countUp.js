@@ -1,0 +1,22 @@
+{
+  "files": [
+    "countUp.directive.ts"
+  ],
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "module": "system",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "declaration": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types" : [
+      "core-js"
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-declare function CountUp(target: string, startVal: number, endVal: number, decimals: number, duration: number, options: any): CountUp;
+declare function CountUp(target: string, startVal: number, endVal: number, decimals: number, duration: number, options: any): void;
 
 declare module CountUp {
 	var options: CountUpOptions;

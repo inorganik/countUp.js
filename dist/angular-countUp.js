@@ -86,10 +86,6 @@
                     return countUp;
                 }
 
-                if ($attrs.relatedTarget) {
-                    $scope.relatedTarget = document.getElementById($attrs.relatedTarget);
-                }
-
                 function relatedStep (timestamp) {
                     if ($attrs.countInstance) {
                         ($parse($attrs.countInstance)).assign($scope.$parent, countUp);

@@ -17,7 +17,9 @@ Before making a pull request, please [read this](#contributing). MIT License.
 If you are using Angular, you can use the included Angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the Angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, `decimals`, and `options`. `id` is not needed. You must include both countUp.js and the module to use the Angular directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy/)** and see usage examples below.
 
 ## Angular 2 directive
-An identical Angular 2 version of the directive is also provided. Simply import the directive from `dist/` into the `directives` array of the component you wish to use it in.
+An identical Angular 2 version of the directive compatible with version ^2.0.0 is also provided.
+Simply import the module from `dist/` into your application module's `imports` array.
+
 See example below.
 
 ## WordPress plugin
@@ -93,14 +95,26 @@ With [angular-scroll-spy](http://inorganik.github.io/angular-scroll-spy/):
 
 #### Angular 2
 
-Make sure countUp.js is loaded as a global dependency during bootstrapping.
+The directive is compatible with Angular version ^2.0.0.
 
-Note the value for the options parameter is passed directly to the directive attribute selector.
+Make sure `countUp.js` is loaded as a global dependency during bootstrapping.
+
+Note the value for the `options` parameter is passed directly to the directive attribute selector.
 
 ```ts
-import {Component} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 
-import {CountUpDirective} from 'countup.js/dist/countUp.directive';
+import {CountUpModule} from 'countup.js/dist/countUp.module';
+
+@NgModule({
+   imports: [CountUpModule],
+   bootstrap: [AppComponent]
+})
+export class AppModule {}
+
+// ...
+// ...
+// Use in some component contained within the importing module...
 
 @Component({
    selector: 'counting-header',
@@ -109,10 +123,9 @@ import {CountUpDirective} from 'countup.js/dist/countUp.directive';
             [startVal]="myStartVal"
             [endVal]="myEndVal"
             [reanimateOnClick]="false"></h1>
-   `,
-   directives: [CountUpDirective]
+   `
 })
-export class CloudCardComponent {
+export class CountingHeaderComponent {
     @Input()
     myStartVal: number;
 

@@ -1,12 +1,12 @@
 {
   "files": [
-    "countUp.directive.ts"
+    "countUp.module.ts"
   ],
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "module": "system",
+    "module": "umd",
     "moduleResolution": "node",
     "removeComments": true,
     "sourceMap": true,

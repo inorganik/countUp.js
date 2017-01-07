@@ -54,9 +54,11 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         suffix: ''
     };
     // extend default options with passed options object
-    for (var key in self.options) {
-        if (options.hasOwnProperty(key)) {
-            self.options[key] = options[key];
+    if (typeof options === 'object') {
+        for (var key in self.options) {
+            if (options.hasOwnProperty(key)) {
+                self.options[key] = options[key];
+            }
         }
     }
     if (self.options.separator === '') { self.options.useGrouping = false; }

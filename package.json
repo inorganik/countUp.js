@@ -1,5 +1,5 @@
 {
-  "name": "countup",
+  "name": "countup.js",
   "description": "Animates a numerical value by counting to it",
   "version": "1.8.1",
   "licenses": "MIT",

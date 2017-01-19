@@ -93,7 +93,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     self.easingFn = self.options.easingFn ? self.options.easingFn : self.easeOutExpo;
     self.formattingFn = self.options.formattingFn ? self.options.formattingFn : self.formatNumber;
 
-    self.version = function () { return '1.7.1'; };
+    self.version = function () { return '1.8.1'; };
 
     // Print value to target
     self.printValue = function(value) {

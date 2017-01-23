@@ -69,6 +69,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
     self.decimals = Math.max(0, decimals || 0);
     self.dec = Math.pow(10, self.decimals);
     self.duration = Number(duration) * 1000 || 2000;
+    self.isCounting = false;
 
     self.formatNumber = function(nStr) {
         nStr = nStr.toFixed(self.decimals);
@@ -148,9 +149,11 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
         // whether to continue
         if (progress < self.duration) {
+            self.isCounting = true;
             self.rAF = requestAnimationFrame(self.count);
         } else {
             if (self.callback) { self.callback(); }
+            self.isCounting = false;
         }
     };
     // start your animation

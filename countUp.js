@@ -49,7 +49,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         separator : ',', // character to use as a separator
         decimal : '.', // character to use as a decimal
         easingFn: null, // optional custom easing closure function, default is Robert Penner's easeOutExpo
-        formattingFn: null // optional custom formatting function, default is self.formatNumber below
+        formattingFn: null, // optional custom formatting function, default is self.formatNumber below
+        udfNumberFn: null //optional custom user-defined formatting number function, default is null, by pengjianlin
     };
     // extend default options with passed options object
     for (var key in options) {
@@ -106,7 +107,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
             this.d.textContent = result;
         }
         else {
-            this.d.innerHTML = result;
+            //modified by pengjianlin of China Mobile Suzhou Research & Development Center
+            this.d.innerHTML = self.options.udfNumberFn ? self.options.udfNumberFn(result) : result;;
         }
     };
 

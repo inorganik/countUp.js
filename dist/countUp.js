@@ -65,7 +65,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         suffix: ''
     };
     // extend default options with passed options object
-    if (typeof options === 'object') {
+    if (typeof options === 'object' && object != null) {
         for (var key in self.options) {
             if (options.hasOwnProperty(key)) {
                 self.options[key] = options[key];

@@ -10,15 +10,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-(function (dependencies, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    else if (typeof define === 'function' && define.amd) {
-        define(dependencies, factory);
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "@angular/core"], factory);
     }
-})(["require", "exports", "@angular/core"], function (require, exports) {
+})(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var core_1 = require("@angular/core");
     var CountUpDirective = (function () {
         function CountUpDirective(el) {
@@ -88,7 +90,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     __decorate([
         core_1.Input(),
         __metadata("design:type", Number),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [Number])
     ], CountUpDirective.prototype, "endVal", null);
     __decorate([
         core_1.Input(),
@@ -125,8 +127,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
         core_1.NgModule({
             declarations: [CountUpDirective],
             exports: [CountUpDirective]
-        }),
-        __metadata("design:paramtypes", [])
+        })
     ], CountUpModule);
     exports.CountUpModule = CountUpModule;
 });

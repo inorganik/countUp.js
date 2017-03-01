@@ -60,17 +60,19 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         separator : ',', // character to use as a separator
         decimal : '.', // character to use as a decimal
         easingFn: null, // optional custom easing closure function, default is Robert Penner's easeOutExpo
-        formattingFn: null // optional custom formatting function, default is self.formatNumber below
+        formattingFn: null, // optional custom formatting function, default is self.formatNumber below
+        prefix: '',
+        suffix: ''
     };
     // extend default options with passed options object
-    for (var key in options) {
-        if (options.hasOwnProperty(key)) {
-            self.options[key] = options[key];
+    if (typeof options === 'object' && object != null) {
+        for (var key in self.options) {
+            if (options.hasOwnProperty(key)) {
+                self.options[key] = options[key];
+            }
         }
     }
     if (self.options.separator === '') { self.options.useGrouping = false; }
-    if (!self.options.prefix) self.options.prefix = '';
-    if (!self.options.suffix) self.options.suffix = '';
 
     self.d = (typeof target === 'string') ? document.getElementById(target) : target;
     self.startVal = Number(startVal);

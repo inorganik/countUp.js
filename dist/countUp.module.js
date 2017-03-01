@@ -20,6 +20,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     }
 })(function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var core_1 = require("@angular/core");
     var CountUpDirective = (function () {
         function CountUpDirective(el) {

@@ -15,3 +15,5 @@ export declare class CountUpDirective implements OnInit {
     private createCountUp(sta, end, dec, dur);
     private animate();
 }
+export declare class CountUpModule {
+}

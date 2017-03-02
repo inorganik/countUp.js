@@ -4,7 +4,8 @@ import {
    Input,
    HostListener,
    Inject,
-   OnInit
+   OnInit,
+   NgModule
 } from '@angular/core';
 
 declare var CountUp;
@@ -118,3 +119,12 @@ export class CountUpDirective implements OnInit {
         }
     }
 }
+
+/**
+ * Module providing the countUp directive.
+ */
+@NgModule({
+   declarations: [CountUpDirective],
+   exports: [CountUpDirective]
+})
+export class CountUpModule {}

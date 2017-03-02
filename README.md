@@ -5,7 +5,7 @@ Despite its name, CountUp can count in either direction, depending on the `start
 
 CountUp.js supports all browsers.
 
-##[Try the demo](http://inorganik.github.io/countUp.js)
+## [Try the demo](http://inorganik.github.io/countUp.js)
 
 ## Installation
 
@@ -17,11 +17,14 @@ Before making a pull request, please [read this](#contributing). MIT License.
 If you are using Angular, you can use the included Angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the Angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, `decimals`, and `options`. `id` is not needed. You must include both countUp.js and the module to use the Angular directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy/)** and see usage examples below.
 
 ## Angular 2 directive
-An identical Angular 2 version of the directive is also provided. Simply import the directive from `dist/` into the `directives` array of the component you wish to use it in.
-See example below.
+An identical Angular 2 version of the directive compatible with version ^2.0.0 is also provided.
+Simply import the module from `dist/` into your application module's `imports` array. See example below.
+
+## jQuery
+A jQuery version is also included in case you like dollar signs.
 
 ## WordPress plugin
-If you want a quick and easy way to use this on your WordPress site, try this plugin by [@4DMedia](https://twitter.com/4dMedia): [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)
+Add CountUp to your WordPress site with this plugin: [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)
 
 ## Usage:
 Params:
@@ -93,14 +96,24 @@ With [angular-scroll-spy](http://inorganik.github.io/angular-scroll-spy/):
 
 #### Angular 2
 
-Make sure countUp.js is loaded as a global dependency during bootstrapping.
+The directive is compatible with Angular version ^2.0.0. Make sure `countUp.js` is loaded as a global dependency during bootstrapping.
 
-Note the value for the options parameter is passed directly to the directive attribute selector.
+Note the value for the `options` parameter is passed directly to the directive attribute selector.
 
 ```ts
-import {Component} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 
-import {CountUpDirective} from 'countup.js/dist/countUp.directive';
+import {CountUpModule} from 'countup.js/dist/countUp.module';
+
+@NgModule({
+   imports: [CountUpModule],
+   bootstrap: [AppComponent]
+})
+export class AppModule {}
+
+// ...
+// ...
+// Use in some component contained within the importing module...
 
 @Component({
    selector: 'counting-header',
@@ -109,10 +122,9 @@ import {CountUpDirective} from 'countup.js/dist/countUp.directive';
             [startVal]="myStartVal"
             [endVal]="myEndVal"
             [reanimateOnClick]="false"></h1>
-   `,
-   directives: [CountUpDirective]
+   `
 })
-export class CloudCardComponent {
+export class CountingHeaderComponent {
     @Input()
     myStartVal: number;
 
@@ -153,7 +165,7 @@ demo.start();
 
 Before you make a pull request, please be sure to follow these super simple instructions:
 
-1. Do your work on the `countUp.js` and/or `angular-countUp.js` files in the root directory.
+1. Do your work on the `countUp.js` and/or other files in the root directory.
 2. In Terminal, `cd` to the `countUp.js` directory.
 3. Run `npm install`, which installs gulp and its dependencies.
 4. Run `gulp`, which copies and minifies the .js files to the `dist` folder.

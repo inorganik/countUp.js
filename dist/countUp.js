@@ -61,11 +61,11 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         decimal : '.', // character to use as a decimal
         easingFn: null, // optional custom easing closure function, default is Robert Penner's easeOutExpo
         formattingFn: null, // optional custom formatting function, default is self.formatNumber below
-        prefix: '',
-        suffix: ''
+        prefix: '', // optional text before the result
+        suffix: '' // optional text after the result
     };
     // extend default options with passed options object
-    if (typeof options === 'object' && options != null) {
+    if (options && typeof options === 'object') {
         for (var key in self.options) {
             if (options.hasOwnProperty(key)) {
                 self.options[key] = options[key];
@@ -73,6 +73,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
         }
     }
     if (self.options.separator === '') { self.options.useGrouping = false; }
+
+    self.version = function () { return '1.8.2'; };
 
     self.d = (typeof target === 'string') ? document.getElementById(target) : target;
     self.startVal = Number(startVal);
@@ -105,8 +107,6 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
     self.easingFn = self.options.easingFn ? self.options.easingFn : self.easeOutExpo;
     self.formattingFn = self.options.formattingFn ? self.options.formattingFn : self.formatNumber;
-
-    self.version = function () { return '1.8.1'; };
 
     // Print value to target
     self.printValue = function(value) {

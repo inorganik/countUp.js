@@ -5,7 +5,7 @@ Despite its name, CountUp can count in either direction, depending on the `start
 
 CountUp.js supports all browsers.
 
-##[Try the demo](http://inorganik.github.io/countUp.js)
+## [Try the demo](http://inorganik.github.io/countUp.js)
 
 ## Installation
 
@@ -18,12 +18,13 @@ If you are using Angular, you can use the included Angular module. Use the count
 
 ## Angular 2 directive
 An identical Angular 2 version of the directive compatible with version ^2.0.0 is also provided.
-Simply import the module from `dist/` into your application module's `imports` array.
+Simply import the module from `dist/` into your application module's `imports` array. See example below.
 
-See example below.
+## jQuery
+A jQuery version is also included in case you like dollar signs.
 
 ## WordPress plugin
-If you want a quick and easy way to use this on your WordPress site, try this plugin by [@4DMedia](https://twitter.com/4dMedia): [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)
+Add CountUp to your WordPress site with this plugin: [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)
 
 ## Usage:
 Params:
@@ -95,9 +96,7 @@ With [angular-scroll-spy](http://inorganik.github.io/angular-scroll-spy/):
 
 #### Angular 2
 
-The directive is compatible with Angular version ^2.0.0.
-
-Make sure `countUp.js` is loaded as a global dependency during bootstrapping.
+The directive is compatible with Angular version ^2.0.0. Make sure `countUp.js` is loaded as a global dependency during bootstrapping.
 
 Note the value for the `options` parameter is passed directly to the directive attribute selector.
 
@@ -166,7 +165,7 @@ demo.start();
 
 Before you make a pull request, please be sure to follow these super simple instructions:
 
-1. Do your work on the `countUp.js` and/or `angular-countUp.js` files in the root directory.
+1. Do your work on the `countUp.js` and/or other files in the root directory.
 2. In Terminal, `cd` to the `countUp.js` directory.
 3. Run `npm install`, which installs gulp and its dependencies.
 4. Run `gulp`, which copies and minifies the .js files to the `dist` folder.

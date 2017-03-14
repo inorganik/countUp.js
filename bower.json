@@ -1,6 +1,6 @@
 {
     "name": "countUp.js",
-    "main": "dist/countUp.min.js",
+    "main": ["dist/countUp.min.js", "dist/angular-countUp.js"],
     "author": "Jamie Perkins",
     "ignore": [
         "CHANGELOG.md",

@@ -10,14 +10,14 @@
 
     <title>CountUp.js</title>
 
-    <!-- <link rel="stylesheet" type="text/css" href="../inorganik.github.io/assets/css/style.css?v=20140820"> -->
-    <link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=20141210">
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script> -->
+    <!--<link rel="stylesheet" type="text/css" href="../inorganik.github.io/assets/css/style.css?v=20140820">-->
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=20141210"> 
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>-->
     <script src="countUp.js"></script>
-    <!-- <script type="text/javascript" src="angular-countUp.js"></script> -->
+    <!--<script type="text/javascript" src="angular-countUp.js"></script>-->
     <script>
 
-    //var app = angular.module("demoApp",["countUpModule"]);
+    // var app = angular.module("demoApp",["countUpModule"]);
 
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -46,7 +46,8 @@
         </section>
         <section>
             <p style="position:absolute; top:5px; left:0;">Current stars:</p>
-            <h1 class="jumbo" id="myTargetElement">0</h1>
+            <h1 class="jumbo" id="myTargetElement">0</h1> 
+            <!--<h1 class="jumbo" count-up start-val="0" end-val="2536.1" duration="2.5" decimals="1"></h1>-->
         </section>
         <section>
             <form>
@@ -146,7 +147,8 @@
 
     // set CountUp options
     // you don't need to do this - you can use the default options
-    var useOnComplete = false,
+    var demo, code, data, stars, easingFunctions,
+        useOnComplete = false,
         useEasing = true,
         easingFn = null,
         useGrouping = true,
@@ -158,10 +160,9 @@
             decimal : '.', // character to use as a decimal
         };
 
-    var demo, code, data, stars, easingFunctions;
-
-    // create instance
     window.onload = function() {
+        // in case we're testing angular
+        if (typeof angular !== 'undefined') return;
         // setup CountUp object
         demo = new CountUp('myTargetElement', 0, 94.62, 2, 2.5, options);
         // you could do demo.start() right here but we are getting actual current star count from github api below
@@ -240,7 +241,6 @@
         // you don't have to create a new instance of CountUp every time you start an animation,
         // you can just change the properties individually. But I do here in case user changes values in demo.
         demo = new CountUp("myTargetElement", startVal, endVal, decimals, duration, options);
-
         if (useOnComplete) {
             demo.start(methodToCallOnComplete);
         } else {
@@ -371,22 +371,18 @@
                         document.getElementById("startVal").value = 0;
                         document.getElementById("endVal").value = stars;
                         document.getElementById("decimals").value = 0;
-                        // change code example values
-                        updateCodeVisualizer();
-                        // change the startVal and endVal properties of the demo CountUp and run it
-                        demo.startVal = 0;
-                        demo.endVal = stars;
-                        demo.decimals = 0;
-                        demo.start();
+                        
+                        createCountUp();
                     }
                 }
             }
         }
-    }
+    };
     getStars.onerror = function() {
-        console.log('error: '+getStars.status)
+        console.error('error getting stars:', getStars.status);
+        stars = getStars.status;
         demo.start();
-    }
+    };
 
     </script>
 </html>

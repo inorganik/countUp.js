@@ -41,7 +41,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	}
 
 	var self = this;
-    self.version = function () { return '1.8.3'; };
+    self.version = function () { return '1.8.4'; };
 
 	function formatNumber(num) {
 		num = num.toFixed(self.decimals);
@@ -81,7 +81,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	// extend default options with passed options object
 	if (options && typeof options === 'object') {
 		for (var key in self.options) {
-			if (options.hasOwnProperty(key) && options[key]) {
+			if (options.hasOwnProperty(key) && options[key] !== null) {
 				self.options[key] = options[key];
 			}
 		}

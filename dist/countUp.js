@@ -52,7 +52,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	}
 
 	var self = this;
-    self.version = function () { return '1.8.4'; };
+    self.version = function () { return '1.8.5'; };
 
 	function formatNumber(num) {
 		num = num.toFixed(self.decimals);
@@ -215,6 +215,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	// pass a new endVal and start animation
 	self.update = function (newEndVal) {
 		if (!self.initialize()) return;
+		if (newEndVal === self.frameVal) return;
 		cancelAnimationFrame(self.rAF);
 		self.paused = false;
 		delete self.startTime;

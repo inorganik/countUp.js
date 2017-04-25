@@ -147,18 +147,11 @@
 
     // set CountUp options
     // you don't need to do this - you can use the default options
-    var demo, code, data, stars, easingFunctions,
+    var demo, options, code, data, stars, easingFunctions,
         useOnComplete = false,
         useEasing = true,
         easingFn = null,
-        useGrouping = true,
-        options = {
-            useEasing : useEasing, // toggle easing
-            easingFn : easingFn, // defaults to easeOutExpo, but you can specify your own
-            useGrouping : useGrouping, // 1,000,000 vs 1000000
-            separator : ',', // character to use as a separator
-            decimal : '.', // character to use as a decimal
-        };
+        useGrouping = true;
 
     window.onload = function() {
         // in case we're testing angular
@@ -233,10 +226,10 @@
             easingFn : typeof easingFn === 'undefined' ? null : easingFn,
             useGrouping : useGrouping,
             separator : document.getElementById("separator").value,
-            decimal : document.getElementById("decimal").value,
-            prefix: prefix,
-            suffix: suffix
+            decimal : document.getElementById("decimal").value
         };
+        if (prefix.length) options.prefix = prefix;
+        if (suffix.length) options.suffix = suffix;
 
         // you don't have to create a new instance of CountUp every time you start an animation,
         // you can just change the properties individually. But I do here in case user changes values in demo.
@@ -308,17 +301,15 @@
         startVal = Number(startVal.replace(',','').replace(' ',''));
         var endVal = document.getElementById("endVal").value;
         endVal = Number(endVal.replace(',','').replace(' ',''));
-        var decimals = document.getElementById("decimals").value;
-        var duration = document.getElementById("duration").value;
-        var separator = document.getElementById("separator").value;
-        var decimal = document.getElementById("decimal").value;
-        var prefix = document.getElementById("prefix").value;
-        var suffix = document.getElementById("suffix").value;
-
-        var easingFn = getEasingFn();
-        var easingFnBody = getEasingFnBody(easingFn);
-
-        var code = '';
+        var decimals = document.getElementById("decimals").value,
+            duration = document.getElementById("duration").value,
+            separator = document.getElementById("separator").value,
+            decimal = document.getElementById("decimal").value,
+            prefix = document.getElementById("prefix").value,
+            suffix = document.getElementById("suffix").value,
+            easingFn = getEasingFn(),
+            easingFnBody = getEasingFnBody(easingFn),
+            code = '';
 
         if (useEasing && easingFn) {
             code += 'var easingFn = ';
@@ -335,8 +326,8 @@
         code += (useGrouping) ? '&emsp;&emsp;useGrouping : true, <br>' : '&emsp;&emsp;useGrouping : false, <br>';
         code += '&emsp;&emsp;separator : \''+separator+'\', <br>';
         code += '&emsp;&emsp;decimal : \''+decimal+'\', <br>';
-        code += '&emsp;&emsp;prefix : \''+prefix+'\', <br>';
-        code += '&emsp;&emsp;suffix : \''+suffix+'\' <br>';
+        if (prefix.length) code += '&emsp;&emsp;prefix : \''+prefix+'\', <br>';
+        if (suffix.length) code += '&emsp;&emsp;suffix : \''+suffix+'\' <br>';
         code += '};<br>';
         code += 'var demo = new CountUp("myTargetElement", '+startVal+', '+endVal+', '+decimals+', '+duration+', options);<br>';
         if (useOnComplete) {

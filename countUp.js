@@ -204,18 +204,19 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	// pass a new endVal and start animation
 	self.update = function (newEndVal) {
 		if (!self.initialize()) return;
+		newEndVal = Number(newEndVal);
+		if (!ensureNumber(newEndVal)) {
+			console.error('[CountUp] update() - new endVal is not a number', newEndVal);
+			return;
+		}
 		if (newEndVal === self.frameVal) return;
 		cancelAnimationFrame(self.rAF);
 		self.paused = false;
 		delete self.startTime;
 		self.startVal = self.frameVal;
-		self.endVal = Number(newEndVal);
-		if (ensureNumber(self.endVal)) {
-			self.countDown = (self.startVal > self.endVal);
-			self.rAF = requestAnimationFrame(self.count);
-		} else {
-			console.error('[CountUp] update() - new endVal is not a number', newEndVal);
-		}
+		self.endVal = newEndVal;
+		self.countDown = (self.startVal > self.endVal);
+		self.rAF = requestAnimationFrame(self.count);
 	};
 
 	// format startVal on initialization

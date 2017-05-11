@@ -18,7 +18,7 @@
 
     /**
      * count-up attribute directive
-     * 
+     *
      * @param {number} startVal - (optional) The value you want to begin at, default 0
      * @param {number} countUp - The value you want to arrive at
      * @param {number} duration - (optional) Duration in seconds, default 2.
@@ -27,7 +27,7 @@
      * @param {string} filter - (optional) Filter expression to apply to animated values
      * @param {object} options - (optional) Provides for extra configuration, such as easing.
      */
-    module.directive('countUp', [ '$filter', function($filter) {
+    module.directive('countUp', [ '$filter', '$parse', function($filter, $parse) {
 
         return {
             restrict: 'A',
@@ -38,7 +38,8 @@
                 decimals: '=?',
                 reanimateOnClick: '=?',
                 filter: '@',
-                options: '=?'
+                options: '=?',
+                countInstance: '=?'
             },
             link: function ($scope, $el, $attrs) {
 
@@ -75,7 +76,7 @@
                     dur = Number(dur) || 2;
                     dec = Number(dec) || 0;
 
-                    // construct countUp 
+                    // construct countUp
                     var countUp = new CountUp($el[0], sta, end, dec, dur, options);
                     if (end > 999) {
                         // make easing smoother for large numbers
@@ -85,7 +86,18 @@
                     return countUp;
                 }
 
+                function relatedStep (timestamp) {
+                    if ($attrs.countInstance) {
+                        ($parse($attrs.countInstance)).assign($scope.$parent, countUp);
+                        $scope.$parent.$digest();
+                        if (countUp.frameVal !== $scope.endVal) {
+                            window.requestAnimationFrame(relatedStep);
+                        }
+                    }
+                }
+
                 function animate() {
+                    window.requestAnimationFrame(relatedStep);
                     countUp.reset();
                     if ($scope.endVal > 999) {
                         countUp.start(function() {
@@ -125,6 +137,7 @@
 
                     if (countUp !== null) {
                         countUp.update($scope.endVal);
+                        window.requestAnimationFrame(relatedStep);
                     } else {
                         countUp = createCountUp($scope.startVal, $scope.endVal, $scope.decimals, $scope.duration);
                         animate();

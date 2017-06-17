@@ -20,6 +20,9 @@ If you are using Angular, you can use the included Angular module. Use the count
 An identical Angular 2 version of the directive compatible with version ^2.0.0 is also provided.
 Simply import the module from `dist/` into your application module's `imports` array. See example below.
 
+## React component
+If you are using React, there is a React component wrapper [`react-countup`](https://github.com/glennreyes/react-countup) that can be used right out of the box and takes all the complexity for you. It supports all common options and features including `easing`, `separator`, `decimals`, callbacks `onStart` and `onComplete`. **[Check out the React demo](https://glennreyes.github.io/react-countup)** and see usage examples below.
+
 ## jQuery
 A jQuery version is also included in case you like dollar signs.
 
@@ -132,6 +135,20 @@ export class CountingHeaderComponent {
     myEndVal: number;
 }
 ```
+
+#### React
+*If you are using React*, (not required) with [`react-countup`](https://github.com/glennreyes/react-countup), just simply do:
+
+```js
+import CountUp from 'react-countup';
+
+render(
+  <CountUp start={0} end={160526} />,
+  document.getElementById('root')
+);
+```
+
+Your CountUp component will start to count up right after the component has been mounted.
 
 #### Custom easing:
 

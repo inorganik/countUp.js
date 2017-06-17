@@ -13,15 +13,15 @@ Simply include the countUp.js file in your project or install via npm or bower u
 
 Before making a pull request, please [read this](#contributing). MIT License.
 
-## React component
-If you are using React, there is a React component wrapper [`react-countup`](https://github.com/glennreyes/react-countup) that can be used right out of the box and takes all the complexity for you. It supports all common options and features including `easing`, `separator`, `decimals`, callbacks `onStart` and `onComplete`. **[Check out the React demo](https://glennreyes.github.io/react-countup)** and see usage examples below.
-
 ## Angular directive
 If you are using Angular, you can use the included Angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the Angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, `decimals`, and `options`. `id` is not needed. You must include both countUp.js and the module to use the Angular directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy/)** and see usage examples below.
 
 ## Angular 2 directive
 An identical Angular 2 version of the directive compatible with version ^2.0.0 is also provided.
 Simply import the module from `dist/` into your application module's `imports` array. See example below.
+
+## React component
+If you are using React, there is a React component wrapper [`react-countup`](https://github.com/glennreyes/react-countup) that can be used right out of the box and takes all the complexity for you. It supports all common options and features including `easing`, `separator`, `decimals`, callbacks `onStart` and `onComplete`. **[Check out the React demo](https://glennreyes.github.io/react-countup)** and see usage examples below.
 
 ## jQuery
 A jQuery version is also included in case you like dollar signs.
@@ -86,20 +86,6 @@ numAnim.start(function() {
 });
 ```
 
-#### React
-*If you are using React*, (not required) with [`react-countup`](https://github.com/glennreyes/react-countup), just simply do:
-
-```js
-import CountUp from 'react-countup';
-
-render(
-  <CountUp start={0} end={160526} />,
-  document.getElementById('root')
-);
-```
-
-Your CountUp component will start to count up right after the component has been mounted.
-
 #### Angular
 *If you are using Angular*, (not required), create your animation like the examples below. Make sure you include both countUp.js and angular-countUp.js, and inject the `countUpModule`.
 
@@ -149,6 +135,20 @@ export class CountingHeaderComponent {
     myEndVal: number;
 }
 ```
+
+#### React
+*If you are using React*, (not required) with [`react-countup`](https://github.com/glennreyes/react-countup), just simply do:
+
+```js
+import CountUp from 'react-countup';
+
+render(
+  <CountUp start={0} end={160526} />,
+  document.getElementById('root')
+);
+```
+
+Your CountUp component will start to count up right after the component has been mounted.
 
 #### Custom easing:
 

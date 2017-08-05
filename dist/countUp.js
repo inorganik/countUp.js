@@ -133,7 +133,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	self.printValue = function(value) {
 
 		// if the value did not change, we skip the printing
-        if(self.frameVal === self.previousPrintedValue) return false;
+        if(value === self.previousPrintedValue) return false;
 
 
 		var result = self.options.formattingFn(value);
@@ -149,7 +149,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		}
 
 		// set self.previousPrintedValue to the actual printed value
-        self.previousPrintedValue = self.frameVal;
+        self.previousPrintedValue = value;
 	};
 
 	self.count = function(timestamp) {

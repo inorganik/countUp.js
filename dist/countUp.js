@@ -125,8 +125,17 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		}
 	};
 
+
+    // Remember already printed value, to prevent rerendering element
+    self.previousPrintedValue = null;
+
 	// Print value to target
 	self.printValue = function(value) {
+
+		// if the value did not change, we skip the printing
+        if(value === self.previousPrintedValue) return false;
+
+
 		var result = self.options.formattingFn(value);
 
 		if (self.d.tagName === 'INPUT') {
@@ -138,6 +147,9 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		else {
 			this.d.innerHTML = result;
 		}
+
+		// set self.previousPrintedValue to the actual printed value
+        self.previousPrintedValue = value;
 	};
 
 	self.count = function(timestamp) {

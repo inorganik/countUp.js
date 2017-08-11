@@ -51,7 +51,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		x1 = x[0];
 		x2 = x.length > 1 ? self.options.decimal + x[1] : '';
 		rgx = /(\d+)(\d{3})/;
-		if (self.options.useGrouping) {
+		if (self.options.useGrouping && self.options.separator) {
 			while (rgx.test(x1)) {
 				x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
 			}

@@ -43,6 +43,25 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	var self = this;
     self.version = function () { return '1.8.5'; };
 
+    function digitsConvert(digits,to) {
+        var ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+        var fa = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+        switch(to) {
+            case 'ar':
+                return digits.replace(/[0-9]/g, function(w){
+                    return ar[+w];
+                });
+                break;
+            case 'fa':
+                return digits.replace(/[0-9]/g, function(w){
+                    return fa[+w];
+                });
+                break;
+            default:
+                return digits;
+        }
+    }
+
 	function formatNumber(num) {
 		num = num.toFixed(self.decimals);
 		num += '';
@@ -56,6 +75,10 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 				x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
 			}
 		}
+        if (self.options.digits!='en') {
+            x1 = digitsConvert(x1,self.options.digits);
+            x2 = digitsConvert(x2,self.options.digits);
+        }
 		return self.options.prefix + x1 + x2 + self.options.suffix;
 	}
 	// Robert Penner's easeOutExpo
@@ -75,7 +98,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		easingFn: easeOutExpo, // optional custom easing function, default is Robert Penner's easeOutExpo
 		formattingFn: formatNumber, // optional custom formatting function, default is formatNumber above
 		prefix: '', // optional text before the result
-		suffix: '' // optional text after the result
+		suffix: '', // optional text after the result
+        digits: 'en' // defines the output language for digits ('en' for English,'ar' for Arabic & 'fa' for Farsi digits)
 	};
 
 	// extend default options with passed options object

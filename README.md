@@ -7,27 +7,24 @@ CountUp.js supports all browsers.
 
 ## [Try the demo](http://inorganik.github.io/countUp.js)
 
+## Please note
+
+_Angular 1 and 2 modules used to be part of this repo_. **As of v1.9.0, they have moved.** See links below. 
+
+## See Also
+
+- **[CountUp.js Angular 1.x Module](https://github.com/inorganik/countUp.js-angular1)**
+- **[CountUp.js Angular ^2 Module](https://github.com/inorganik/countUp.js-angular2)**
+- **[CountUp.js React](https://github.com/glennreyes/react-countup)**
+- **[CountUp.js WordPress Plugin](https://wordpress.org/plugins/countup-js/)**
+
 ## Installation
 
 Simply include the countUp.js file in your project or install via npm or bower using the package name `countup.js` or `countUp.js` respectively.
 
 Before making a pull request, please [read this](#contributing). MIT License.
 
-## Angular directive
-If you are using Angular, you can use the included Angular module. Use the count-up attribute to quickly create an animation. It also integrates nicely with the Angular-scroll-spy directive. The Angular directive only requires an `end-val` attribute, but will also accept `start-val`, `duration`, `decimals`, and `options`. `id` is not needed. You must include both countUp.js and the module to use the Angular directive. **[Check out the angular demo](http://inorganik.github.io/angular-scroll-spy/)** and see usage examples below.
-
-## Angular 2 directive
-An identical Angular 2 version of the directive compatible with version ^2.0.0 is also provided.
-Simply import the module from `dist/` into your application module's `imports` array. See example below.
-
-## React component
-If you are using React, there is a React component wrapper [`react-countup`](https://github.com/glennreyes/react-countup) that can be used right out of the box and takes all the complexity for you. It supports all common options and features including `easing`, `separator`, `decimals`, callbacks `onStart` and `onComplete`. **[Check out the React demo](https://glennreyes.github.io/react-countup)** and see usage examples below.
-
-## jQuery
 A jQuery version is also included in case you like dollar signs.
-
-## WordPress plugin
-Add CountUp to your WordPress site with this plugin: [https://wordpress.org/plugins/countup-js/](https://wordpress.org/plugins/countup-js/)
 
 ## Usage:
 Params:
@@ -90,103 +87,11 @@ numAnim.start(function() {
 });
 ```
 
-#### Angular
-*If you are using Angular*, (not required), create your animation like the examples below. Make sure you include both countUp.js and angular-countUp.js, and inject the `countUpModule`.
-
-```html
-<h2 count-up end-val="873.4"></h2>
-```
-With [angular-scroll-spy](http://inorganik.github.io/angular-scroll-spy/):
-```html
-<h2 count-up id="numberAnimation" end-val="873.4" scroll-spy-event="elementFirstScrolledIntoView" scroll-spy></h2>
-```
-
-#### Angular 2
-
-The directive is compatible with Angular version ^2.0.0. Make sure `countUp.js` is loaded as a global dependency during bootstrapping.
-
-Note the value for the `options` parameter is passed directly to the directive attribute selector.
-
-```ts
-import {Component, NgModule} from '@angular/core';
-
-import {CountUpModule} from 'countup.js/dist/countUp.module';
-
-@NgModule({
-   imports: [CountUpModule],
-   bootstrap: [AppComponent]
-})
-export class AppModule {}
-
-// ...
-// ...
-// Use in some component contained within the importing module...
-
-@Component({
-   selector: 'counting-header',
-   template: `
-        <h1 countUp="{useEasing: false}"
-            [startVal]="myStartVal"
-            [endVal]="myEndVal"
-            [reanimateOnClick]="false"></h1>
-   `
-})
-export class CountingHeaderComponent {
-    @Input()
-    myStartVal: number;
-
-    @Input()
-    myEndVal: number;
-}
-```
-
-#### React
-*If you are using React*, (not required) with [`react-countup`](https://github.com/glennreyes/react-countup), just simply do:
-
-```js
-import CountUp from 'react-countup';
-
-render(
-  <CountUp start={0} end={160526} />,
-  document.getElementById('root')
-);
-```
-
-Your CountUp component will start to count up right after the component has been mounted.
-
-#### Custom easing:
-
-You can optionally apply your custom easing function, which will receive 4 parameters necessary to calculate a Bezier curve:
-
-- `t` (the current time);
-- `b` (the beginning value);
-- `c` (the difference between the beginning and destination value);
-- `d` (the total time of the tween).
-
-You could use any of Robert Penner's [easing functions](https://github.com/danro/jquery-easing/blob/master/jquery.easing.js). Just avoid using "bouncy" functions, because they cause counting in both directions
-
-If you don't specify a custom easing function, CountUp uses the default `easeOutExpo`.
-
-Example:
-
-```js
-var easeOutCubic = function(t, b, c, d) {
-    var ts = (t /= d) * t;
-    var tc = ts * t;
-    return b + c * (1.77635683940025e-15 * tc * ts + 0.999999999999998 * tc + -3 * ts + 3 * t);
-};
-var options = {
-  easingFn: easeOutCubic
-};
-var demo = new CountUp("myTargetElement", 24.02, 94.62, 2, 2.5, options);
-demo.start();
-```
-
 ## Contributing <a name="contributing"></a>
 
 Before you make a pull request, please be sure to follow these super simple instructions:
 
-1. Do your work on the `countUp.js` and/or other files in the root directory.
+1. Do your work on `countUp.js` and/or other files in the root directory.
 2. In Terminal, `cd` to the `countUp.js` directory.
 3. Run `npm install`, which installs gulp and its dependencies.
 4. Run `gulp`, which copies and minifies the .js files to the `dist` folder.

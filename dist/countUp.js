@@ -25,6 +25,33 @@
 
 var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
+	var self = this;
+	self.version = function () { return '1.9.0'; };
+	
+	// default options
+	self.options = {
+		useEasing: true, // toggle easing
+		useGrouping: true, // 1,000,000 vs 1000000
+		separator: ',', // character to use as a separator
+		decimal: '.', // character to use as a decimal
+		easingFn: easeOutExpo, // optional custom easing function, default is Robert Penner's easeOutExpo
+		formattingFn: formatNumber, // optional custom formatting function, default is formatNumber above
+		prefix: '', // optional text before the result
+		suffix: '', // optional text after the result
+		numerals: [] // optionally pass an array of custom numerals for 0-9
+	};
+
+	// extend default options with passed options object
+	if (options && typeof options === 'object') {
+		for (var key in self.options) {
+			if (options.hasOwnProperty(key) && options[key] !== null) {
+				self.options[key] = options[key];
+			}
+		}
+	}
+
+	if (self.options.separator === '') self.options.useGrouping = false;
+
 	// make sure requestAnimationFrame and cancelAnimationFrame are defined
 	// polyfill for browsers without native support
 	// by Opera engineer Erik Möller
@@ -51,28 +78,6 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		};
 	}
 
-	var self = this;
-    self.version = function () { return '1.8.5'; };
-
-    function digitsConvert(digits,to) {
-        var ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-        var fa = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
-        switch(to) {
-            case 'ar':
-                return digits.replace(/[0-9]/g, function(w){
-                    return ar[+w];
-                });
-                break;
-            case 'fa':
-                return digits.replace(/[0-9]/g, function(w){
-                    return fa[+w];
-                });
-                break;
-            default:
-                return digits;
-        }
-    }
-
 	function formatNumber(num) {
 		num = num.toFixed(self.decimals);
 		num += '';
@@ -86,10 +91,15 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 				x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
 			}
 		}
-        if (self.options.digits!='en') {
-            x1 = digitsConvert(x1,self.options.digits);
-            x2 = digitsConvert(x2,self.options.digits);
-        }
+		// optional numeral substitution
+		if (self.options.numerals.length) {
+			x1 = x1.replace(/[0-9]/g, function(w) {
+                return self.options.numerals[+w];
+            })
+			x2 = x2.replace(/[0-9]/g, function(w) {
+                return self.options.numerals[+w];
+            })
+		}
 		return self.options.prefix + x1 + x2 + self.options.suffix;
 	}
 	// Robert Penner's easeOutExpo
@@ -99,36 +109,14 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	function ensureNumber(n) {
 		return (typeof n === 'number' && !isNaN(n));
 	}
-	
-	// default options
-	self.options = {
-		useEasing: true, // toggle easing
-		useGrouping: true, // 1,000,000 vs 1000000
-		separator: ',', // character to use as a separator
-		decimal: '.', // character to use as a decimal
-		easingFn: easeOutExpo, // optional custom easing function, default is Robert Penner's easeOutExpo
-		formattingFn: formatNumber, // optional custom formatting function, default is formatNumber above
-		prefix: '', // optional text before the result
-		suffix: '', // optional text after the result
-        digits: 'en' // defines the output language for digits ('en' for English,'ar' for Arabic & 'fa' for Farsi digits)
-	};
-
-	// extend default options with passed options object
-	if (options && typeof options === 'object') {
-		for (var key in self.options) {
-			if (options.hasOwnProperty(key) && options[key] !== null) {
-				self.options[key] = options[key];
-			}
-		}
-	}
-
-	if (self.options.separator === '') self.options.useGrouping = false;
 
 	self.initialize = function() { 
 		if (self.initialized) return true;
+		
+		self.error = '';
 		self.d = (typeof target === 'string') ? document.getElementById(target) : target;
 		if (!self.d) { 
-			console.error('[CountUp] target is null or undefined', self.d);
+			self.error = '[CountUp] target is null or undefined'
 			return false;
 		}
 		self.startVal = Number(startVal);
@@ -140,11 +128,17 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 			self.duration = Number(duration) * 1000 || 2000;
 			self.countDown = (self.startVal > self.endVal);
 			self.frameVal = self.startVal;
-			self.initialized = true;
-			return true;
+			if (isNaN(self.options.separator)) {
+				self.initialized = true;
+				return true;
+			}
+			else {
+				self.error = '[CountUp] separator cannot be a number: '+self.options.separator;
+				return false;
+			}
 		}
 		else {
-			console.error('[CountUp] startVal or endVal is not a number', self.startVal, self.endVal);
+			self.error = '[CountUp] startVal ('+startVal+') or endVal ('+endVal+') is not a number';
 			return false;
 		}
 	};
@@ -241,9 +235,10 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		if (!self.initialize()) return;
 		newEndVal = Number(newEndVal);
 		if (!ensureNumber(newEndVal)) {
-			console.error('[CountUp] update() - new endVal is not a number', newEndVal);
+			self.error = '[CountUp] update() - new endVal is not a number: '+newEndVal;
 			return;
 		}
+		self.error = '';
 		if (newEndVal === self.frameVal) return;
 		cancelAnimationFrame(self.rAF);
 		self.paused = false;

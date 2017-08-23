@@ -42,7 +42,11 @@ Decimals, duration, and options can be left out to use the default values.
 
 ```js
 var numAnim = new CountUp("SomeElementYouWantToAnimate", 24.02, 99.99);
-numAnim.start();
+if (!numAnim.error) {
+    numAnim.start();
+} else {
+    console.error(numAnim.error);
+}
 ```
 
 with optional callback:

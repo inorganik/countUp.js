@@ -15,7 +15,7 @@
 var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
 	var self = this;
-	self.version = function () { return '1.9.0'; };
+	self.version = function () { return '1.9.1'; };
 	
 	// default options
 	self.options = {
@@ -117,14 +117,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 			self.duration = Number(duration) * 1000 || 2000;
 			self.countDown = (self.startVal > self.endVal);
 			self.frameVal = self.startVal;
-			if (isNaN(self.options.separator)) {
-				self.initialized = true;
-				return true;
-			}
-			else {
-				self.error = '[CountUp] separator cannot be a number: '+self.options.separator;
-				return false;
-			}
+			self.initialized = true;
+			return true;
 		}
 		else {
 			self.error = '[CountUp] startVal ('+startVal+') or endVal ('+endVal+') is not a number';

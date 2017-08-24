@@ -11,7 +11,6 @@
 	<title>CountUp.js</title>
 
 	<link rel="stylesheet" type="text/css" href="../inorganik.github.io/assets/css/style.css?v=20140820">
-	<!--<link rel="stylesheet" type="text/css" href="../assets/css/style.css?v=20141210"> -->
 	<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>-->
 	<script src="countUp.js"></script>
 	<!--<script type="text/javascript" src="angular-countUp.js"></script>-->
@@ -301,7 +300,6 @@
 		updateCodeVisualizer();
 	}
 	function toggleEasing(checkbox) {
-
 		useEasing = checkbox.checked
 		easingFnsDropdown.disabled = !useEasing
 		if (useEasing) {
@@ -311,9 +309,7 @@
 		updateCodeVisualizer();
 	}
 	function toggleGrouping(checkbox) {
-
 		useGrouping = checkbox.checked;
-		document.getElementById('separator').disabled = !useGrouping
 		updateCodeVisualizer();
 	}
 	function methodToCallOnComplete() {

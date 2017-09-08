@@ -15,7 +15,7 @@
 var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
 	var self = this;
-	self.version = function () { return '1.9.1'; };
+	self.version = function () { return '1.9.2'; };
 	
 	// default options
 	self.options = {
@@ -41,7 +41,8 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
 	if (self.options.separator === '') {
 		self.options.useGrouping = false;
-	} else {
+	}
+	else {
 		// ensure the separator is a string (formatNumber assumes this)
 		self.options.separator = '' + self.options.separator;
 	}
@@ -53,15 +54,13 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	var vendors = ['webkit', 'moz', 'ms', 'o'];
 	for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
 		window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-		window.cancelAnimationFrame =
-			window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+		window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
 	}
 	if (!window.requestAnimationFrame) {
 		window.requestAnimationFrame = function(callback, element) {
 			var currTime = new Date().getTime();
 			var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-			var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-				timeToCall);
+			var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
 			lastTime = currTime + timeToCall;
 			return id;
 		};
@@ -92,11 +91,11 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		// optional numeral substitution
 		if (self.options.numerals.length) {
 			x1 = x1.replace(/[0-9]/g, function(w) {
-								return self.options.numerals[+w];
-						})
+				return self.options.numerals[+w];
+			})
 			x2 = x2.replace(/[0-9]/g, function(w) {
-								return self.options.numerals[+w];
-						})
+				return self.options.numerals[+w];
+			})
 		}
 		return self.options.prefix + x1 + x2 + self.options.suffix;
 	}

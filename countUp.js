@@ -39,7 +39,12 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		}
 	}
 
-	if (self.options.separator === '') self.options.useGrouping = false;
+	if (self.options.separator === '') {
+		self.options.useGrouping = false;
+	} else {
+		// ensure the separator is a string (formatNumber assumes this)
+		self.options.separator = '' + self.options.separator;
+	}
 
 	// make sure requestAnimationFrame and cancelAnimationFrame are defined
 	// polyfill for browsers without native support
@@ -49,14 +54,14 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
 		window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
 		window.cancelAnimationFrame =
-		  window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+			window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
 	}
 	if (!window.requestAnimationFrame) {
 		window.requestAnimationFrame = function(callback, element) {
 			var currTime = new Date().getTime();
 			var timeToCall = Math.max(0, 16 - (currTime - lastTime));
 			var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-			  timeToCall);
+				timeToCall);
 			lastTime = currTime + timeToCall;
 			return id;
 		};
@@ -70,24 +75,28 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	function formatNumber(num) {
 		num = num.toFixed(self.decimals);
 		num += '';
-		var x, x1, x2, rgx;
+		var x, x1, x2, x3, i, l;
 		x = num.split('.');
 		x1 = x[0];
 		x2 = x.length > 1 ? self.options.decimal + x[1] : '';
-		rgx = /(\d+)(\d{3})/;
 		if (self.options.useGrouping) {
-			while (rgx.test(x1)) {
-				x1 = x1.replace(rgx, '$1' + self.options.separator + '$2');
+			x3 = '';
+			for (i = 0, l = x1.length; i < l; ++i) {
+				if (i !== 0 && ((i % 3) === 0)) {
+					x3 = self.options.separator + x3;
+				}
+				x3 = x1[l - i - 1] + x3;
 			}
+			x1 = x3;
 		}
 		// optional numeral substitution
 		if (self.options.numerals.length) {
 			x1 = x1.replace(/[0-9]/g, function(w) {
-                return self.options.numerals[+w];
-            })
+								return self.options.numerals[+w];
+						})
 			x2 = x2.replace(/[0-9]/g, function(w) {
-                return self.options.numerals[+w];
-            })
+								return self.options.numerals[+w];
+						})
 		}
 		return self.options.prefix + x1 + x2 + self.options.suffix;
 	}

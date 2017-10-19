@@ -16,6 +16,7 @@ _Angular 1 and 2 modules used to be part of this repo_. **As of v1.9.0, they hav
 - **[CountUp.js Angular 1.x Module](https://github.com/inorganik/countUp.js-angular1)**
 - **[CountUp.js Angular ^2 Module](https://github.com/inorganik/countUp.js-angular2)**
 - **[CountUp.js React](https://github.com/glennreyes/react-countup)**
+- **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2?ref=madewithvuejs.com)**
 - **[CountUp.js WordPress Plugin](https://wordpress.org/plugins/countup-js/)**
 
 ## Installation

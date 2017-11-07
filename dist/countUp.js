@@ -26,7 +26,7 @@
 var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
 	var self = this;
-	self.version = function () { return '1.9.2'; };
+	self.version = function () { return '1.9.3'; };
 	
 	// default options
 	self.options = {
@@ -83,19 +83,20 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	}
 
 	function formatNumber(num) {
-		num = num.toFixed(self.decimals);
+		var neg = (num < 0),
+        	x, x1, x2, x3, i, len;
+		num = Math.abs(num).toFixed(self.decimals);
 		num += '';
-		var x, x1, x2, x3, i, l;
 		x = num.split('.');
 		x1 = x[0];
 		x2 = x.length > 1 ? self.options.decimal + x[1] : '';
 		if (self.options.useGrouping) {
 			x3 = '';
-			for (i = 0, l = x1.length; i < l; ++i) {
+			for (i = 0, len = x1.length; i < len; ++i) {
 				if (i !== 0 && ((i % 3) === 0)) {
 					x3 = self.options.separator + x3;
 				}
-				x3 = x1[l - i - 1] + x3;
+				x3 = x1[len - i - 1] + x3;
 			}
 			x1 = x3;
 		}
@@ -108,7 +109,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 				return self.options.numerals[+w];
 			})
 		}
-		return self.options.prefix + x1 + x2 + self.options.suffix;
+		return (neg ? '-' : '') + self.options.prefix + x1 + x2 + self.options.suffix;
 	}
 	// Robert Penner's easeOutExpo
 	function easeOutExpo(t, b, c, d) {

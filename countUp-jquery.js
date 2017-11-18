@@ -27,7 +27,7 @@
         this.each(function(i, elem) {
         	var countUp = new CountUp(elem, defaults.startVal, defaults.endVal, defaults.decimals, defaults.duration, defaults.options);
 
-        	countUp.start();
+        	countUp.start(defaults.complete);
         });
 
 

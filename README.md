@@ -7,10 +7,6 @@ CountUp.js supports all browsers.
 
 ## [Try the demo](http://inorganik.github.io/countUp.js)
 
-## Please note
-
-_Angular 1 and 2 modules used to be part of this repo_. **As of v1.9.0, they have moved.** See links below. 
-
 ## See Also
 
 - **[CountUp.js Angular 1.x Module](https://github.com/inorganik/countUp.js-angular1)**
@@ -90,7 +86,7 @@ numAnim.start(function() {
 
 ## Contributing <a name="contributing"></a>
 
-Before you make a pull request, please be sure to follow these super simple instructions:
+Before you make a pull request, please be sure to follow these instructions:
 
 1. Do your work on `countUp.js` and/or other files in the root directory.
 2. In Terminal, `cd` to the `countUp.js` directory.

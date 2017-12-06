@@ -10,7 +10,7 @@
 
 	<title>CountUp.js</title>
 
-	<link rel="stylesheet" type="text/css" href="../inorganik.github.io/assets/css/style.css?v=20140820">
+	<link rel="stylesheet" type="text/css" href="../inorganik.github.io/assets/css/style.css?v=20171206">
 	<script src="countUp.js"></script>
 	<script src="demo.js"></script>
 	<script>
@@ -38,6 +38,7 @@
 			<h1>CountUp.js &nbsp;<small id="version" class="lt-gray"></small></h1>
 			<p>CountUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.</p>
 			<p>Install via npm using the package name <code class="indigo large">&nbsp;countup.js&nbsp;</code> or bower using <code class="indigo large">&nbsp;countUp.js</code>.</p>
+			<p>🆕&ensp;You might also like <a href="https://inorganik.github.io/strokeText.js/">strokeText.js</a> &mdash; simple, pixel-perfect text stroking for the web.</p>
 			<h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/CountUp.js">Download on Github</a></h3>
 		</section>
 		<section>
@@ -52,12 +53,12 @@
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Params:</h4>
 				<div class="inlineLeft marginLeft marginRight">
-					<input type="text" value="24.02" id="startVal" style="width:50px" onkeyup="updateCodeVisualizer()">
+					<input type="text" value="24.02" id="startVal" style="width:80px" onkeyup="updateCodeVisualizer()">
 					<label class="inlineLabel">Start</label>
 				</div>
 				<input type="button" class="inlineLeft marginRight" value="Swap" onClick="swapValues()" style="width:80px;">
 				<div class="inlineLeft marginRight">
-					<input type="text" value="94.62" id="endVal" style="width:50px" onkeyup="updateCodeVisualizer()">
+					<input type="text" value="94.62" id="endVal" style="width:80px" onkeyup="updateCodeVisualizer()">
 					<label class="inlineLabel">End</label>
 				</div>
 				<div class="inlineLeft marginRight">
@@ -65,7 +66,7 @@
 					<label class="inlineLabel">Decimals</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="number" value="2.5" id="duration" step=".1" style="width:50px" onkeyup="updateCodeVisualizer()" onchange="updateCodeVisualizer()">
+					<input type="number" value="2.5" id="duration" step=".1" style="width:60px" onkeyup="updateCodeVisualizer()" onchange="updateCodeVisualizer()">
 					<label class="inlineLabel">Duration</label>
 				</div>
 			</form>
@@ -105,7 +106,7 @@
 				<input type="button" value="Reset" onClick="showCodeAndReset()" class="inlineLeft marginRight">
 				<input type="button" value="Update:" onClick="showCodeAndUpdate()" class="inlineLeft" style="margin-right:5px">
 				<div class="inlineLeft marginRight">
-					<input type="text" value="6789" id="updateVal" style="width:50px" onkeyup="updateCodeVisualizerForUpdate()">
+					<input type="text" value="6789" id="updateVal" style="width:80px" onkeyup="updateCodeVisualizerForUpdate()">
 				</div>
 				<div class="inlineLeft">
 					<input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
@@ -138,17 +139,8 @@
 		</section>
 		<section class="marginBottom">
 			<div class="col full marginBottom marginTop">
-				<div class="code-contain marginBottom">
-					<code id="codeVisualizer" class="indigo">var options = {<br>
-						&emsp;&emsp;useEasing : true, <br>
-						&emsp;&emsp;easingFn : null, <br>
-						&emsp;&emsp;useGrouping : true, <br>
-						&emsp;&emsp;separator : ',', <br>
-						&emsp;&emsp;decimal : '.' <br>
-						}<br>
-						var demo = new CountUp("myTargetElement", 24.02, 94.62, 0, 2, options);<br>
-						demo.start();
-					</code>
+				<div class="code-contain indigo">
+					<code id="codeVisualizer" class="indigo"></code>
 				</div>
 			</div>
 		</section>

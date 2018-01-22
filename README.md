@@ -9,19 +9,19 @@ CountUp.js supports all browsers.
 
 ## See Also
 
-- **[CountUp.js Angular 1.x Module](https://github.com/inorganik/countUp.js-angular1)**
 - **[CountUp.js Angular ^2 Module](https://github.com/inorganik/countUp.js-angular2)** ![New and improved!](http://img4me.com/sxa.gif)
+- **[CountUp.js Angular 1.x Module](https://github.com/inorganik/countUp.js-angular1)**
 - **[CountUp.js React](https://github.com/glennreyes/react-countup)**
-- **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2?ref=madewithvuejs.com)**
+- **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2)**
 - **[CountUp.js WordPress Plugin](https://wordpress.org/plugins/countup-js/)**
 
 ## Installation
 
-Simply include the countUp.js file in your project or install via npm or bower using the package name `countup.js` or `countUp.js` respectively.
+Simply include the countUp.js file in your project or install via npm/yarn using the package name `countup.js`.
 
 Before making a pull request, please [read this](#contributing). MIT License.
 
-A jQuery version is also included in case you like dollar signs.
+A jQuery version is also included, but needs to be included manually.
 
 ## Usage:
 Params:

@@ -23,7 +23,7 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		useGrouping: true, // 1,000,000 vs 1000000
 		separator: ',', // character to use as a separator
 		decimal: '.', // character to use as a decimal
-		easingFn: easeOutExpo, // optional custom easing function, default is Robert Penner's easeOutExpo
+		easingFn: easeOutExpo, // optional custom easing function, default is Robert Penner's easeOutExpo, altered to allow passing in string name of function, or direct function reference
 		formattingFn: formatNumber, // optional custom formatting function, default is formatNumber above
 		prefix: '', // optional text before the result
 		suffix: '', // optional text after the result
@@ -45,6 +45,23 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	else {
 		// ensure the separator is a string (formatNumber assumes this)
 		self.options.separator = '' + self.options.separator;
+	}
+    
+    //allow passing easingFn as <string>:
+    if (self.options.useEasing) {
+		//if: easingFn name given as string, check if it's a function, if so, set easingFn to reference to function:
+		if (typeof self.options.easingFn !== "undefined" && typeof self.options.easingFn === "string") {
+			//if: function defined in window, prefer local function:
+			if (typeof window[self.options.easingFn] === "function") {
+				self.options.easingFn = window[self.options.easingFn];
+			//else if: using jQuery Easing v1.3 - http://gsgd.co.uk/sandbox/jquery/easing/, and function found:
+			} else if (typeof jQuery !== "undefined" && typeof jQuery.easing[self.options.easingFn] === "function") {
+				self.options.easingFn = jQuery.easing[self.options.easingFn];
+			//else: easing function not found, reset to default:
+			} else {
+				self.options.easingFn = easeOutExpo;
+			}
+		}
 	}
 
 	// make sure requestAnimationFrame and cancelAnimationFrame are defined

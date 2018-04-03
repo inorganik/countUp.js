@@ -16,14 +16,14 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 
 	var self = this;
 	self.version = function () { return '1.9.3'; };
-	
+
 	// default options
 	self.options = {
 		useEasing: true, // toggle easing
 		useGrouping: true, // 1,000,000 vs 1000000
 		separator: ',', // character to use as a separator
 		decimal: '.', // character to use as a decimal
-		easingFn: easeOutExpo, // optional custom easing function, default is Robert Penner's easeOutExpo
+		easingFn: easeOutExpo, // optional custom easing function, default is Robert Penner's easeOutExpo, altered to allow passing in string name of function, or direct function reference
 		formattingFn: formatNumber, // optional custom formatting function, default is formatNumber above
 		prefix: '', // optional text before the result
 		suffix: '', // optional text after the result
@@ -45,6 +45,23 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 	else {
 		// ensure the separator is a string (formatNumber assumes this)
 		self.options.separator = '' + self.options.separator;
+	}
+
+	if (self.options.useEasing) {
+		//If easingFn name given as string, check if it's a function, if so, set easingFn to reference to function:
+		if (typeof self.options.easingFn !== "undefined" && typeof self.options.easingFn === "string") {
+			//if function defined in window, prefer local function:
+			if (typeof window[self.options.easingFn] === "function") {
+				self.options.easingFn = window[self.options.easingFn];
+			//else if using jQuery Easing v1.3 - http://gsgd.co.uk/sandbox/jquery/easing/
+			} else if (typeof jQuery !== "undefined" && typeof jQuery.easing[self.options.easingFn] === "function") {
+				self.options.easingFn = jQuery.easing[self.options.easingFn];
+			//easing function not found, reset to default, or turn off easing?
+			} else {
+				//resetting to default
+				self.options.easingFn = easeOutExpo;
+			}
+		}
 	}
 
 	// make sure requestAnimationFrame and cancelAnimationFrame are defined
@@ -101,19 +118,19 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		return (neg ? '-' : '') + self.options.prefix + x1 + x2 + self.options.suffix;
 	}
 	// Robert Penner's easeOutExpo
-	function easeOutExpo(t, b, c, d) {
-		return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
+	function easeOutExpo (x, t, b, c, d) {
+		return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
 	}
 	function ensureNumber(n) {
 		return (typeof n === 'number' && !isNaN(n));
 	}
 
-	self.initialize = function() { 
+	self.initialize = function() {
 		if (self.initialized) return true;
-		
+
 		self.error = '';
 		self.d = (typeof target === 'string') ? document.getElementById(target) : target;
-		if (!self.d) { 
+		if (!self.d) {
 			self.error = '[CountUp] target is null or undefined'
 			return false;
 		}
@@ -161,9 +178,9 @@ var CountUp = function(target, startVal, endVal, decimals, duration, options) {
 		// to ease or not to ease
 		if (self.options.useEasing) {
 			if (self.countDown) {
-				self.frameVal = self.startVal - self.options.easingFn(progress, 0, self.startVal - self.endVal, self.duration);
+				self.frameVal = self.startVal - self.options.easingFn(null, progress, 0, self.startVal - self.endVal, self.duration);
 			} else {
-				self.frameVal = self.options.easingFn(progress, self.startVal, self.endVal - self.startVal, self.duration);
+				self.frameVal = self.options.easingFn(null, progress, self.startVal, self.endVal - self.startVal, self.duration);
 			}
 		} else {
 			if (self.countDown) {

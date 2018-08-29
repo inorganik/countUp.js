@@ -78,7 +78,7 @@ numAnim.update(someValue);
 For large numbers, since CountUp has a long way to go in just a few seconds, the animation seems to abruptly stop. The solution is to subtract 100 from your `endVal`, then use the callback to invoke the `update` method which completes the animation with the same duration with a difference of only 100 to animate:
 ```js
 var endVal = 9645.72;
-var numAnim = new CountUp("targetElem", 0, endVal - 100, 2, duration/2);
+var numAnim = new CountUp('targetElem', 0, endVal - 100, 2, duration/2);
 numAnim.start(function() {
 	numAnim.update(endVal);
 });
@@ -90,5 +90,5 @@ Before you make a pull request, please be sure to follow these instructions:
 
 1. Do your work on `countUp.js` and/or other files in the root directory.
 2. In Terminal, `cd` to the `countUp.js` directory.
-3. Run `npm install`, which installs gulp and its dependencies.
-4. Run `gulp`, which copies and minifies the .js files to the `dist` folder.
+3. Run `npm i`
+4. Run `npm run build`, which copies and minifies the .js files to the `dist` folder.

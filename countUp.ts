@@ -1,6 +1,6 @@
 export interface CountUpOptions { // (default)
   startVal?: number; // number to start at (0)
-  decimals?: number; // number of decimal places (0)
+  decimalPlaces?: number; // number of decimal places (0)
   duration?: number; // animation duration in seconds (2)
   useEasing?: boolean; // ease animation (true)
   useGrouping?: boolean; // example: 1,000 vs 1000 (true)
@@ -21,7 +21,7 @@ export class CountUp {
   version = '2.0.0';
   private defaults: CountUpOptions = {
     startVal: 0,
-    decimals: 0,
+    decimalPlaces: 0,
     duration: 2,
     useEasing: true,
     useGrouping: true,
@@ -62,8 +62,8 @@ export class CountUp {
     if (!this.el) {
       this.error = '[CountUp] target is null or undefined';
     }
-    this.options.decimals = Math.max(0 || this.options.decimals);
-    this.decimalMult = Math.pow(10, this.options.decimals);
+    this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
+    this.decimalMult = Math.pow(10, this.options.decimalPlaces);
     this.duration = Number(this.options.duration) * 1000;
     this.startVal = this.validateValue(this.options.startVal);
     this.endVal = this.validateValue(endVal);
@@ -190,7 +190,7 @@ export class CountUp {
       x1: string,
       x2: string,
       x3: string;
-    result = Math.abs(num).toFixed(this.options.decimals);
+    result = Math.abs(num).toFixed(this.options.decimalPlaces);
     result += '';
     x = result.split('.');
     x1 = x[0];

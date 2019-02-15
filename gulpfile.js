@@ -1,5 +1,4 @@
 import gulp from 'gulp';
-import wrap from 'gulp-wrap-umd';
 import uglify from 'gulp-uglify';
 import rename from 'gulp-rename';
 import del from 'del';
@@ -7,12 +6,7 @@ import del from 'del';
 export const clean = () => del(['dist/*']);
 
 export function umd() {
-	return gulp.src('countUp.js')
-		.pipe(wrap({
-			namespace: 'CountUp',
-			exports: 'CountUp'
-        }))
-        .pipe(gulp.dest('dist/'))
+	return gulp.src('dist/countUp.js')
 		.pipe(uglify())
 		.pipe(rename({
 			suffix: '.min'

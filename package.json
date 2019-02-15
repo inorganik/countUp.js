@@ -12,14 +12,14 @@
 	"devDependencies": {
 		"del": "^3.0.0",
 		"gulp": "^4.0.0",
-		"gulp-rename": "^1.4.0",
+		"gulp-concat": "^2.6.1",
 		"gulp-uglify": "^3.0.1",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.3"
 	},
 	"scripts": {
-		"build": "gulp",
-    "clean": "gulp clean",
-    "lint": "tslint --project tsconfig.json"
+		"build": "npm run clean && tsc && gulp",
+		"clean": "gulp clean",
+		"lint": "tslint --project tsconfig.json"
 	}
 }

@@ -1,21 +1,30 @@
-import gulp from 'gulp';
-import uglify from 'gulp-uglify';
-import rename from 'gulp-rename';
-import del from 'del';
+const gulp = require('gulp');
+const uglify = require('gulp-uglify');
+const concat = require('gulp-concat');
+const del = require('del');
 
-export const clean = () => del(['dist/*']);
+const clean = () => del(['dist/*']);
 
-export function umd() {
-	return gulp.src('dist/countUp.js')
+const buildNormal = () => {
+  return gulp.src('./dist/countUp.js')
+    .pipe(concat('countUp.min.js'))
 		.pipe(uglify())
-		.pipe(rename({
-			suffix: '.min'
-		}))
+		.pipe(gulp.dest('dist'));
+}
+
+const buildLegacy = () => {
+  return gulp.src([
+      './requestAnimationFrame.polyfill.js',
+      './dist/countUp.js'
+    ])
+    .pipe(concat('countUp.legacy.min.js'))
+		.pipe(uglify())
 		.pipe(gulp.dest('dist'));
 }
 
 gulp.task('clean', clean);
-const build = gulp.series(clean, umd);
+const build = gulp.series(buildNormal, buildLegacy);
 gulp.task('build', build);
 
-export default build;
+exports.clean = clean;
+exports.default = build;

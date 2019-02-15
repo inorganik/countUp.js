@@ -1,11 +1,11 @@
 export interface CountUpOptions { // (default)
   startVal?: number; // number to start at (0)
-  decimals: number; // number of decimal places (0)
-  duration: number; // animation duration in seconds (2)
+  decimals?: number; // number of decimal places (0)
+  duration?: number; // animation duration in seconds (2)
   useEasing?: boolean; // ease animation (true)
   useGrouping?: boolean; // example: 1,000 vs 1000 (true)
   autoSmoothThreshold?: number; // smooth easing for large numbers above this (999)
-  smoothAmount?: number; // amount to be counted if auto-smoothed
+  autoSmoothAmount?: number; // amount to be counted if auto-smoothed
   separator?: string; // grouping separator (,)
   decimal?: string; // decimal (.)
   // easingFn: easing function for animation (easeOutExpo)
@@ -13,19 +13,20 @@ export interface CountUpOptions { // (default)
   formattingFn?: (n: number) => string; // this function formats result
   prefix?: string; // text prepended to result
   suffix?: string; // text appended to result
+  numerals?: string[];
 }
 
 export class CountUp {
 
   version = '2.0.0';
-  defaults: CountUpOptions = {
+  private defaults: CountUpOptions = {
     startVal: 0,
     decimals: 0,
     duration: 2,
     useEasing: true,
     useGrouping: true,
     autoSmoothThreshold: 999,
-    smoothAmount: 100,
+    autoSmoothAmount: 100,
     separator: ',',
     decimal: '.',
     easingFn: this.easeOutExpo,
@@ -33,25 +34,25 @@ export class CountUp {
     prefix: '',
     suffix: ''
   };
-  el: HTMLElement | HTMLInputElement;
-  rAF: any;
+  private el: HTMLElement | HTMLInputElement;
+  private rAF: any;
+  private startTime: number;
+  private decimalMult: number;
+  private timestamp: number;
+  private remaining: number;
+  private finalEndVal: number;
+  callback: (args?: any) => any;
   error = '';
   startVal = 0;
   duration = 0;
   countDown = false;
   paused = false;
   frameVal: number;
-  startTime: number;
-  decimalMult: number;
-  timestamp: number;
-  remaining: number;
-  internalCallback: (args?: any) => void;
-  callback: (args?: any) => void;
 
   constructor(
     private target: string | HTMLElement | HTMLInputElement,
     private endVal: number,
-    private options: CountUpOptions
+    private options?: CountUpOptions
   ) {
     this.options = {
       ...this.defaults,
@@ -66,41 +67,33 @@ export class CountUp {
     this.duration = Number(this.options.duration) * 1000;
     this.startVal = this.validateValue(this.options.startVal);
     this.endVal = this.validateValue(endVal);
+    this.options.separator = String(this.options.separator);
+    if (this.options.separator === '') {
+      this.options.useGrouping = false;
+    }
     if (this.startVal) {
       this.printValue(this.startVal);
-    }
-
-    // auto-smooth large numbers
-    if (this.endVal > this.options.autoSmoothThreshold) {
-      const up = (this.endVal > this.startVal) ? -1 : 1;
-      this.startVal = this.frameVal;
-      // this.endVal = this.endVal + (up * 100)
-      // countUp = new CountUp(this.el.nativeElement, start, this.endVal + (up * 100), decimals, duration / 2, this.options);
-    }
-  }
-
-  validateValue(value: number): number {
-    const newValue = Number(value);
-    if (!this.ensureNumber(newValue)) {
-      this.error = `[CountUp] invalid start or end value: ${value}`;
-      return null;
-    } else {
-      this.countDown = (this.options.startVal > newValue);
-      return newValue;
     }
   }
 
   // start animation
-  start = function(callback) {
+  start(callback?: (args?: any) => any) {
     if (this.error) {
       return;
     }
     this.callback = callback;
+    // auto-smooth large numbers
+    if (this.endVal > this.options.autoSmoothThreshold) {
+      this.finalEndVal = this.endVal;
+      const up = (this.endVal > this.startVal) ? -1 : 1;
+      this.endVal = this.endVal + (up * 100);
+      this.duration = this.duration / 2;
+    }
     this.rAF = requestAnimationFrame(this.count);
-  };
+  }
 
   // pause/resume animation
-  pauseResume = function () {
+  pauseResume() {
     if (!this.paused) {
       this.paused = true;
       cancelAnimationFrame(this.rAF);
@@ -111,18 +104,21 @@ export class CountUp {
       this.startVal = this.frameVal;
       this.start();
     }
-  };
+  }
 
   // reset to startVal so animation can be run again
-  reset = function () {
+  reset() {
     this.paused = false;
     this.startTime = null;
+    this.finalEndVal = null;
     cancelAnimationFrame(this.rAF);
     this.printValue(this.startVal);
-  };
+  }
+
   // pass a new endVal and start animation
-  update = function (newEndVal) {
+  update(newEndVal) {
     this.endVal = this.validateValue(newEndVal);
+    this.finalEndVal = null;
     if (this.endVal === this.frameVal) {
       return;
     }
@@ -132,7 +128,7 @@ export class CountUp {
     this.startTime = null;
     this.startVal = this.frameVal;
     this.start();
-  };
+  }
 
   count(timestamp: number) {
 
@@ -173,6 +169,9 @@ export class CountUp {
     // whether to continue
     if (progress < this.duration) {
       this.rAF = requestAnimationFrame(this.count);
+    } else if (this.finalEndVal) {
+      // for auto-smoothing
+      this.update(this.finalEndVal);
     } else {
       if (this.callback) {
         this.callback();
@@ -199,12 +198,17 @@ export class CountUp {
     if (this.options.useGrouping) {
       x3 = '';
       for (let i = 0, len = x1.length; i < len; ++i) {
-        if (i !== 0 && ((i % 3) === 0)) {
+        if (i !== 0 && (i % 3) === 0) {
           x3 = this.options.separator + x3;
         }
         x3 = x1[len - i - 1] + x3;
       }
       x1 = x3;
+    }
+    // optional numeral substitution
+    if (this.options.numerals && this.options.numerals.length) {
+      x1 = x1.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
+      x2 = x2.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
     }
     return neg + this.options.prefix + x1 + x2 + this.options.suffix;
   }
@@ -224,5 +228,16 @@ export class CountUp {
 
   ensureNumber(n: any) {
     return (typeof n === 'number' && !isNaN(n));
+  }
+
+  validateValue(value: number): number {
+    const newValue = Number(value);
+    if (!this.ensureNumber(newValue)) {
+      this.error = `[CountUp] invalid start or end value: ${value}`;
+      return null;
+    } else {
+      this.countDown = (this.options.startVal > newValue);
+      return newValue;
+    }
   }
 }

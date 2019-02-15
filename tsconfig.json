@@ -3,10 +3,8 @@
     "lib": ["es2017", "dom"],
     "module": "commonjs",
     "outDir": "dist",
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "target": "es5",
+    "declaration": true
   },
   "compileOnSave": true,
   "files": [

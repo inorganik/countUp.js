@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["es2017", "dom"],
-    "module": "commonjs",
+    "module": "umd",
     "outDir": "dist",
     "target": "es5",
     "declaration": true

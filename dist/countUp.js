@@ -198,7 +198,6 @@ var __assign = (this && this.__assign) || function () {
             this.error = '';
             this.paused = false;
             this.startTime = null;
-            console.log('frame val on update', this.frameVal);
             this.startVal = this.frameVal;
             this.start();
         };

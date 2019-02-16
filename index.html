@@ -65,7 +65,7 @@
 					<label class="inlineLabel">Decimals</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="number" value="2.5" id="duration" step=".1" style="width:60px">
+					<input type="number" value="2" id="duration" step=".1" style="width:60px">
 					<label class="inlineLabel">Duration</label>
 				</div>
 			</form>
@@ -80,11 +80,11 @@
 					<input id="useGrouping" type="checkbox" checked><label class="inlineLabel">Use grouping</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="text" value="," id="separator" style="width:15px; padding:0 5px;" onkeyup="updateCodeVisualizer()">
+					<input type="text" value="," id="separator" style="width:25px; padding:0 5px;" onkeyup="updateCodeVisualizer()">
 					<label class="inlineLabel">Separator</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="text" value="." id="decimal" style="width:15px; padding:0 5px;" onkeyup="updateCodeVisualizer()">
+					<input type="text" value="." id="decimal" style="width:25px; padding:0 5px;" onkeyup="updateCodeVisualizer()">
 					<label class="inlineLabel">Decimal</label>
 				</div>
 				<div class="inlineLeft marginRight">
@@ -100,15 +100,15 @@
 		<section>
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Methods:</h4>
-				<input type="button" value="Start" onClick="createCountUp()" class="inlineLeft marginLeft marginRight">
-				<input type="button" value="Pause/Resume" onClick="showCodeAndPauseResume()" class="inlineLeft marginRight">
-				<input type="button" value="Reset" onClick="showCodeAndReset()" class="inlineLeft marginRight">
-				<input type="button" value="Update:" onClick="showCodeAndUpdate()" class="inlineLeft" style="margin-right:5px">
+				<input type="button" value="Start" id="start" class="inlineLeft marginLeft marginRight">
+				<input type="button" value="Pause/Resume" id="pauseResume" class="inlineLeft marginRight">
+				<input type="button" value="Reset" id="reset" class="inlineLeft marginRight">
+				<input type="button" value="Update:" id="update" class="inlineLeft" style="margin-right:5px">
 				<div class="inlineLeft marginRight">
-					<input type="text" value="6789" id="updateVal" style="width:80px" onkeyup="updateCodeVisualizerForUpdate()">
+					<input type="text" value="6789" id="updateVal" style="width:80px">
 				</div>
 				<div class="inlineLeft">
-					<input type="checkbox" onClick="toggleOnComplete(this)"><label class="inlineLabel">Alert on complete</label>
+					<input type="checkbox" id="useOnComplete"><label class="inlineLabel">Alert on complete</label>
 				</div>
 			</form>
 		</section>
@@ -132,7 +132,7 @@
 					</select>
 				</div>
 				<div class="inlineLeft">
-					<input type="button" value="Apply" onClick="createCountUp()">
+					<input type="button" id="apply" value="Apply">
 				</div>
 			</form>
 		</section>

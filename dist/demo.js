@@ -10,11 +10,10 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var countUp_1 = require("./countUp");
-    console.log('CountUp demo', countUp_1.CountUp);
     var input = function (id) {
         return document.getElementById(id);
     };
-    var code, stars, useOnComplete, endVal, options;
+    var code, stars, endVal, options;
     var demo = new countUp_1.CountUp('myTargetElement', 100);
     var codeVisualizer = document.getElementById('codeVisualizer');
     var easingFnsDropdown = input('easingFnsDropdown');
@@ -29,6 +28,11 @@
     input('decimal').onchange = updateCodeVisualizer;
     input('prefix').onchange = updateCodeVisualizer;
     input('suffix').onchange = updateCodeVisualizer;
+    input('useEasing').onclick = updateCodeVisualizer;
+    input('useGrouping').onclick = updateCodeVisualizer;
+    input('useOnComplete').onclick = updateCodeVisualizer;
+    input('easingFnsDropdown').onchange = updateCodeVisualizer;
+    input('numeralsDropdown').onchange = updateCodeVisualizer;
     document.getElementById('swapValues').onclick = function () {
         var oldStartVal = input('startVal').value;
         var oldEndVal = input('endVal').value;
@@ -36,19 +40,32 @@
         input('endVal').value = oldStartVal;
         updateCodeVisualizer();
     };
-    input('useEasing').onclick = function (e) {
-        console.log(e);
-        // useEasing = e.target.value
-        // easingFnsDropdown.disabled = !useEasing;
-        // if (useEasing) {
-        //   easingFnsDropdown.value = 'easeOutExpo';
-        //   input('easingFnPreview').value = "";
-        // }
-        // updateCodeVisualizer();
+    document.getElementById('start').onclick = createCountUp;
+    document.getElementById('apply').onclick = createCountUp;
+    document.getElementById('pauseResume').onclick = function () {
+        code += '<br>demo.pauseResume();';
+        codeVisualizer.innerHTML = code;
+        demo.pauseResume();
     };
-    input('useGrouping').onclick = function (e) {
-        console.log(e);
+    document.getElementById('reset').onclick = function () {
+        code += '<br>demo.reset();';
+        codeVisualizer.innerHTML = code;
+        demo.reset();
     };
+    document.getElementById('update').onclick = function () {
+        var updateVal = input('updateVal').value;
+        var num = updateVal ? updateVal : 0;
+        code += "<br>demo.update(" + num + ");";
+        codeVisualizer.innerHTML = code;
+        demo.update(num);
+    };
+    input('updateVal').onchange = function () {
+        var updateVal = input('updateVal').value;
+        var num = updateVal ? updateVal : 0;
+        code += '<br>demo.update(' + num + ');';
+        codeVisualizer.innerHTML = code;
+    };
+    // OPTION VALUES
     var easingFunctions = {
         easeOutExpo: function (t, b, c, d) {
             return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
@@ -66,7 +83,6 @@
     };
     function getEasingFn() {
         var fn = input('easingFnsDropdown').value;
-        console.log('fn', fn);
         if (fn === 'easeOutExpo') {
             return null;
         }
@@ -98,14 +114,13 @@
         }
     }
     var stringifyArray = function (arr) { return '[\'' + arr.join('\', \'') + '\']'; };
+    // COUNTUP AND CODE VISUALIZER
     function createCountUp() {
         establishOptionsFromInputs();
-        // you don't have to create a new instance of CountUp every time you start an animation,
-        // you can just change the properties individually. But I do here in case user changes values in demo.
         demo = new countUp_1.CountUp('myTargetElement', endVal, options);
         if (!demo.error) {
             errorSection.style.display = 'none';
-            if (useOnComplete) {
+            if (input('useOnComplete').checked) {
                 demo.start(methodToCallOnComplete);
             }
             else {
@@ -119,21 +134,6 @@
             console.error(demo.error);
         }
     }
-    function showCodeAndPauseResume() {
-        codeVisualizer.innerHTML = 'demo.pauseResume();';
-        demo.pauseResume();
-    }
-    function showCodeAndReset() {
-        codeVisualizer.innerHTML = 'demo.reset();';
-        demo.reset();
-    }
-    function showCodeAndUpdate() {
-        var updateVal = input('updateVal').value;
-        var num = updateVal ? updateVal : 0;
-        code = "demo.update(" + num + ");<br>";
-        codeVisualizer.innerHTML = code;
-        demo.update(num);
-    }
     function methodToCallOnComplete() {
         console.log('COMPLETE!');
         alert('COMPLETE!');
@@ -142,27 +142,25 @@
         endVal = Number(input('endVal').value);
         options = {
             startVal: input('startVal').value,
-            duration: input('duration').value,
+            duration: Number(input('duration').value),
             prefix: input('prefix').value,
             suffix: input('suffix').value,
             decimalPlaces: input('decimals').value,
-            useEasing: input('useEasing').value,
-            useGrouping: input('useGrouping').value,
+            useEasing: input('useEasing').checked,
+            useGrouping: input('useGrouping').checked,
             easingFn: typeof getEasingFn() === 'undefined' ? null : getEasingFn(),
             separator: input('separator').value,
             decimal: input('decimal').value,
             numerals: getNumerals()
         };
-        console.log('demo options', options);
+        // unset null values so they don't overwrite defaults
         for (var key in options) {
             if (options.hasOwnProperty(key)) {
-                console.log(key, options[key]);
                 if (options[key] === null) {
                     delete options[key];
                 }
             }
         }
-        console.log('fixed opts', options);
     }
     function updateCodeVisualizer() {
         establishOptionsFromInputs();
@@ -181,32 +179,28 @@
             var delimeter = (singleLine) ? ';' : ',';
             return "&emsp;&emsp;" + keyPair + delimeter + "<br>";
         }
-        code += 'const options = {<br>';
-        code += indentedLine("useEasing: " + options.useEasing);
-        code += (options.easingFn && options.useEasing) ? indentedLine("easingFn: " + options.easingFn) : '';
-        code += indentedLine("useGrouping: " + options.useGrouping);
-        code += indentedLine("separator: '" + options.separator + "'");
-        code += indentedLine("decimal: '" + options.decimal + "'");
-        if (options.prefix.length) {
-            code += indentedLine("prefix: '" + options.prefix + "'");
+        var opts = '';
+        opts += (options.startVal !== '0') ? indentedLine("startVal: " + options.startVal) : '';
+        opts += (options.duration !== 2) ? indentedLine("duration: " + options.duration) : '';
+        opts += (options.useEasing) ? '' : indentedLine("useEasing: " + options.useEasing);
+        opts += (options.useEasing && options.easingFn) ? indentedLine("easingFn") : '';
+        opts += (options.useGrouping) ? '' : indentedLine("useGrouping: " + options.useGrouping);
+        opts += (options.separator !== ',') ? indentedLine("separator: '" + options.separator + "'") : '';
+        opts += (options.decimal !== '.') ? indentedLine("decimal: '" + options.decimal + "'") : '';
+        opts += (options.prefix.length) ? indentedLine("prefix: '" + options.prefix + "'") : '';
+        opts += (options.suffix.length) ? indentedLine("suffix: '" + options.suffix + "'") : '';
+        opts += (options.numerals && options.numerals.length) ?
+            indentedLine("numerals: '" + stringifyArray(options.numerals) + "'") : '';
+        if (opts.length) {
+            code += "const options = {<br>" + opts + "};<br>";
         }
-        if (options.suffix.length) {
-            code += indentedLine("suffix: '" + options.suffix + "'");
-        }
-        if (options.numerals && options.numerals.length) {
-            code += indentedLine("numerals: '" + stringifyArray(options.numerals) + "'");
-        }
-        code += '};<br>';
         code += "let demo = new CountUp('myTargetElement', " + endVal + ", options);<br>";
         code += 'if (!demo.error) {<br>';
-        if (useOnComplete) {
-            code += indentedLine('demo.start(methodToCallOnComplete)', true);
-        }
-        else {
-            code += indentedLine('demo.start()', true);
-        }
+        code += (input('useOnComplete').checked) ?
+            indentedLine('demo.start(methodToCallOnComplete)', true) : indentedLine('demo.start()', true);
         code += '} else {<br>';
-        code += '&emsp;&emsp;console.error(demo.error);<br>}';
+        code += indentedLine('console.error(demo.error)', true);
+        code += '}';
         codeVisualizer.innerHTML = code;
     }
     // get current star count

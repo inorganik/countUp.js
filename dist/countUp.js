@@ -20,6 +20,7 @@ var __assign = (this && this.__assign) || function () {
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    // playground: stackblitz.com/edit/countup-typescript
     var CountUp = /** @class */ (function () {
         function CountUp(target, endVal, options) {
             var _this = this;
@@ -37,11 +38,6 @@ var __assign = (this && this.__assign) || function () {
                 autoSmoothAmount: 100,
                 separator: ',',
                 decimal: '.',
-                // ease out expo
-                easingFn: function (t, b, c, d) {
-                    return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
-                },
-                formattingFn: this.formatNumber,
                 prefix: '',
                 suffix: ''
             };
@@ -50,28 +46,6 @@ var __assign = (this && this.__assign) || function () {
             this.duration = 0;
             this.countDown = false;
             this.paused = false;
-            // reset to startVal so animation can be run again
-            this.reset = function () {
-                _this.paused = false;
-                _this.startTime = null;
-                _this.finalEndVal = null;
-                cancelAnimationFrame(_this.rAF);
-                _this.printValue(_this.startVal);
-            };
-            // pass a new endVal and start animation
-            this.update = function (newEndVal) {
-                _this.endVal = _this.validateValue(newEndVal);
-                _this.finalEndVal = null;
-                if (_this.endVal === _this.frameVal) {
-                    return;
-                }
-                cancelAnimationFrame(_this.rAF);
-                _this.error = '';
-                _this.paused = false;
-                _this.startTime = null;
-                _this.startVal = _this.frameVal;
-                _this.start();
-            };
             this.count = function (timestamp) {
                 if (!_this.startTime) {
                     _this.startTime = timestamp;
@@ -81,10 +55,10 @@ var __assign = (this && this.__assign) || function () {
                 // to ease or not to ease
                 if (_this.options.useEasing) {
                     if (_this.countDown) {
-                        _this.frameVal = _this.startVal - _this.options.easingFn(progress, 0, _this.startVal - _this.endVal, _this.duration);
+                        _this.frameVal = _this.startVal - _this.easingFn(progress, 0, _this.startVal - _this.endVal, _this.duration);
                     }
                     else {
-                        _this.frameVal = _this.options.easingFn(progress, _this.startVal, _this.endVal - _this.startVal, _this.duration);
+                        _this.frameVal = _this.easingFn(progress, _this.startVal, _this.endVal - _this.startVal, _this.duration);
                     }
                 }
                 else {
@@ -110,7 +84,7 @@ var __assign = (this && this.__assign) || function () {
                 if (progress < _this.duration) {
                     _this.rAF = requestAnimationFrame(_this.count);
                 }
-                else if (_this.finalEndVal) {
+                else if (_this.finalEndVal !== null) {
                     // for auto-smoothing
                     _this.update(_this.finalEndVal);
                 }
@@ -120,52 +94,7 @@ var __assign = (this && this.__assign) || function () {
                     }
                 }
             };
-            this.printValue = function (val) {
-                var result = _this.options.formattingFn(val);
-                if (_this.el.tagName === 'INPUT') {
-                    var input = _this.el;
-                    input.value = result;
-                }
-                else if (_this.el.tagName === 'text' || _this.el.tagName === 'tspan') {
-                    _this.el.textContent = result;
-                }
-                else {
-                    _this.el.innerHTML = result;
-                }
-            };
-            this.ensureNumber = function (n) {
-                return (typeof n === 'number' && !isNaN(n));
-            };
-            this.validateValue = function (value) {
-                var newValue = Number(value);
-                if (!_this.ensureNumber(newValue)) {
-                    _this.error = "[CountUp] invalid start or end value: " + value;
-                    return null;
-                }
-                else {
-                    _this.countDown = (_this.options.startVal > newValue);
-                    return newValue;
-                }
-            };
-            console.log('passed in options', options);
-            this.options = __assign({}, this.defaults, options);
-            console.log('resulting options', this.options);
-            this.el = (typeof target === 'string') ? document.getElementById(target) : target;
-            if (!this.el) {
-                this.error = '[CountUp] target is null or undefined';
-            }
-            this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
-            this.decimalMult = Math.pow(10, this.options.decimalPlaces);
-            this.duration = Number(this.options.duration) * 1000;
-            this.startVal = this.validateValue(this.options.startVal);
-            this.endVal = this.validateValue(endVal);
-            this.options.separator = String(this.options.separator);
-            if (this.options.separator === '') {
-                this.options.useGrouping = false;
-            }
-            if (this.startVal) {
-                this.printValue(this.startVal);
-            }
+            // default format and easing functions
             this.formatNumber = function (num) {
                 var neg = (num < 0) ? '-' : '';
                 var result, x, x1, x2, x3;
@@ -191,6 +120,30 @@ var __assign = (this && this.__assign) || function () {
                 }
                 return neg + _this.options.prefix + x1 + x2 + _this.options.suffix;
             };
+            this.easeOutExpo = function (t, b, c, d) {
+                return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
+            };
+            this.options = __assign({}, this.defaults, options);
+            this.formattingFn = (this.options.formattingFn) ?
+                this.options.formattingFn : this.formatNumber;
+            this.easingFn = (this.options.easingFn) ?
+                this.options.easingFn : this.easeOutExpo;
+            this.el = (typeof target === 'string') ? document.getElementById(target) : target;
+            if (!this.el) {
+                this.error = '[CountUp] target is null or undefined';
+            }
+            this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
+            this.decimalMult = Math.pow(10, this.options.decimalPlaces);
+            this.duration = Number(this.options.duration) * 1000;
+            this.startVal = this.validateValue(this.options.startVal);
+            this.endVal = this.validateValue(endVal);
+            this.options.separator = String(this.options.separator);
+            if (this.options.separator === '') {
+                this.options.useGrouping = false;
+            }
+            if (this.startVal) {
+                this.printValue(this.startVal);
+            }
         }
         // start animation
         CountUp.prototype.start = function (callback) {
@@ -199,7 +152,8 @@ var __assign = (this && this.__assign) || function () {
             }
             this.callback = callback;
             // auto-smooth large numbers
-            if (this.endVal > this.options.autoSmoothThreshold) {
+            var animateAmount = this.endVal - this.startVal;
+            if (Math.abs(animateAmount) > this.options.autoSmoothThreshold) {
                 this.finalEndVal = this.endVal;
                 var up = (this.endVal > this.startVal) ? -1 : 1;
                 this.endVal = this.endVal + (up * 100);
@@ -219,6 +173,60 @@ var __assign = (this && this.__assign) || function () {
                 this.duration = this.remaining;
                 this.startVal = this.frameVal;
                 this.start();
+            }
+        };
+        // reset to startVal so animation can be run again
+        CountUp.prototype.reset = function () {
+            this.paused = false;
+            this.startTime = null;
+            this.frameVal = null;
+            if (this.options.startVal) {
+                this.startVal = this.validateValue(this.options.startVal);
+            }
+            this.finalEndVal = null;
+            cancelAnimationFrame(this.rAF);
+            this.printValue(this.startVal);
+        };
+        // pass a new endVal and start animation
+        CountUp.prototype.update = function (newEndVal) {
+            this.endVal = this.validateValue(newEndVal);
+            this.finalEndVal = null;
+            if (this.endVal === this.frameVal) {
+                return;
+            }
+            cancelAnimationFrame(this.rAF);
+            this.error = '';
+            this.paused = false;
+            this.startTime = null;
+            console.log('frame val on update', this.frameVal);
+            this.startVal = this.frameVal;
+            this.start();
+        };
+        CountUp.prototype.printValue = function (val) {
+            var result = this.formattingFn(val);
+            if (this.el.tagName === 'INPUT') {
+                var input = this.el;
+                input.value = result;
+            }
+            else if (this.el.tagName === 'text' || this.el.tagName === 'tspan') {
+                this.el.textContent = result;
+            }
+            else {
+                this.el.innerHTML = result;
+            }
+        };
+        CountUp.prototype.ensureNumber = function (n) {
+            return (typeof n === 'number' && !isNaN(n));
+        };
+        CountUp.prototype.validateValue = function (value) {
+            var newValue = Number(value);
+            if (!this.ensureNumber(newValue)) {
+                this.error = "[CountUp] invalid start or end value: " + value;
+                return null;
+            }
+            else {
+                this.countDown = (this.options.startVal > newValue);
+                return newValue;
             }
         };
         return CountUp;

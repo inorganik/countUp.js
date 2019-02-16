@@ -1,5 +1,4 @@
 (function ($) {
-
   $.fn.countup = function (params) {
     // make sure dependency is present
     if (typeof CountUp !== 'function') {
@@ -13,7 +12,6 @@
       duration: 2,
     };
 
-
     if (typeof params === 'number') {
       defaults.endVal = params;
     }
@@ -26,8 +24,7 @@
     }
 
     this.each(function (i, elem) {
-      var countUp = new CountUp(elem, defaults.endVal, defaults.decimals, defaults.duration, defaults.options);
-
+      var countUp = new CountUp(elem, defaults.endVal, defaults.options);
       countUp.start();
     });
 

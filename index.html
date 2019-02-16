@@ -12,7 +12,7 @@
 
   <link rel="stylesheet" type="text/css" href="../inorganik.github.io/assets/css/style.css?v=20171206">
 
-  <script data-main="./demo.js" type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.1/require.min.js"></script>
+  <script data-main="./dist/demo.js" type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.1/require.min.js"></script>
 	<script>
 
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -52,20 +52,20 @@
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Params:</h4>
 				<div class="inlineLeft marginLeft marginRight">
-					<input type="text" value="24.02" id="startVal" style="width:80px" onkeyup="updateCodeVisualizer()">
+					<input type="text" value="24.02" id="startVal" style="width:80px">
 					<label class="inlineLabel">Start</label>
 				</div>
-				<input type="button" class="inlineLeft marginRight" value="Swap" onClick="swapValues()" style="width:80px;">
+				<input id="swapValues" type="button" class="inlineLeft marginRight" value="Swap" style="width:80px;">
 				<div class="inlineLeft marginRight">
-					<input type="text" value="94.62" id="endVal" style="width:80px" onkeyup="updateCodeVisualizer()">
+					<input type="text" value="94.62" id="endVal" style="width:80px">
 					<label class="inlineLabel">End</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="number" value="2" id="decimals" step="1" style="width:50px" onkeyup="updateCodeVisualizer()" onchange="updateCodeVisualizer()">
+					<input type="number" value="2" id="decimals" step="1" style="width:50px">
 					<label class="inlineLabel">Decimals</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="number" value="2.5" id="duration" step=".1" style="width:60px" onkeyup="updateCodeVisualizer()" onchange="updateCodeVisualizer()">
+					<input type="number" value="2.5" id="duration" step=".1" style="width:60px">
 					<label class="inlineLabel">Duration</label>
 				</div>
 			</form>
@@ -74,10 +74,10 @@
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Options:</h4>
 				<div class="inlineLeft marginLeft marginRight">
-					<input type="checkbox" onClick="toggleEasing(this)" checked><label class="inlineLabel">Use easing</label>
+					<input id="useEasing" type="checkbox" checked><label class="inlineLabel">Use easing</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="checkbox" onClick="toggleGrouping(this)" checked><label class="inlineLabel">Use grouping</label>
+					<input id="useGrouping" type="checkbox" checked><label class="inlineLabel">Use grouping</label>
 				</div>
 				<div class="inlineLeft marginRight">
 					<input type="text" value="," id="separator" style="width:15px; padding:0 5px;" onkeyup="updateCodeVisualizer()">

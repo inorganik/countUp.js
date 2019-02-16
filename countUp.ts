@@ -19,6 +19,8 @@ export interface CountUpOptions { // (default)
 export class CountUp {
 
   version = '2.0.0';
+  formatNumber: (num: number) => string;
+
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -29,7 +31,9 @@ export class CountUp {
     autoSmoothAmount: 100,
     separator: ',',
     decimal: '.',
-    easingFn: this.easeOutExpo,
+    // ease out expo
+    easingFn: (t: number, b: number, c: number, d: number) =>
+      c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b,
     formattingFn: this.formatNumber,
     prefix: '',
     suffix: ''
@@ -38,7 +42,6 @@ export class CountUp {
   private rAF: any;
   private startTime: number;
   private decimalMult: number;
-  private timestamp: number;
   private remaining: number;
   private finalEndVal: number;
   callback: (args?: any) => any;
@@ -54,10 +57,12 @@ export class CountUp {
     private endVal: number,
     private options?: CountUpOptions
   ) {
+    console.log('passed in options', options);
     this.options = {
       ...this.defaults,
       ...options
     };
+    console.log('resulting options', this.options);
     this.el = (typeof target === 'string') ? document.getElementById(target) : target;
     if (!this.el) {
       this.error = '[CountUp] target is null or undefined';
@@ -74,6 +79,36 @@ export class CountUp {
     if (this.startVal) {
       this.printValue(this.startVal);
     }
+
+    this.formatNumber = (num: number): string => {
+      const neg = (num < 0) ? '-' : '';
+      let result: string,
+        x: string[],
+        x1: string,
+        x2: string,
+        x3: string;
+      result = Math.abs(num).toFixed(this.options.decimalPlaces);
+      result += '';
+      x = result.split('.');
+      x1 = x[0];
+      x2 = x.length > 1 ? this.options.decimal + x[1] : '';
+      if (this.options.useGrouping) {
+        x3 = '';
+        for (let i = 0, len = x1.length; i < len; ++i) {
+          if (i !== 0 && (i % 3) === 0) {
+            x3 = this.options.separator + x3;
+          }
+          x3 = x1[len - i - 1] + x3;
+        }
+        x1 = x3;
+      }
+      // optional numeral substitution
+      if (this.options.numerals && this.options.numerals.length) {
+        x1 = x1.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
+        x2 = x2.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
+      }
+      return neg + this.options.prefix + x1 + x2 + this.options.suffix;
+    };
   }
 
   // start animation
@@ -107,7 +142,7 @@ export class CountUp {
   }
 
   // reset to startVal so animation can be run again
-  reset() {
+  reset = () => {
     this.paused = false;
     this.startTime = null;
     this.finalEndVal = null;
@@ -116,7 +151,7 @@ export class CountUp {
   }
 
   // pass a new endVal and start animation
-  update(newEndVal) {
+  update = (newEndVal) => {
     this.endVal = this.validateValue(newEndVal);
     this.finalEndVal = null;
     if (this.endVal === this.frameVal) {
@@ -130,11 +165,10 @@ export class CountUp {
     this.start();
   }
 
-  count(timestamp: number) {
+  count = (timestamp: number) => {
 
     if (!this.startTime) { this.startTime = timestamp; }
 
-    this.timestamp = timestamp;
     const progress = timestamp - this.startTime;
     this.remaining = this.duration - progress;
 
@@ -179,41 +213,7 @@ export class CountUp {
     }
   }
 
-  easeOutExpo(t: number, b: number, c: number, d: number) {
-    return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
-  }
-
-  formatNumber(num: number): string {
-    const neg = (num < 0) ? '-' : '';
-    let result: string,
-      x: string[],
-      x1: string,
-      x2: string,
-      x3: string;
-    result = Math.abs(num).toFixed(this.options.decimalPlaces);
-    result += '';
-    x = result.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? this.options.decimal + x[1] : '';
-    if (this.options.useGrouping) {
-      x3 = '';
-      for (let i = 0, len = x1.length; i < len; ++i) {
-        if (i !== 0 && (i % 3) === 0) {
-          x3 = this.options.separator + x3;
-        }
-        x3 = x1[len - i - 1] + x3;
-      }
-      x1 = x3;
-    }
-    // optional numeral substitution
-    if (this.options.numerals && this.options.numerals.length) {
-      x1 = x1.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
-      x2 = x2.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
-    }
-    return neg + this.options.prefix + x1 + x2 + this.options.suffix;
-  }
-
-  printValue(val: number) {
+  printValue = (val: number) => {
     const result = this.options.formattingFn(val);
 
     if (this.el.tagName === 'INPUT') {
@@ -226,11 +226,11 @@ export class CountUp {
     }
   }
 
-  ensureNumber(n: any) {
+  ensureNumber = (n: any) => {
     return (typeof n === 'number' && !isNaN(n));
   }
 
-  validateValue(value: number): number {
+  validateValue = (value: number): number => {
     const newValue = Number(value);
     if (!this.ensureNumber(newValue)) {
       this.error = `[CountUp] invalid start or end value: ${value}`;

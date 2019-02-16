@@ -22,13 +22,14 @@ var __assign = (this && this.__assign) || function () {
     Object.defineProperty(exports, "__esModule", { value: true });
     var CountUp = /** @class */ (function () {
         function CountUp(target, endVal, options) {
+            var _this = this;
             this.target = target;
             this.endVal = endVal;
             this.options = options;
             this.version = '2.0.0';
             this.defaults = {
                 startVal: 0,
-                decimals: 0,
+                decimalPlaces: 0,
                 duration: 2,
                 useEasing: true,
                 useGrouping: true,
@@ -36,7 +37,10 @@ var __assign = (this && this.__assign) || function () {
                 autoSmoothAmount: 100,
                 separator: ',',
                 decimal: '.',
-                easingFn: this.easeOutExpo,
+                // ease out expo
+                easingFn: function (t, b, c, d) {
+                    return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
+                },
                 formattingFn: this.formatNumber,
                 prefix: '',
                 suffix: ''
@@ -46,13 +50,112 @@ var __assign = (this && this.__assign) || function () {
             this.duration = 0;
             this.countDown = false;
             this.paused = false;
+            // reset to startVal so animation can be run again
+            this.reset = function () {
+                _this.paused = false;
+                _this.startTime = null;
+                _this.finalEndVal = null;
+                cancelAnimationFrame(_this.rAF);
+                _this.printValue(_this.startVal);
+            };
+            // pass a new endVal and start animation
+            this.update = function (newEndVal) {
+                _this.endVal = _this.validateValue(newEndVal);
+                _this.finalEndVal = null;
+                if (_this.endVal === _this.frameVal) {
+                    return;
+                }
+                cancelAnimationFrame(_this.rAF);
+                _this.error = '';
+                _this.paused = false;
+                _this.startTime = null;
+                _this.startVal = _this.frameVal;
+                _this.start();
+            };
+            this.count = function (timestamp) {
+                if (!_this.startTime) {
+                    _this.startTime = timestamp;
+                }
+                var progress = timestamp - _this.startTime;
+                _this.remaining = _this.duration - progress;
+                // to ease or not to ease
+                if (_this.options.useEasing) {
+                    if (_this.countDown) {
+                        _this.frameVal = _this.startVal - _this.options.easingFn(progress, 0, _this.startVal - _this.endVal, _this.duration);
+                    }
+                    else {
+                        _this.frameVal = _this.options.easingFn(progress, _this.startVal, _this.endVal - _this.startVal, _this.duration);
+                    }
+                }
+                else {
+                    if (_this.countDown) {
+                        _this.frameVal = _this.startVal - ((_this.startVal - _this.endVal) * (progress / _this.duration));
+                    }
+                    else {
+                        _this.frameVal = _this.startVal + (_this.endVal - _this.startVal) * (progress / _this.duration);
+                    }
+                }
+                // don't go past endVal since progress can exceed duration in the last frame
+                if (_this.countDown) {
+                    _this.frameVal = (_this.frameVal < _this.endVal) ? _this.endVal : _this.frameVal;
+                }
+                else {
+                    _this.frameVal = (_this.frameVal > _this.endVal) ? _this.endVal : _this.frameVal;
+                }
+                // decimal
+                _this.frameVal = Math.round(_this.frameVal * _this.decimalMult) / _this.decimalMult;
+                // format and print value
+                _this.printValue(_this.frameVal);
+                // whether to continue
+                if (progress < _this.duration) {
+                    _this.rAF = requestAnimationFrame(_this.count);
+                }
+                else if (_this.finalEndVal) {
+                    // for auto-smoothing
+                    _this.update(_this.finalEndVal);
+                }
+                else {
+                    if (_this.callback) {
+                        _this.callback();
+                    }
+                }
+            };
+            this.printValue = function (val) {
+                var result = _this.options.formattingFn(val);
+                if (_this.el.tagName === 'INPUT') {
+                    var input = _this.el;
+                    input.value = result;
+                }
+                else if (_this.el.tagName === 'text' || _this.el.tagName === 'tspan') {
+                    _this.el.textContent = result;
+                }
+                else {
+                    _this.el.innerHTML = result;
+                }
+            };
+            this.ensureNumber = function (n) {
+                return (typeof n === 'number' && !isNaN(n));
+            };
+            this.validateValue = function (value) {
+                var newValue = Number(value);
+                if (!_this.ensureNumber(newValue)) {
+                    _this.error = "[CountUp] invalid start or end value: " + value;
+                    return null;
+                }
+                else {
+                    _this.countDown = (_this.options.startVal > newValue);
+                    return newValue;
+                }
+            };
+            console.log('passed in options', options);
             this.options = __assign({}, this.defaults, options);
+            console.log('resulting options', this.options);
             this.el = (typeof target === 'string') ? document.getElementById(target) : target;
             if (!this.el) {
                 this.error = '[CountUp] target is null or undefined';
             }
-            this.options.decimals = Math.max(0 || this.options.decimals);
-            this.decimalMult = Math.pow(10, this.options.decimals);
+            this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
+            this.decimalMult = Math.pow(10, this.options.decimalPlaces);
             this.duration = Number(this.options.duration) * 1000;
             this.startVal = this.validateValue(this.options.startVal);
             this.endVal = this.validateValue(endVal);
@@ -63,6 +166,31 @@ var __assign = (this && this.__assign) || function () {
             if (this.startVal) {
                 this.printValue(this.startVal);
             }
+            this.formatNumber = function (num) {
+                var neg = (num < 0) ? '-' : '';
+                var result, x, x1, x2, x3;
+                result = Math.abs(num).toFixed(_this.options.decimalPlaces);
+                result += '';
+                x = result.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? _this.options.decimal + x[1] : '';
+                if (_this.options.useGrouping) {
+                    x3 = '';
+                    for (var i = 0, len = x1.length; i < len; ++i) {
+                        if (i !== 0 && (i % 3) === 0) {
+                            x3 = _this.options.separator + x3;
+                        }
+                        x3 = x1[len - i - 1] + x3;
+                    }
+                    x1 = x3;
+                }
+                // optional numeral substitution
+                if (_this.options.numerals && _this.options.numerals.length) {
+                    x1 = x1.replace(/[0-9]/g, function (w) { return _this.options.numerals[+w]; });
+                    x2 = x2.replace(/[0-9]/g, function (w) { return _this.options.numerals[+w]; });
+                }
+                return neg + _this.options.prefix + x1 + x2 + _this.options.suffix;
+            };
         }
         // start animation
         CountUp.prototype.start = function (callback) {
@@ -91,133 +219,6 @@ var __assign = (this && this.__assign) || function () {
                 this.duration = this.remaining;
                 this.startVal = this.frameVal;
                 this.start();
-            }
-        };
-        // reset to startVal so animation can be run again
-        CountUp.prototype.reset = function () {
-            this.paused = false;
-            this.startTime = null;
-            this.finalEndVal = null;
-            cancelAnimationFrame(this.rAF);
-            this.printValue(this.startVal);
-        };
-        // pass a new endVal and start animation
-        CountUp.prototype.update = function (newEndVal) {
-            this.endVal = this.validateValue(newEndVal);
-            this.finalEndVal = null;
-            if (this.endVal === this.frameVal) {
-                return;
-            }
-            cancelAnimationFrame(this.rAF);
-            this.error = '';
-            this.paused = false;
-            this.startTime = null;
-            this.startVal = this.frameVal;
-            this.start();
-        };
-        CountUp.prototype.count = function (timestamp) {
-            if (!this.startTime) {
-                this.startTime = timestamp;
-            }
-            this.timestamp = timestamp;
-            var progress = timestamp - this.startTime;
-            this.remaining = this.duration - progress;
-            // to ease or not to ease
-            if (this.options.useEasing) {
-                if (this.countDown) {
-                    this.frameVal = this.startVal - this.options.easingFn(progress, 0, this.startVal - this.endVal, this.duration);
-                }
-                else {
-                    this.frameVal = this.options.easingFn(progress, this.startVal, this.endVal - this.startVal, this.duration);
-                }
-            }
-            else {
-                if (this.countDown) {
-                    this.frameVal = this.startVal - ((this.startVal - this.endVal) * (progress / this.duration));
-                }
-                else {
-                    this.frameVal = this.startVal + (this.endVal - this.startVal) * (progress / this.duration);
-                }
-            }
-            // don't go past endVal since progress can exceed duration in the last frame
-            if (this.countDown) {
-                this.frameVal = (this.frameVal < this.endVal) ? this.endVal : this.frameVal;
-            }
-            else {
-                this.frameVal = (this.frameVal > this.endVal) ? this.endVal : this.frameVal;
-            }
-            // decimal
-            this.frameVal = Math.round(this.frameVal * this.decimalMult) / this.decimalMult;
-            // format and print value
-            this.printValue(this.frameVal);
-            // whether to continue
-            if (progress < this.duration) {
-                this.rAF = requestAnimationFrame(this.count);
-            }
-            else if (this.finalEndVal) {
-                // for auto-smoothing
-                this.update(this.finalEndVal);
-            }
-            else {
-                if (this.callback) {
-                    this.callback();
-                }
-            }
-        };
-        CountUp.prototype.easeOutExpo = function (t, b, c, d) {
-            return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
-        };
-        CountUp.prototype.formatNumber = function (num) {
-            var _this = this;
-            var neg = (num < 0) ? '-' : '';
-            var result, x, x1, x2, x3;
-            result = Math.abs(num).toFixed(this.options.decimals);
-            result += '';
-            x = result.split('.');
-            x1 = x[0];
-            x2 = x.length > 1 ? this.options.decimal + x[1] : '';
-            if (this.options.useGrouping) {
-                x3 = '';
-                for (var i = 0, len = x1.length; i < len; ++i) {
-                    if (i !== 0 && (i % 3) === 0) {
-                        x3 = this.options.separator + x3;
-                    }
-                    x3 = x1[len - i - 1] + x3;
-                }
-                x1 = x3;
-            }
-            // optional numeral substitution
-            if (this.options.numerals && this.options.numerals.length) {
-                x1 = x1.replace(/[0-9]/g, function (w) { return _this.options.numerals[+w]; });
-                x2 = x2.replace(/[0-9]/g, function (w) { return _this.options.numerals[+w]; });
-            }
-            return neg + this.options.prefix + x1 + x2 + this.options.suffix;
-        };
-        CountUp.prototype.printValue = function (val) {
-            var result = this.options.formattingFn(val);
-            if (this.el.tagName === 'INPUT') {
-                var input = this.el;
-                input.value = result;
-            }
-            else if (this.el.tagName === 'text' || this.el.tagName === 'tspan') {
-                this.el.textContent = result;
-            }
-            else {
-                this.el.innerHTML = result;
-            }
-        };
-        CountUp.prototype.ensureNumber = function (n) {
-            return (typeof n === 'number' && !isNaN(n));
-        };
-        CountUp.prototype.validateValue = function (value) {
-            var newValue = Number(value);
-            if (!this.ensureNumber(newValue)) {
-                this.error = "[CountUp] invalid start or end value: " + value;
-                return null;
-            }
-            else {
-                this.countDown = (this.options.startVal > newValue);
-                return newValue;
             }
         };
         return CountUp;

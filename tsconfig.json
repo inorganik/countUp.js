@@ -4,12 +4,7 @@
     "module": "umd",
     "outDir": "dist",
     "target": "es5",
-    "declaration": true,
     "pretty": true
   },
-  "compileOnSave": true,
-  "files": [
-    "countUp.ts",
-    "demo.ts"
-  ]
+  "compileOnSave": true
 }

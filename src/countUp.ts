@@ -249,5 +249,5 @@ export class CountUp {
   }
 
   easeOutExpo = (t: number, b: number, c: number, d: number) =>
-    c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
+    c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b
 }

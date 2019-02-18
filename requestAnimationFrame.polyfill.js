@@ -2,7 +2,6 @@
 // polyfill for browsers without native support
 // by Opera engineer Erik Möller
 (function () {
-  console.log('EXECUTED RAF POLYFILL');
   var lastTime = 0;
   var vendors = ['webkit', 'moz', 'ms', 'o'];
   for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {

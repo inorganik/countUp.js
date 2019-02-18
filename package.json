@@ -10,16 +10,20 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
+		"@types/jest": "^24.0.6",
 		"del": "^3.0.0",
 		"gulp": "^4.0.0",
 		"gulp-concat": "^2.6.1",
 		"gulp-uglify": "^3.0.1",
+		"jest": "^24.1.0",
+		"ts-jest": "^24.0.0",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.3"
 	},
 	"scripts": {
 		"build": "npm run clean && tsc && gulp",
 		"clean": "gulp clean",
-		"lint": "tslint --project tsconfig.json"
+    "lint": "tslint --project tsconfig.json",
+    "test": "jest"
 	}
 }

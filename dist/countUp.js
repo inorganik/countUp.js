@@ -128,10 +128,6 @@ var __assign = (this && this.__assign) || function () {
                 this.options.formattingFn : this.formatNumber;
             this.easingFn = (this.options.easingFn) ?
                 this.options.easingFn : this.easeOutExpo;
-            this.el = (typeof target === 'string') ? document.getElementById(target) : target;
-            if (!this.el) {
-                this.error = '[CountUp] target is null or undefined';
-            }
             this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
             this.decimalMult = Math.pow(10, this.options.decimalPlaces);
             this.duration = Number(this.options.duration) * 1000;
@@ -141,8 +137,12 @@ var __assign = (this && this.__assign) || function () {
             if (this.options.separator === '') {
                 this.options.useGrouping = false;
             }
-            if (this.startVal) {
+            this.el = (typeof target === 'string') ? document.getElementById(target) : target;
+            if (this.el) {
                 this.printValue(this.startVal);
+            }
+            else {
+                this.error = '[CountUp] target is null or undefined';
             }
         }
         // start animation

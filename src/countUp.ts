@@ -27,7 +27,7 @@ export class CountUp {
     useEasing: true,
     useGrouping: true,
     autoSmoothThreshold: 999,
-    autoSmoothAmount: 100,
+    autoSmoothAmount: 500,
     separator: ',',
     decimal: '.',
     prefix: '',
@@ -38,15 +38,16 @@ export class CountUp {
   private startTime: number;
   private decimalMult: number;
   private remaining: number;
-  private finalEndVal: number;
+  private finalEndVal: number = null;
   private formattingFn: (num: number) => string;
   private easingFn?: (t: number, b: number, c: number, d: number) => number;
+  private useEasing = true;
   callback: (args?: any) => any;
   error = '';
   startVal = 0;
-  duration = 0;
+  duration: number;
   countDown = false;
-  paused = false;
+  paused = true;
   frameVal: number;
 
   constructor(
@@ -65,10 +66,13 @@ export class CountUp {
 
     this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
     this.decimalMult = Math.pow(10, this.options.decimalPlaces);
-    this.duration = Number(this.options.duration) * 1000;
+    this.resetDuration();
+    this.remaining = this.duration;
     this.startVal = this.validateValue(this.options.startVal);
+    this.frameVal = this.startVal;
     this.endVal = this.validateValue(endVal);
     this.options.separator = String(this.options.separator);
+    this.useEasing = this.options.useEasing;
     if (this.options.separator === '') {
       this.options.useGrouping = false;
     }
@@ -80,21 +84,41 @@ export class CountUp {
     }
   }
 
+  determineIfWillAutoSmooth(start: number, end: number) {
+    const animateAmount = end - start;
+    if (Math.abs(animateAmount) > this.options.autoSmoothThreshold) {
+      this.finalEndVal = end;
+      const up = (this.endVal > this.startVal) ? -1 : 1;
+      this.endVal = this.endVal + (up * this.options.autoSmoothAmount);
+      this.duration = this.duration / 2;
+    } else {
+      this.endVal = (this.finalEndVal) ? this.finalEndVal : this.endVal;
+      this.finalEndVal = null;
+    }
+    if (this.finalEndVal) {
+      this.useEasing = false;
+    } else {
+      this.useEasing = this.options.useEasing;
+    }
+  }
+
   // start animation
   start(callback?: (args?: any) => any) {
     if (this.error) {
       return;
     }
     this.callback = callback;
-    // auto-smooth large numbers
-    const animateAmount = this.endVal - this.startVal;
-    if (Math.abs(animateAmount) > this.options.autoSmoothThreshold) {
-      this.finalEndVal = this.endVal;
-      const up = (this.endVal > this.startVal) ? -1 : 1;
-      this.endVal = this.endVal + (up * 100);
-      this.duration = this.duration / 2;
+    if (this.duration > 0) {
+      this.paused = false;
+      // auto-smooth large numbers
+      const end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
+      this.determineIfWillAutoSmooth(this.frameVal, end);
+
+      this.rAF = requestAnimationFrame(this.count);
+    } else {
+      this.printValue(this.endVal);
+      this.complete();
     }
-    this.rAF = requestAnimationFrame(this.count);
   }
 
   // pause/resume animation
@@ -103,40 +127,45 @@ export class CountUp {
       this.paused = true;
       cancelAnimationFrame(this.rAF);
     } else {
-      this.paused = false;
       this.startTime = null;
       this.duration = this.remaining;
-      this.startVal = this.frameVal;
+      if (this.finalEndVal) {
+        this.duration += (this.duration / 2);
+      }
+      // this.startVal = this.frameVal;
       this.start();
     }
   }
 
   // reset to startVal so animation can be run again
   reset() {
+    cancelAnimationFrame(this.rAF);
     this.paused = false;
     this.startTime = null;
-    this.frameVal = null;
-    if (this.options.startVal) {
-      this.startVal = this.validateValue(this.options.startVal);
-    }
+    this.resetDuration();
     this.finalEndVal = null;
-    cancelAnimationFrame(this.rAF);
+    this.startVal = this.validateValue(this.options.startVal);
+    this.frameVal = this.startVal;
     this.printValue(this.startVal);
   }
 
   // pass a new endVal and start animation
   update(newEndVal) {
+    cancelAnimationFrame(this.rAF);
     this.endVal = this.validateValue(newEndVal);
+    if (!this.finalEndVal) {
+      this.resetDuration();
+    }
     this.finalEndVal = null;
+    this.determineIfWillAutoSmooth(this.frameVal, this.endVal);
+
     if (this.endVal === this.frameVal) {
       return;
     }
-    cancelAnimationFrame(this.rAF);
     this.error = '';
-    this.paused = false;
     this.startTime = null;
     this.startVal = this.frameVal;
-    this.start();
+    this.rAF = requestAnimationFrame(this.count);
   }
 
   count = (timestamp: number) => {
@@ -147,7 +176,7 @@ export class CountUp {
     this.remaining = this.duration - progress;
 
     // to ease or not to ease
-    if (this.options.useEasing) {
+    if (this.useEasing) {
       if (this.countDown) {
         this.frameVal = this.startVal - this.easingFn(progress, 0, this.startVal - this.endVal, this.duration);
       } else {
@@ -181,9 +210,14 @@ export class CountUp {
       // for auto-smoothing
       this.update(this.finalEndVal);
     } else {
-      if (this.callback) {
-        this.callback();
-      }
+      this.complete();
+    }
+  }
+
+  complete() {
+    this.paused = true;
+    if (this.callback) {
+      this.callback();
     }
   }
 
@@ -213,6 +247,10 @@ export class CountUp {
       this.countDown = (this.options.startVal > newValue);
       return newValue;
     }
+  }
+
+  resetDuration() {
+    this.duration = Number(this.options.duration) * 1000;
   }
 
   // default format and easing functions
@@ -247,6 +285,6 @@ export class CountUp {
     return neg + this.options.prefix + x1 + x2 + this.options.suffix;
   }
 
-  easeOutExpo = (t: number, b: number, c: number, d: number) =>
+  easeOutExpo = (t: number, b: number, c: number, d: number): number =>
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b
 }

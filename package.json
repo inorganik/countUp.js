@@ -24,6 +24,7 @@
 		"build": "npm run clean && tsc && gulp",
 		"clean": "gulp clean",
     "lint": "tslint --project tsconfig.json",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
 	}
 }

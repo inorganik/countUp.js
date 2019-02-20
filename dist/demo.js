@@ -16,13 +16,12 @@
     var code, stars, endVal, options;
     var demo = new countUp_1.CountUp('myTargetElement', 100);
     var codeVisualizer = document.getElementById('codeVisualizer');
-    var easingFnsDropdown = input('easingFnsDropdown');
     var errorSection = document.getElementById('errorSection');
     document.getElementById('version').innerHTML = demo.version;
     // HANDLERS
     input('startVal').onchange = updateCodeVisualizer;
     input('endVal').onchange = updateCodeVisualizer;
-    input('decimals').onchange = updateCodeVisualizer;
+    input('decimalPlaces').onchange = updateCodeVisualizer;
     input('duration').onchange = updateCodeVisualizer;
     input('separator').onchange = updateCodeVisualizer;
     input('decimal').onchange = updateCodeVisualizer;
@@ -142,15 +141,15 @@
         endVal = Number(input('endVal').value);
         options = {
             startVal: input('startVal').value,
+            decimalPlaces: input('decimalPlaces').value,
             duration: Number(input('duration').value),
-            prefix: input('prefix').value,
-            suffix: input('suffix').value,
-            decimalPlaces: input('decimals').value,
             useEasing: input('useEasing').checked,
             useGrouping: input('useGrouping').checked,
             easingFn: typeof getEasingFn() === 'undefined' ? null : getEasingFn(),
             separator: input('separator').value,
             decimal: input('decimal').value,
+            prefix: input('prefix').value,
+            suffix: input('suffix').value,
             numerals: getNumerals()
         };
         // unset null values so they don't overwrite defaults
@@ -181,6 +180,7 @@
         }
         var opts = '';
         opts += (options.startVal !== '0') ? indentedLine("startVal: " + options.startVal) : '';
+        opts += (options.decimalPlaces !== '0') ? indentedLine("decimalPlaces: " + options.decimalPlaces) : '';
         opts += (options.duration !== 2) ? indentedLine("duration: " + options.duration) : '';
         opts += (options.useEasing) ? '' : indentedLine("useEasing: " + options.useEasing);
         opts += (options.useEasing && options.easingFn) ? indentedLine("easingFn") : '';
@@ -193,8 +193,11 @@
             indentedLine("numerals: '" + stringifyArray(options.numerals) + "'") : '';
         if (opts.length) {
             code += "const options = {<br>" + opts + "};<br>";
+            code += "let demo = new CountUp('myTargetElement', " + endVal + ", options);<br>";
         }
-        code += "let demo = new CountUp('myTargetElement', " + endVal + ", options);<br>";
+        else {
+            code += "let demo = new CountUp('myTargetElement', " + endVal + ");<br>";
+        }
         code += 'if (!demo.error) {<br>';
         code += (input('useOnComplete').checked) ?
             indentedLine('demo.start(methodToCallOnComplete)', true) : indentedLine('demo.start()', true);
@@ -217,9 +220,7 @@
                         var data = JSON.parse(getStars.responseText);
                         stars = data.stargazers_count;
                         // change input values
-                        input('startVal').value = 0 + '';
                         input('endVal').value = stars;
-                        input('decimals').value = 0 + '';
                         createCountUp();
                     }
                 }

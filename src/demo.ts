@@ -6,7 +6,6 @@ const input = (id: string): HTMLInputElement => {
 let code, stars, endVal, options;
 let demo = new CountUp('myTargetElement', 100);
 const codeVisualizer = document.getElementById('codeVisualizer');
-const easingFnsDropdown = input('easingFnsDropdown');
 const errorSection = document.getElementById('errorSection');
 document.getElementById('version').innerHTML = demo.version;
 
@@ -14,7 +13,7 @@ document.getElementById('version').innerHTML = demo.version;
 
 input('startVal').onchange = updateCodeVisualizer;
 input('endVal').onchange = updateCodeVisualizer;
-input('decimals').onchange = updateCodeVisualizer;
+input('decimalPlaces').onchange = updateCodeVisualizer;
 input('duration').onchange = updateCodeVisualizer;
 input('separator').onchange = updateCodeVisualizer;
 input('decimal').onchange = updateCodeVisualizer;
@@ -136,15 +135,15 @@ function establishOptionsFromInputs() {
 
   options = {
     startVal: input('startVal').value,
+    decimalPlaces: input('decimalPlaces').value,
     duration: Number(input('duration').value),
-    prefix: input('prefix').value,
-    suffix: input('suffix').value,
-    decimalPlaces: input('decimals').value,
     useEasing: input('useEasing').checked,
     useGrouping: input('useGrouping').checked,
     easingFn: typeof getEasingFn() === 'undefined' ? null : getEasingFn(),
     separator: input('separator').value,
     decimal: input('decimal').value,
+    prefix: input('prefix').value,
+    suffix: input('suffix').value,
     numerals: getNumerals()
   };
 
@@ -179,6 +178,7 @@ function updateCodeVisualizer() {
   }
   let opts = '';
   opts += (options.startVal !== '0') ? indentedLine(`startVal: ${options.startVal}`) : '';
+  opts += (options.decimalPlaces !== '0') ? indentedLine(`decimalPlaces: ${options.decimalPlaces}`) : '';
   opts += (options.duration !== 2) ? indentedLine(`duration: ${options.duration}`) : '';
   opts += (options.useEasing) ? '' : indentedLine(`useEasing: ${options.useEasing}`);
   opts += (options.useEasing && options.easingFn) ? indentedLine(`easingFn`) : '';
@@ -191,8 +191,10 @@ function updateCodeVisualizer() {
     indentedLine(`numerals: '${stringifyArray(options.numerals)}'`) : '';
   if (opts.length) {
     code += `const options = {<br>${opts}};<br>`;
+    code += `let demo = new CountUp('myTargetElement', ${endVal}, options);<br>`;
+  } else {
+    code += `let demo = new CountUp('myTargetElement', ${endVal});<br>`;
   }
-  code += `let demo = new CountUp('myTargetElement', ${endVal}, options);<br>`;
   code += 'if (!demo.error) {<br>';
   code += (input('useOnComplete').checked) ?
     indentedLine('demo.start(methodToCallOnComplete)', true) : indentedLine('demo.start()', true);
@@ -218,10 +220,7 @@ getStars.onreadystatechange = () => {
           const data = JSON.parse(getStars.responseText);
           stars = data.stargazers_count;
           // change input values
-          input('startVal').value = 0 + '';
           input('endVal').value = stars;
-          input('decimals').value = 0 + '';
-
           createCountUp();
         }
       }

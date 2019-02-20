@@ -41,11 +41,11 @@ var __assign = (this && this.__assign) || function () {
                 prefix: '',
                 suffix: ''
             };
+            this.finalEndVal = null;
             this.error = '';
             this.startVal = 0;
-            this.duration = 0;
             this.countDown = false;
-            this.paused = false;
+            this.paused = true;
             this.count = function (timestamp) {
                 if (!_this.startTime) {
                     _this.startTime = timestamp;
@@ -89,9 +89,7 @@ var __assign = (this && this.__assign) || function () {
                     _this.update(_this.finalEndVal);
                 }
                 else {
-                    if (_this.callback) {
-                        _this.callback();
-                    }
+                    _this.complete();
                 }
             };
             // default format and easing functions
@@ -131,7 +129,9 @@ var __assign = (this && this.__assign) || function () {
             this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
             this.decimalMult = Math.pow(10, this.options.decimalPlaces);
             this.duration = Number(this.options.duration) * 1000;
+            this.remaining = this.duration;
             this.startVal = this.validateValue(this.options.startVal);
+            this.frameVal = this.startVal;
             this.endVal = this.validateValue(endVal);
             this.options.separator = String(this.options.separator);
             if (this.options.separator === '') {
@@ -145,21 +145,35 @@ var __assign = (this && this.__assign) || function () {
                 this.error = '[CountUp] target is null or undefined';
             }
         }
-        // start animation
-        CountUp.prototype.start = function (callback) {
-            if (this.error) {
-                return;
-            }
-            this.callback = callback;
-            // auto-smooth large numbers
-            var animateAmount = this.endVal - this.startVal;
+        CountUp.prototype.determineIfWillAutoSmooth = function (animateAmount) {
             if (Math.abs(animateAmount) > this.options.autoSmoothThreshold) {
                 this.finalEndVal = this.endVal;
                 var up = (this.endVal > this.startVal) ? -1 : 1;
                 this.endVal = this.endVal + (up * 100);
                 this.duration = this.duration / 2;
             }
-            this.rAF = requestAnimationFrame(this.count);
+            else {
+                this.endVal = (this.finalEndVal) ? this.finalEndVal : this.endVal;
+                this.finalEndVal = null;
+            }
+        };
+        // start animation
+        CountUp.prototype.start = function (callback) {
+            if (this.error) {
+                return;
+            }
+            this.callback = callback;
+            if (this.duration > 0) {
+                // auto-smooth large numbers
+                var animateAmount = this.endVal - this.startVal;
+                this.determineIfWillAutoSmooth(animateAmount);
+                this.paused = false;
+                this.rAF = requestAnimationFrame(this.count);
+            }
+            else {
+                this.printValue(this.endVal);
+                this.complete();
+            }
         };
         // pause/resume animation
         CountUp.prototype.pauseResume = function () {
@@ -172,6 +186,9 @@ var __assign = (this && this.__assign) || function () {
                 this.startTime = null;
                 this.duration = this.remaining;
                 this.startVal = this.frameVal;
+                var end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
+                var animateAmount = end - this.startVal;
+                this.determineIfWillAutoSmooth(animateAmount);
                 this.start();
             }
         };
@@ -200,6 +217,12 @@ var __assign = (this && this.__assign) || function () {
             this.startTime = null;
             this.startVal = this.frameVal;
             this.start();
+        };
+        CountUp.prototype.complete = function () {
+            this.paused = true;
+            if (this.callback) {
+                this.callback();
+            }
         };
         CountUp.prototype.printValue = function (val) {
             var result = this.formattingFn(val);

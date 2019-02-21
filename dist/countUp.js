@@ -34,8 +34,9 @@ var __assign = (this && this.__assign) || function () {
                 duration: 2,
                 useEasing: true,
                 useGrouping: true,
-                autoSmoothThreshold: 999,
-                autoSmoothAmount: 333,
+                smartEaseEnabled: true,
+                smartEaseThreshold: 999,
+                smartEaseAmount: 333,
                 separator: ',',
                 decimal: '.',
                 prefix: '',
@@ -149,13 +150,16 @@ var __assign = (this && this.__assign) || function () {
                 this.error = '[CountUp] target is null or undefined';
             }
         }
-        CountUp.prototype.determineIfWillAutoSmooth = function (start, end) {
+        CountUp.prototype.determineCountDownAndSmartEase = function (start, end) {
+            this.countDown = (start > end);
+            if (!this.options.smartEaseEnabled) {
+                return;
+            }
             var animateAmount = end - start;
-            this.countDown = (this.startVal > this.endVal);
-            if (Math.abs(animateAmount) > this.options.autoSmoothThreshold) {
+            if (Math.abs(animateAmount) > this.options.smartEaseThreshold) {
                 this.finalEndVal = end;
                 var up = (this.countDown) ? 1 : -1;
-                this.endVal = this.endVal + (up * this.options.autoSmoothAmount);
+                this.endVal = this.endVal + (up * this.options.smartEaseAmount);
                 this.duration = this.duration / 2;
             }
             else {
@@ -177,7 +181,7 @@ var __assign = (this && this.__assign) || function () {
             this.callback = callback;
             if (this.duration > 0) {
                 // auto-smooth large numbers
-                this.determineIfWillAutoSmooth(this.startVal, this.endVal);
+                this.determineCountDownAndSmartEase(this.startVal, this.endVal);
                 this.paused = false;
                 this.rAF = requestAnimationFrame(this.count);
             }
@@ -221,7 +225,7 @@ var __assign = (this && this.__assign) || function () {
             }
             this.finalEndVal = null;
             this.startVal = this.frameVal;
-            this.determineIfWillAutoSmooth(this.startVal, this.endVal);
+            this.determineCountDownAndSmartEase(this.startVal, this.endVal);
             this.rAF = requestAnimationFrame(this.count);
         };
         CountUp.prototype.printValue = function (val) {

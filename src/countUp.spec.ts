@@ -95,7 +95,7 @@ describe('CountUp', () => {
   describe('various use-cases', () => {
     it('should handle large numbers', () => {
       countUp = new CountUp('target', 6000);
-      const spy = jest.spyOn(countUp, 'determineIfWillAutoSmooth');
+      const spy = jest.spyOn(countUp, 'determineDirectionAndSmartEasing');
       countUp.start();
 
       expect(document.getElementById('target').innerHTML).toEqual('6,000');

@@ -4,8 +4,8 @@ export interface CountUpOptions { // (default)
   duration?: number; // animation duration in seconds (2)
   useEasing?: boolean; // ease animation (true)
   useGrouping?: boolean; // example: 1,000 vs 1000 (true)
-  autoSmoothThreshold?: number; // smooth easing for large numbers above this (999)
-  autoSmoothAmount?: number; // amount to be counted if auto-smoothed
+  smartEasingThreshold?: number; // smooth easing for large numbers above this (999)
+  smartEasingAmount?: number; // amount to be eased if smartEasingEnabled
   separator?: string; // grouping separator (,)
   decimal?: string; // decimal (.)
   // easingFn: easing function for animation (easeOutExpo)
@@ -26,8 +26,8 @@ export class CountUp {
     duration: 2,
     useEasing: true,
     useGrouping: true,
-    autoSmoothThreshold: 999,
-    autoSmoothAmount: 333,
+    smartEasingThreshold: 999,
+    smartEasingAmount: 333,
     separator: ',',
     decimal: '.',
     prefix: '',
@@ -83,16 +83,16 @@ export class CountUp {
     }
   }
 
-  private determineIfWillAutoSmooth(start: number, end: number) {
+  // determines where easing starts and whether to count down or up
+  private determineDirectionAndSmartEasing(start: number, end: number) {
+    this.countDown = (start > end);
     const animateAmount = end - start;
-    this.countDown = (this.startVal > this.endVal);
-    if (Math.abs(animateAmount) > this.options.autoSmoothThreshold) {
+    if (Math.abs(animateAmount) > this.options.smartEasingThreshold) {
       this.finalEndVal = end;
       const up = (this.countDown) ? 1 : -1;
-      this.endVal = this.endVal + (up * this.options.autoSmoothAmount);
+      this.endVal = end + (up * this.options.smartEasingAmount);
       this.duration = this.duration / 2;
     } else {
-      this.endVal = (this.finalEndVal) ? this.finalEndVal : this.endVal;
       this.finalEndVal = null;
     }
     if (this.finalEndVal) {
@@ -110,7 +110,7 @@ export class CountUp {
     this.callback = callback;
     if (this.duration > 0) {
       // auto-smooth large numbers
-      this.determineIfWillAutoSmooth(this.startVal, this.endVal);
+      this.determineDirectionAndSmartEasing(this.startVal, this.endVal);
       this.paused = false;
       this.rAF = requestAnimationFrame(this.count);
     } else {
@@ -155,7 +155,7 @@ export class CountUp {
     }
     this.finalEndVal = null;
     this.startVal = this.frameVal;
-    this.determineIfWillAutoSmooth(this.startVal, this.endVal);
+    this.determineDirectionAndSmartEasing(this.startVal, this.endVal);
     this.rAF = requestAnimationFrame(this.count);
   }
 

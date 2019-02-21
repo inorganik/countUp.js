@@ -17,7 +17,7 @@ const buildLegacy = () => {
       './requestAnimationFrame.polyfill.js',
       './dist/countUp.js'
     ])
-    .pipe(concat('countUp.legacy.min.js'))
+    .pipe(concat('countUp.withPolyfill.min.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist'));
 }

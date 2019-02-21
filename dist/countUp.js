@@ -34,15 +34,14 @@ var __assign = (this && this.__assign) || function () {
                 duration: 2,
                 useEasing: true,
                 useGrouping: true,
-                smartEaseEnabled: true,
-                smartEaseThreshold: 999,
-                smartEaseAmount: 333,
+                smartEasingThreshold: 999,
+                smartEasingAmount: 333,
                 separator: ',',
                 decimal: '.',
                 prefix: '',
                 suffix: ''
             };
-            this.finalEndVal = null; // for auto-smoothing
+            this.finalEndVal = null; // for smart easing
             this.useEasing = true;
             this.countDown = false;
             this.error = '';
@@ -87,7 +86,7 @@ var __assign = (this && this.__assign) || function () {
                     _this.rAF = requestAnimationFrame(_this.count);
                 }
                 else if (_this.finalEndVal !== null) {
-                    // for auto-smoothing
+                    // smart easing
                     _this.update(_this.finalEndVal);
                 }
                 else {
@@ -122,7 +121,6 @@ var __assign = (this && this.__assign) || function () {
                 }
                 return neg + _this.options.prefix + x1 + x2 + _this.options.suffix;
             };
-            // t: current time, b: beginning value, c: change in value, d: duration
             this.easeOutExpo = function (t, b, c, d) {
                 return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
             };
@@ -150,20 +148,19 @@ var __assign = (this && this.__assign) || function () {
                 this.error = '[CountUp] target is null or undefined';
             }
         }
-        CountUp.prototype.determineCountDownAndSmartEase = function (start, end) {
-            this.countDown = (start > end);
-            if (!this.options.smartEaseEnabled) {
-                return;
-            }
-            var animateAmount = end - start;
-            if (Math.abs(animateAmount) > this.options.smartEaseThreshold) {
+        // determines where easing starts and whether to count down or up
+        CountUp.prototype.determineDirectionAndSmartEasing = function () {
+            var end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
+            this.countDown = (this.startVal > end);
+            var animateAmount = end - this.startVal;
+            if (Math.abs(animateAmount) > this.options.smartEasingThreshold) {
                 this.finalEndVal = end;
                 var up = (this.countDown) ? 1 : -1;
-                this.endVal = this.endVal + (up * this.options.smartEaseAmount);
+                this.endVal = end + (up * this.options.smartEasingAmount);
                 this.duration = this.duration / 2;
             }
             else {
-                this.endVal = (this.finalEndVal) ? this.finalEndVal : this.endVal;
+                this.endVal = end;
                 this.finalEndVal = null;
             }
             if (this.finalEndVal) {
@@ -180,8 +177,7 @@ var __assign = (this && this.__assign) || function () {
             }
             this.callback = callback;
             if (this.duration > 0) {
-                // auto-smooth large numbers
-                this.determineCountDownAndSmartEase(this.startVal, this.endVal);
+                this.determineDirectionAndSmartEasing();
                 this.paused = false;
                 this.rAF = requestAnimationFrame(this.count);
             }
@@ -198,6 +194,7 @@ var __assign = (this && this.__assign) || function () {
                 this.startTime = null;
                 this.duration = this.remaining;
                 this.startVal = this.frameVal;
+                this.determineDirectionAndSmartEasing();
                 this.rAF = requestAnimationFrame(this.count);
             }
             this.paused = !this.paused;
@@ -207,7 +204,6 @@ var __assign = (this && this.__assign) || function () {
             cancelAnimationFrame(this.rAF);
             this.paused = true;
             this.resetDuration();
-            this.finalEndVal = null;
             this.startVal = this.validateValue(this.options.startVal);
             this.frameVal = this.startVal;
             this.printValue(this.startVal);
@@ -220,12 +216,11 @@ var __assign = (this && this.__assign) || function () {
             if (this.endVal === this.frameVal) {
                 return;
             }
+            this.startVal = this.frameVal;
             if (!this.finalEndVal) {
                 this.resetDuration();
             }
-            this.finalEndVal = null;
-            this.startVal = this.frameVal;
-            this.determineCountDownAndSmartEase(this.startVal, this.endVal);
+            this.determineDirectionAndSmartEasing();
             this.rAF = requestAnimationFrame(this.count);
         };
         CountUp.prototype.printValue = function (val) {

@@ -2,9 +2,14 @@
   "compilerOptions": {
     "lib": ["es2017", "dom"],
     "module": "umd",
+    "declaration": true,
     "outDir": "dist",
     "target": "es5",
     "pretty": true
   },
-  "compileOnSave": true
+  "compileOnSave": true,
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }

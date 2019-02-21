@@ -2,10 +2,10 @@ export interface CountUpOptions { // (default)
   startVal?: number; // number to start at (0)
   decimalPlaces?: number; // number of decimal places (0)
   duration?: number; // animation duration in seconds (2)
-  useEasing?: boolean; // ease animation (true)
   useGrouping?: boolean; // example: 1,000 vs 1000 (true)
-  smartEasingThreshold?: number; // smooth easing for large numbers above this (999)
-  smartEasingAmount?: number; // amount to be eased if smartEasingEnabled
+  useEasing?: boolean; // ease animation (true)
+  smartEasingThreshold?: number; // smooth easing for large numbers above this if useEasing (999)
+  smartEasingAmount?: number; // amount to be eased for numbers above threshold (333)
   separator?: string; // grouping separator (,)
   decimal?: string; // decimal (.)
   // easingFn: easing function for animation (easeOutExpo)
@@ -13,7 +13,7 @@ export interface CountUpOptions { // (default)
   formattingFn?: (n: number) => string; // this function formats result
   prefix?: string; // text prepended to result
   suffix?: string; // text appended to result
-  numerals?: string[];
+  numerals?: string[]; // numeral glyph substitution
 }
 
 // playground: stackblitz.com/edit/countup-typescript
@@ -38,7 +38,7 @@ export class CountUp {
   private startTime: number;
   private decimalMult: number;
   private remaining: number;
-  private finalEndVal: number = null; // for auto-smoothing
+  private finalEndVal: number = null; // for smart easing
   private useEasing = true;
   private countDown = false;
   formattingFn: (num: number) => string;
@@ -84,15 +84,17 @@ export class CountUp {
   }
 
   // determines where easing starts and whether to count down or up
-  private determineDirectionAndSmartEasing(start: number, end: number) {
-    this.countDown = (start > end);
-    const animateAmount = end - start;
+  private determineDirectionAndSmartEasing() {
+    const end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
+    this.countDown = (this.startVal > end);
+    const animateAmount = end - this.startVal;
     if (Math.abs(animateAmount) > this.options.smartEasingThreshold) {
       this.finalEndVal = end;
       const up = (this.countDown) ? 1 : -1;
       this.endVal = end + (up * this.options.smartEasingAmount);
       this.duration = this.duration / 2;
     } else {
+      this.endVal = end;
       this.finalEndVal = null;
     }
     if (this.finalEndVal) {
@@ -109,8 +111,7 @@ export class CountUp {
     }
     this.callback = callback;
     if (this.duration > 0) {
-      // auto-smooth large numbers
-      this.determineDirectionAndSmartEasing(this.startVal, this.endVal);
+      this.determineDirectionAndSmartEasing();
       this.paused = false;
       this.rAF = requestAnimationFrame(this.count);
     } else {
@@ -126,6 +127,7 @@ export class CountUp {
       this.startTime = null;
       this.duration = this.remaining;
       this.startVal = this.frameVal;
+      this.determineDirectionAndSmartEasing();
       this.rAF = requestAnimationFrame(this.count);
     }
     this.paused = !this.paused;
@@ -136,7 +138,6 @@ export class CountUp {
     cancelAnimationFrame(this.rAF);
     this.paused = true;
     this.resetDuration();
-    this.finalEndVal = null;
     this.startVal = this.validateValue(this.options.startVal);
     this.frameVal = this.startVal;
     this.printValue(this.startVal);
@@ -150,12 +151,11 @@ export class CountUp {
     if (this.endVal === this.frameVal) {
       return;
     }
+    this.startVal = this.frameVal;
     if (!this.finalEndVal) {
       this.resetDuration();
     }
-    this.finalEndVal = null;
-    this.startVal = this.frameVal;
-    this.determineDirectionAndSmartEasing(this.startVal, this.endVal);
+    this.determineDirectionAndSmartEasing();
     this.rAF = requestAnimationFrame(this.count);
   }
 
@@ -197,7 +197,7 @@ export class CountUp {
     if (progress < this.duration) {
       this.rAF = requestAnimationFrame(this.count);
     } else if (this.finalEndVal !== null) {
-      // for auto-smoothing
+      // smart easing
       this.update(this.finalEndVal);
     } else {
       if (this.callback) {
@@ -270,7 +270,7 @@ export class CountUp {
     }
     return neg + this.options.prefix + x1 + x2 + this.options.suffix;
   }
-  // t: current time, b: beginning value, c: change in value, d: duration
+
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b
 

@@ -35,16 +35,17 @@ var __assign = (this && this.__assign) || function () {
                 useEasing: true,
                 useGrouping: true,
                 autoSmoothThreshold: 999,
-                autoSmoothAmount: 100,
+                autoSmoothAmount: 333,
                 separator: ',',
                 decimal: '.',
                 prefix: '',
                 suffix: ''
             };
-            this.finalEndVal = null;
+            this.finalEndVal = null; // for auto-smoothing
+            this.useEasing = true;
+            this.countDown = false;
             this.error = '';
             this.startVal = 0;
-            this.countDown = false;
             this.paused = true;
             this.count = function (timestamp) {
                 if (!_this.startTime) {
@@ -53,7 +54,7 @@ var __assign = (this && this.__assign) || function () {
                 var progress = timestamp - _this.startTime;
                 _this.remaining = _this.duration - progress;
                 // to ease or not to ease
-                if (_this.options.useEasing) {
+                if (_this.useEasing) {
                     if (_this.countDown) {
                         _this.frameVal = _this.startVal - _this.easingFn(progress, 0, _this.startVal - _this.endVal, _this.duration);
                     }
@@ -89,7 +90,9 @@ var __assign = (this && this.__assign) || function () {
                     _this.update(_this.finalEndVal);
                 }
                 else {
-                    _this.complete();
+                    if (_this.callback) {
+                        _this.callback();
+                    }
                 }
             };
             // default format and easing functions
@@ -118,6 +121,7 @@ var __assign = (this && this.__assign) || function () {
                 }
                 return neg + _this.options.prefix + x1 + x2 + _this.options.suffix;
             };
+            // t: current time, b: beginning value, c: change in value, d: duration
             this.easeOutExpo = function (t, b, c, d) {
                 return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
             };
@@ -126,14 +130,14 @@ var __assign = (this && this.__assign) || function () {
                 this.options.formattingFn : this.formatNumber;
             this.easingFn = (this.options.easingFn) ?
                 this.options.easingFn : this.easeOutExpo;
-            this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
-            this.decimalMult = Math.pow(10, this.options.decimalPlaces);
-            this.duration = Number(this.options.duration) * 1000;
-            this.remaining = this.duration;
             this.startVal = this.validateValue(this.options.startVal);
             this.frameVal = this.startVal;
             this.endVal = this.validateValue(endVal);
+            this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
+            this.decimalMult = Math.pow(10, this.options.decimalPlaces);
+            this.resetDuration();
             this.options.separator = String(this.options.separator);
+            this.useEasing = this.options.useEasing;
             if (this.options.separator === '') {
                 this.options.useGrouping = false;
             }
@@ -145,16 +149,24 @@ var __assign = (this && this.__assign) || function () {
                 this.error = '[CountUp] target is null or undefined';
             }
         }
-        CountUp.prototype.determineIfWillAutoSmooth = function (animateAmount) {
+        CountUp.prototype.determineIfWillAutoSmooth = function (start, end) {
+            var animateAmount = end - start;
+            this.countDown = (this.startVal > this.endVal);
             if (Math.abs(animateAmount) > this.options.autoSmoothThreshold) {
-                this.finalEndVal = this.endVal;
-                var up = (this.endVal > this.startVal) ? -1 : 1;
-                this.endVal = this.endVal + (up * 100);
+                this.finalEndVal = end;
+                var up = (this.countDown) ? 1 : -1;
+                this.endVal = this.endVal + (up * this.options.autoSmoothAmount);
                 this.duration = this.duration / 2;
             }
             else {
                 this.endVal = (this.finalEndVal) ? this.finalEndVal : this.endVal;
                 this.finalEndVal = null;
+            }
+            if (this.finalEndVal) {
+                this.useEasing = false;
+            }
+            else {
+                this.useEasing = this.options.useEasing;
             }
         };
         // start animation
@@ -165,64 +177,52 @@ var __assign = (this && this.__assign) || function () {
             this.callback = callback;
             if (this.duration > 0) {
                 // auto-smooth large numbers
-                var animateAmount = this.endVal - this.startVal;
-                this.determineIfWillAutoSmooth(animateAmount);
+                this.determineIfWillAutoSmooth(this.startVal, this.endVal);
                 this.paused = false;
                 this.rAF = requestAnimationFrame(this.count);
             }
             else {
                 this.printValue(this.endVal);
-                this.complete();
             }
         };
         // pause/resume animation
         CountUp.prototype.pauseResume = function () {
             if (!this.paused) {
-                this.paused = true;
                 cancelAnimationFrame(this.rAF);
             }
             else {
-                this.paused = false;
                 this.startTime = null;
                 this.duration = this.remaining;
                 this.startVal = this.frameVal;
-                var end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
-                var animateAmount = end - this.startVal;
-                this.determineIfWillAutoSmooth(animateAmount);
-                this.start();
+                this.rAF = requestAnimationFrame(this.count);
             }
+            this.paused = !this.paused;
         };
         // reset to startVal so animation can be run again
         CountUp.prototype.reset = function () {
-            this.paused = false;
-            this.startTime = null;
-            this.frameVal = null;
-            if (this.options.startVal) {
-                this.startVal = this.validateValue(this.options.startVal);
-            }
-            this.finalEndVal = null;
             cancelAnimationFrame(this.rAF);
+            this.paused = true;
+            this.resetDuration();
+            this.finalEndVal = null;
+            this.startVal = this.validateValue(this.options.startVal);
+            this.frameVal = this.startVal;
             this.printValue(this.startVal);
         };
         // pass a new endVal and start animation
         CountUp.prototype.update = function (newEndVal) {
+            cancelAnimationFrame(this.rAF);
+            this.startTime = null;
             this.endVal = this.validateValue(newEndVal);
-            this.finalEndVal = null;
             if (this.endVal === this.frameVal) {
                 return;
             }
-            cancelAnimationFrame(this.rAF);
-            this.error = '';
-            this.paused = false;
-            this.startTime = null;
-            this.startVal = this.frameVal;
-            this.start();
-        };
-        CountUp.prototype.complete = function () {
-            this.paused = true;
-            if (this.callback) {
-                this.callback();
+            if (!this.finalEndVal) {
+                this.resetDuration();
             }
+            this.finalEndVal = null;
+            this.startVal = this.frameVal;
+            this.determineIfWillAutoSmooth(this.startVal, this.endVal);
+            this.rAF = requestAnimationFrame(this.count);
         };
         CountUp.prototype.printValue = function (val) {
             var result = this.formattingFn(val);
@@ -247,9 +247,13 @@ var __assign = (this && this.__assign) || function () {
                 return null;
             }
             else {
-                this.countDown = (this.options.startVal > newValue);
                 return newValue;
             }
+        };
+        CountUp.prototype.resetDuration = function () {
+            this.startTime = null;
+            this.duration = Number(this.options.duration) * 1000;
+            this.remaining = this.duration;
         };
         return CountUp;
     }());

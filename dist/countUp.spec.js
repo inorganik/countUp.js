@@ -61,6 +61,7 @@
             });
             it('should pause when pauseResume is called', function () {
                 countUp.start();
+                // resetRAF();
                 countUp.pauseResume();
                 expect(countUp.paused).toBeTruthy();
             });
@@ -68,7 +69,7 @@
                 countUp.start();
                 countUp.reset();
                 expect(document.getElementById('target').innerHTML).toEqual('0');
-                expect(countUp.paused).toBeFalsy();
+                expect(countUp.paused).toBeTruthy();
             });
             it('should update when update is called', function () {
                 countUp.start();
@@ -81,8 +82,17 @@
         describe('various use-cases', function () {
             it('should handle large numbers', function () {
                 countUp = new countUp_1.CountUp('target', 6000);
+                var spy = jest.spyOn(countUp, 'determineIfWillAutoSmooth');
                 countUp.start();
                 expect(document.getElementById('target').innerHTML).toEqual('6,000');
+                expect(spy).toHaveBeenCalled();
+            });
+            it('should not use easing when specified with a large number (auto-smooth)', function () {
+                countUp = new countUp_1.CountUp('target', 6000, { useEasing: false });
+                var spy = jest.spyOn(countUp, 'easingFn');
+                countUp.start();
+                expect(document.getElementById('target').innerHTML).toEqual('6,000');
+                expect(spy).toHaveBeenCalledTimes(0);
             });
             it('should count down when endVal is less than startVal', function () {
                 countUp = new countUp_1.CountUp('target', 10, { startVal: 500 });
@@ -100,23 +110,11 @@
                 countUp.start();
                 expect(document.getElementById('target').innerHTML).toEqual('2,000');
             });
-            it('should call the callback if there is one', function () {
+            it('should call the callback when finished if there is one', function () {
                 var cb = jest.fn();
                 countUp.start(cb);
                 expect(document.getElementById('target').innerHTML).toEqual('100');
                 expect(cb).toHaveBeenCalled();
-            });
-            it('should still pass with this improbable scenario', function () {
-                countUp = new countUp_1.CountUp('target', 2000, { duration: 0 });
-                var cb = jest.fn();
-                countUp.start(cb);
-                expect(document.getElementById('target').innerHTML).toEqual('2,000');
-                expect(cb).toHaveBeenCalled();
-            });
-            it('should work by calling pauseResume instead of start', function () {
-                countUp = new countUp_1.CountUp('target', 100);
-                countUp.pauseResume();
-                expect(document.getElementById('target').innerHTML).toEqual('100');
             });
         });
         describe('options', function () {

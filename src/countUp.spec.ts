@@ -67,6 +67,7 @@ describe('CountUp', () => {
 
     it('should pause when pauseResume is called', () => {
       countUp.start();
+      // resetRAF();
       countUp.pauseResume();
 
       expect(countUp.paused).toBeTruthy();
@@ -77,7 +78,7 @@ describe('CountUp', () => {
       countUp.reset();
 
       expect(document.getElementById('target').innerHTML).toEqual('0');
-      expect(countUp.paused).toBeFalsy();
+      expect(countUp.paused).toBeTruthy();
     });
 
     it('should update when update is called', () => {
@@ -94,9 +95,20 @@ describe('CountUp', () => {
   describe('various use-cases', () => {
     it('should handle large numbers', () => {
       countUp = new CountUp('target', 6000);
+      const spy = jest.spyOn(countUp, 'determineIfWillAutoSmooth');
       countUp.start();
 
       expect(document.getElementById('target').innerHTML).toEqual('6,000');
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should not use easing when specified with a large number (auto-smooth)', () => {
+      countUp = new CountUp('target', 6000, { useEasing: false });
+      const spy = jest.spyOn(countUp, 'easingFn');
+      countUp.start();
+
+      expect(document.getElementById('target').innerHTML).toEqual('6,000');
+      expect(spy).toHaveBeenCalledTimes(0);
     });
 
     it('should count down when endVal is less than startVal', () => {
@@ -121,29 +133,12 @@ describe('CountUp', () => {
       expect(document.getElementById('target').innerHTML).toEqual('2,000');
     });
 
-    it('should call the callback if there is one', () => {
+    it('should call the callback when finished if there is one', () => {
       const cb = jest.fn();
       countUp.start(cb);
 
       expect(document.getElementById('target').innerHTML).toEqual('100');
       expect(cb).toHaveBeenCalled();
-    });
-
-    it('should still pass with this improbable scenario', () => {
-      countUp = new CountUp('target', 2000, { duration: 0 });
-      const cb = jest.fn();
-      countUp.start(cb);
-
-      expect(document.getElementById('target').innerHTML).toEqual('2,000');
-      expect(cb).toHaveBeenCalled();
-    });
-
-    it('should work by calling pauseResume instead of start', () => {
-      countUp = new CountUp('target', 100);
-      countUp.pauseResume();
-
-
-      expect(document.getElementById('target').innerHTML).toEqual('100');
     });
   });
 

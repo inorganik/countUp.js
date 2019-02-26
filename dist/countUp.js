@@ -19,7 +19,7 @@ define(["require", "exports"], function (require, exports) {
             this.target = target;
             this.endVal = endVal;
             this.options = options;
-            this.version = '2.0.0';
+            this.version = '2.0.1';
             this.defaults = {
                 startVal: 0,
                 decimalPlaces: 0,

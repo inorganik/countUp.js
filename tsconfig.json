@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "lib": ["es2017", "dom"],
-    "module": "amd",
+    "module": "commonjs",
     "declaration": true,
     "outDir": "dist",
     "target": "es5",
     "pretty": true
   },
   "compileOnSave": true,
+  "include": ["src"],
   "exclude": [
     "node_modules",
     "**/*.spec.ts"

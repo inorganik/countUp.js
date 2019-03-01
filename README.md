@@ -1,19 +1,21 @@
 # CountUp.js
 CountUp.js is a dependency-free, lightweight Javascript class that can be used to quickly create animations that display numerical data in a more interesting way.
 
-Despite its name, CountUp can count in either direction, depending on the start value and end value that you pass.
+Despite its name, CountUp can count in either direction, depending on the start and end values that you pass.
 
 CountUp.js supports all browsers. MIT license.
 
 ## [Try the demo](http://inorganik.github.io/countUp.js)
 
-## New in 2.0.0
+## New in 2.0
 
 - Completely rewritten in **Typescript**! The distributed code is still Javascript.
 - **New** cleaner [method signature](#example).
 - Tests with **Jest**. As much code coverage as possible mocking requestAnimationFrame.
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
 - **Separate bundles** for with and without the requestAnimationFrame polyfill. Choose `countUp.min.js` for modern browsers or `countUp.withPolyfill.min.js` for IE9 and older, and Opera mini.
+
+CountUp is now distributed as a `commonjs` module - [see below](#including) for how to include it in your project.
 
 ## See Also
 
@@ -100,10 +102,44 @@ Update the end value and animate:
 countUp.update(989);
 ```
 
+## Including CountUp <a name="including"></a>
+
+CountUp v2 is distributed as a `commonjs` module which means you need to include CountUp in your project using a build tool such as [Webpack](https://webpack.js.org/) or [Browserify](http://browserify.org/).
+
+**Example using Browserify**
+
+Install browserify and countup
+```
+npm i countup.js
+npm i -g browserify
+```
+
+main.js:
+```js
+var countUpModule = require('countup.js');
+
+window.onload = function() {
+  var countUp = countUpModule.CountUp('target', 2000);
+  countUp.start();
+}
+```
+
+Build your bundle
+```
+browserify main.js -o bundle.js
+```
+
+Include in your html:
+```
+<script src="bundle.js"></script>
+```
+🎉 Done!
+
 ## Contributing <a name="contributing"></a>
 
 Before you make a pull request, please be sure to follow these instructions:
 
 1. Do your work on `src/countUp.ts`
-1. Test your work. Do manual tests on the demo in the browser and run `npm t`
+1. Run tests: `npm t`
 1. Run `npm run build`, which copies and minifies the .js files to the `dist` folder.
+1. Test the demo: run `npm run build:demo` then open index.html in a browser and make sure it works.

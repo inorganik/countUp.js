@@ -1,16 +1,26 @@
 {
 	"name": "countup.js",
 	"description": "Animates a numerical value by counting to it",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"license": "MIT",
-	"main": "./dist/countUp.min.js",
+  "main": "./dist/countUp.min.js",
+  "author": "@inorganik",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/inorganik/countUp.js.git"
 	},
+	"scripts": {
+    "build": "npm run clean && tsc && gulp",
+    "build:demo": "browserify demo.js -o ./dist/demo-bundle.js -u './dist/countUp'",
+		"clean": "gulp clean",
+		"lint": "tslint --project tsconfig.json",
+		"test": "jest",
+		"test:watch": "jest --watch"
+	},
 	"dependencies": {},
 	"devDependencies": {
 		"@types/jest": "^24.0.6",
+		"browserify": "^16.2.3",
 		"del": "^3.0.0",
 		"gulp": "^4.0.0",
 		"gulp-concat": "^2.6.1",
@@ -19,12 +29,5 @@
 		"ts-jest": "^24.0.0",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.3"
-	},
-	"scripts": {
-		"build": "npm run clean && tsc && gulp",
-		"clean": "gulp clean",
-		"lint": "tslint --project tsconfig.json",
-		"test": "jest",
-		"test:watch": "jest --watch"
 	}
 }

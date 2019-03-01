@@ -9,7 +9,6 @@
 ## Checklist
 
 - [ ] Test your changes
-- [ ] Sqaushed commits
 - [ ] Followed the build steps
 
 

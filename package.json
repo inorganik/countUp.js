@@ -29,5 +29,6 @@
 		"ts-jest": "^24.0.0",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.3"
-	}
+	},
+	"types": "./dist/countUp.d.ts"
 }

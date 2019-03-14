@@ -5,7 +5,7 @@ Despite its name, CountUp can count in either direction, depending on the start 
 
 CountUp.js supports all browsers. MIT license.
 
-## [Try the demo](http://inorganik.github.io/countUp.js)
+## [Try the demo](https://inorganik.github.io/countUp.js)
 
 ---
 

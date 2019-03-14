@@ -1,7 +1,9 @@
 const gulp = require('gulp');
-const uglify = require('gulp-uglify');
+const uglifyES = require('uglify-es');
+const composer = require('gulp-uglify/composer');
 const concat = require('gulp-concat');
 const del = require('del');
+const uglify = composer(uglifyES, console);
 
 const clean = () => del(['dist/*']);
 

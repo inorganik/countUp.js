@@ -1,4 +1,3 @@
-"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -10,7 +9,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 // playground: stackblitz.com/edit/countup-typescript
 var CountUp = /** @class */ (function () {
     function CountUp(target, endVal, options) {
@@ -247,4 +245,4 @@ var CountUp = /** @class */ (function () {
     };
     return CountUp;
 }());
-exports.CountUp = CountUp;
+export { CountUp };

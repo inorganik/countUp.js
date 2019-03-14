@@ -15,7 +15,7 @@ CountUp.js supports all browsers. MIT license.
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
 - **Separate bundles** for with and without the requestAnimationFrame polyfill. Choose `countUp.min.js` for modern browsers or `countUp.withPolyfill.min.js` for IE9 and older, and Opera mini.
 
-CountUp is now distributed as a `commonjs` module - [see below](#including) for how to include it in your project.
+CountUp is now distributed as a ES6 module - [see below](#including) for how to include it in your project.
 
 ## See Also
 
@@ -104,34 +104,47 @@ countUp.update(989);
 
 ## Including CountUp <a name="including"></a>
 
-CountUp v2 is distributed as a `commonjs` module which means you need to include CountUp in your project using a build tool such as [Webpack](https://webpack.js.org/) or [Browserify](http://browserify.org/).
+CountUp v2 is distributed as an ES6 module. For compatibility with IE and older versions of Firefox (< 60) you will need a [module loader polyfill](https://github.com/ModuleLoader/browser-es-module-loader). If you are interested in a different module wrapping, you could install a previous release because I've experimented with many of them. The CountUp code is the same, the module wrappings were changed.
 
-**Example using Browserify**
+- UMD - `npm i countup.js@2.0.0`.
+- AMD - `npm i countup.js@2.0.1`.
+- commonjs - `npm i countup@2.0.3`.
 
-Install browserify and countup
+For all examples, first install CountUp. This will give you the latest:
 ```
 npm i countup.js
-npm i -g browserify
 ```
+
+### Example with vanilla js
+This is what I used in the demo. Checkout index.html and demo.js.
 
 main.js:
 ```js
-var countUpModule = require('countup.js');
+import { CountUp } from './js/CountUp.min.js';
 
 window.onload = function() {
-  var countUp = new countUpModule.CountUp('target', 2000);
+  var countUp = new CountUp('target', 2000);
   countUp.start();
 }
 ```
 
-Build your bundle
+Include in your html. Notice the `type` attribute:
 ```
-browserify main.js -o bundle.js
+<script src="./js/countUp.min.js" type="module"></script>
+<script src="./main.js" type="module"></script>
 ```
+🎉 Done!
 
-Include in your html:
-```
-<script src="bundle.js"></script>
+### Example with Webpack
+
+main.js:
+```js
+import { CountUp } from 'countup.js';
+
+window.onload = function () {
+  var countUp = new CountUp('countup', 2000);
+  countUp.start();
+}
 ```
 🎉 Done!
 

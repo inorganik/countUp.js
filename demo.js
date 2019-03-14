@@ -1,11 +1,11 @@
-var countUpModule = require('./dist/countUp.js');
+import { CountUp } from './dist/CountUp.js';
 
 window.onload = function () {
   var input = function (id) {
     return document.getElementById(id);
   };
   var code, stars, endVal, options;
-  var demo = new countUpModule.CountUp('myTargetElement', 100);
+  var demo = new CountUp('myTargetElement', 100);
   var codeVisualizer = document.getElementById('codeVisualizer');
   var errorSection = document.getElementById('errorSection');
   document.getElementById('version').innerHTML = demo.version;
@@ -107,7 +107,7 @@ window.onload = function () {
   // COUNTUP AND CODE VISUALIZER
   function createCountUp() {
     establishOptionsFromInputs();
-    demo = new countUpModule.CountUp('myTargetElement', endVal, options);
+    demo = new CountUp('myTargetElement', endVal, options);
     if (!demo.error) {
       errorSection.style.display = 'none';
       if (input('useOnComplete').checked) {

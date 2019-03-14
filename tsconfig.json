@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "lib": ["es2017", "dom"],
-    "module": "commonjs",
+    "module": "esnext",
     "declaration": true,
     "outDir": "dist",
     "target": "es5",
-    "pretty": true
+    "pretty": true,
+    "esModuleInterop": true
   },
   "compileOnSave": true,
   "include": ["src"],

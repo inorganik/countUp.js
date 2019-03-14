@@ -7,6 +7,8 @@ CountUp.js supports all browsers. MIT license.
 
 ## [Try the demo](http://inorganik.github.io/countUp.js)
 
+---
+
 ## New in 2.0
 
 - Completely rewritten in **Typescript**! The distributed code is still Javascript.
@@ -25,6 +27,8 @@ CountUp is now distributed as a ES6 module - [see below](#including) for how to 
 - **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2)**
 - **[CountUp.js WordPress Plugin](https://wordpress.org/plugins/countup-js/)**
 - **[CountUp.js jQuery Plugin](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)**
+
+---
 
 ## Usage:
 
@@ -101,16 +105,17 @@ Update the end value and animate:
 ```js
 countUp.update(989);
 ```
+---
 
 ## Including CountUp <a name="including"></a>
 
-CountUp v2 is distributed as an ES6 module. For compatibility with IE and older versions of Firefox (< 60) you will need a [module loader polyfill](https://github.com/ModuleLoader/browser-es-module-loader). If you are interested in a different module wrapping, you could install a previous release because I've experimented with many of them. The CountUp code is the same, the module wrappings were changed.
+CountUp v2 is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers. For compatibility with IE and older versions of Firefox (< 60), if you are not using a build tool, you will need a [module loader polyfill](https://github.com/ModuleLoader/browser-es-module-loader). You can read more about ES6 modules, using the module polyfill and more [here](https://www.sitepoint.com/using-es-modules/). If you are interested in a different module wrapping, you could install a previous release because I've experimented with many of them. The CountUp code is the same; the module wrappings were changed.
 
 - UMD - `npm i countup.js@2.0.0`.
 - AMD - `npm i countup.js@2.0.1`.
 - commonjs - `npm i countup@2.0.3`.
 
-For all examples, first install CountUp. This will give you the latest:
+For the examples below, first install CountUp. This will give you the latest:
 ```
 npm i countup.js
 ```
@@ -133,7 +138,7 @@ Include in your html. Notice the `type` attribute:
 <script src="./js/countUp.min.js" type="module"></script>
 <script src="./main.js" type="module"></script>
 ```
-🎉 Done!
+🎉 Done! Keep in mind to run locally you'll need a simple local server setup like [this](https://www.npmjs.com/package/http-server) (test the demo locally by running `npm run serve`) because otherwise you may see a CORS error when your browser tries to load the script as a module.
 
 ### Example with Webpack
 
@@ -148,6 +153,10 @@ window.onload = function () {
 ```
 🎉 Done!
 
+_If you have included CountUp in another type of project and want to help the community, please add it to the README and make a PR._
+
+---
+
 ## Contributing <a name="contributing"></a>
 
 Before you make a pull request, please be sure to follow these instructions:
@@ -155,4 +164,4 @@ Before you make a pull request, please be sure to follow these instructions:
 1. Do your work on `src/countUp.ts`
 1. Run tests: `npm t`
 1. Run `npm run build`, which copies and minifies the .js files to the `dist` folder.
-1. Test the demo: run `npm run build:demo` then open index.html in a browser and make sure it works.
+1. Serve the demo by running `npm run serve` and visit http://localhost:8080 to make sure it counts.

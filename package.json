@@ -11,11 +11,11 @@
 	},
 	"scripts": {
 		"build": "npm run clean && tsc && gulp",
-		"build:demo": "browserify demo.js -o ./dist/demo-bundle.js -u './dist/countUp'",
 		"clean": "gulp clean",
 		"lint": "tslint --project tsconfig.json",
 		"test": "jest",
-		"test:watch": "jest --watch"
+		"test:watch": "jest --watch",
+		"serve": "http-server ./"
 	},
 	"dependencies": {},
 	"devDependencies": {
@@ -25,6 +25,7 @@
 		"gulp": "^4.0.0",
 		"gulp-concat": "^2.6.1",
 		"gulp-uglify": "^3.0.2",
+		"http-server": "^0.11.1",
 		"jest": "^24.1.0",
 		"ts-jest": "^24.0.0",
 		"tslint": "^5.12.1",

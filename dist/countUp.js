@@ -16,7 +16,7 @@ var CountUp = /** @class */ (function () {
         this.target = target;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.0.3';
+        this.version = '2.0.4';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,

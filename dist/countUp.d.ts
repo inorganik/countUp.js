@@ -41,7 +41,7 @@ export declare class CountUp {
     start(callback?: (args?: any) => any): void;
     pauseResume(): void;
     reset(): void;
-    update(newEndVal: any): void;
+    update(newEndVal: number): void;
     count: (timestamp: number) => void;
     printValue(val: number): void;
     ensureNumber(n: any): boolean;

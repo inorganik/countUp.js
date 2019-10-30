@@ -144,7 +144,7 @@ export class CountUp {
   }
 
   // pass a new endVal and start animation
-  update(newEndVal: number) {
+  update(newEndVal: string | number) {
     cancelAnimationFrame(this.rAF);
     this.startTime = null;
     this.endVal = this.validateValue(newEndVal);
@@ -223,7 +223,7 @@ export class CountUp {
     return (typeof n === 'number' && !isNaN(n));
   }
 
-  validateValue(value: number): number {
+  validateValue(value: string | number): number {
     const newValue = Number(value);
     if (!this.ensureNumber(newValue)) {
       this.error = `[CountUp] invalid start or end value: ${value}`;

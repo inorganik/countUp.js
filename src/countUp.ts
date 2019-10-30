@@ -144,7 +144,7 @@ export class CountUp {
   }
 
   // pass a new endVal and start animation
-  update(newEndVal) {
+  update(newEndVal: number) {
     cancelAnimationFrame(this.rAF);
     this.startTime = null;
     this.endVal = this.validateValue(newEndVal);

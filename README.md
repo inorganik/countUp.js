@@ -21,7 +21,7 @@ CountUp is now distributed as a ES6 module - [see below](#including) for how to 
 
 ## See Also
 
-- **[CountUp.js Angular ^2 Module](https://github.com/inorganik/countUp.js-angular2)**
+- **[CountUp.js Angular 2+ Module](https://github.com/inorganik/ngx-countUp)**
 - **[CountUp.js Angular 1.x Module](https://github.com/inorganik/countUp.js-angular1)**
 - **[CountUp.js React](https://github.com/glennreyes/react-countup)**
 - **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2)**

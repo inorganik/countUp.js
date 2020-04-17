@@ -2,6 +2,7 @@
   "compilerOptions": {
     "lib": ["es2017", "dom"],
     "module": "esnext",
+    "moduleResolution": "node",
     "declaration": true,
     "outDir": "dist",
     "target": "es5",

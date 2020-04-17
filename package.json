@@ -10,7 +10,8 @@
 		"url": "git+https://github.com/inorganik/countUp.js.git"
 	},
 	"scripts": {
-		"build": "npm run clean && tsc && gulp",
+		"build": "npm run clean && tsc && gulp && npm run build:umd",
+		"build:umd": "rollup dist/countUp.js --format umd --file dist/countUp.umd.js --name countUp",
 		"clean": "gulp clean",
 		"lint": "tslint --project tsconfig.json",
 		"test": "jest",
@@ -27,6 +28,7 @@
 		"gulp-uglify": "^3.0.2",
 		"http-server": "^0.11.1",
 		"jest": "^24.9.0",
+		"rollup": "^2.6.1",
 		"ts-jest": "^24.0.0",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.3",

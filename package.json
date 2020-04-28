@@ -16,7 +16,8 @@
 		"lint": "tslint --project tsconfig.json",
 		"test": "jest",
 		"test:watch": "jest --watch",
-		"serve": "http-server ./"
+    "serve": "http-server ./",
+    "start": "npm run serve"
 	},
 	"dependencies": {},
 	"devDependencies": {
@@ -26,12 +27,12 @@
 		"gulp": "^4.0.0",
 		"gulp-concat": "^2.6.1",
 		"gulp-uglify": "^3.0.2",
-		"http-server": "^0.11.1",
+		"http-server": "^0.12.3",
 		"jest": "^24.9.0",
 		"rollup": "^2.6.1",
 		"ts-jest": "^24.0.0",
 		"tslint": "^5.12.1",
-		"typescript": "^3.3.3",
+		"typescript": "^3.8.3",
 		"uglify-es": "^3.3.9"
 	},
 	"types": "./dist/countUp.d.ts"

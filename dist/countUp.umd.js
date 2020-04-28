@@ -22,7 +22,7 @@
             this.target = target;
             this.endVal = endVal;
             this.options = options;
-            this.version = '2.0.4';
+            this.version = '2.0.5';
             this.defaults = {
                 startVal: 0,
                 decimalPlaces: 0,

@@ -12,7 +12,6 @@
 
   <link rel="stylesheet" type="text/css" href="https://inorganik.github.io/assets/css/style.css?v=20191111">
 
-  <script src="./dist/countUp.min.js" type="module"></script>
   <script src="./demo.js" type="module"></script>
 	<script>
 
@@ -53,20 +52,20 @@
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Params:</h4>
 				<div class="inlineLeft marginLeft marginRight">
-					<input type="text" value="0" id="startVal" style="width:80px">
+					<input type="text" value="0" id="startVal" style="width:80px" class="updateCodeVis">
 					<label class="inlineLabel">Start</label>
 				</div>
 				<input id="swapValues" type="button" class="inlineLeft marginRight" value="Swap" style="width:80px;">
 				<div class="inlineLeft marginRight">
-					<input type="text" value="94.62" id="endVal" style="width:80px">
+					<input type="text" value="94.62" id="endVal" style="width:80px" class="updateCodeVis">
 					<label class="inlineLabel">End</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="number" value="0" id="decimalPlaces" step="1" style="width:50px">
+					<input type="number" value="0" id="decimalPlaces" step="1" style="width:50px" class="updateCodeVis">
 					<label class="inlineLabel">Decimal places</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="number" value="2" id="duration" step=".1" style="width:50px">
+					<input type="number" value="2" id="duration" step=".1" style="width:50px" class="updateCodeVis">
 					<label class="inlineLabel">Duration</label>
 				</div>
 			</form>
@@ -75,25 +74,25 @@
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Options:</h4>
 				<div class="inlineLeft marginLeft marginRight">
-					<input id="useEasing" type="checkbox" checked><label class="inlineLabel">Use easing</label>
+					<input id="useEasing" type="checkbox" checked><label class="inlineLabel updateCodeVis">Use easing</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input id="useGrouping" type="checkbox" checked><label class="inlineLabel">Use grouping</label>
+					<input id="useGrouping" type="checkbox" checked><label class="inlineLabel updateVodeVis">Use grouping</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="text" value="," id="separator" style="width:25px; padding:0 5px;">
+					<input type="text" value="," id="separator" style="width:25px; padding:0 5px;" class="updateCodeVis">
 					<label class="inlineLabel">Separator</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="text" value="." id="decimal" style="width:25px; padding:0 5px;">
+					<input type="text" value="." id="decimal" style="width:25px; padding:0 5px;" class="updateCodeVis">
 					<label class="inlineLabel">Decimal</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="text" value="" id="prefix" style="width:50px; padding:0 5px;">
+					<input type="text" value="" id="prefix" style="width:50px; padding:0 5px;" class="updateCodeVis">
 					<label class="inlineLabel">Prefix</label>
 				</div>
 				<div class="inlineLeft marginRight">
-					<input type="text" value="" id="suffix" style="width:50px; padding:0 5px;">
+					<input type="text" value="" id="suffix" style="width:50px; padding:0 5px;" class="updateCodeVis">
 					<label class="inlineLabel">Suffix</label>
 				</div>
 			</form>
@@ -118,7 +117,7 @@
 				<h4 class="inlineLeft noMargin weight300">Custom:</h4>
 				<div class="inlineLeft marginLeft">
 					<label class="inlineLabel">Easing: &nbsp;</label>
-					<select id="easingFnsDropdown" class="marginRight">
+					<select id="easingFnsDropdown" class="marginRight updateCodeVis">
 						<option value="easeOutExpo" selected>easeOutExpo (default, built-in)</option>
 						<option value="outQuintic">outQuintic</option>
 						<option value="outCubic">outCubic</option>
@@ -126,7 +125,7 @@
 				</div>
 				<div class="inlineLeft marginRight">
 					<label class="inlineLabel">Numerals: &nbsp;</label>
-					<select id="numeralsDropdown">
+					<select id="numeralsDropdown" class="updateCodeVis">
 						<option value="" selected>Default ("1234")</option>
 						<option value="ea">Eastern Arabic ("١٢٣٤")</option>
 						<option value="fa">Farsi ("۱۲۳۴")</option>

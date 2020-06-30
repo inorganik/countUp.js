@@ -1,56 +1,45 @@
 import { CountUp } from './dist/countUp.js';
 
 window.onload = function () {
-  var input = function (id) {
+  var el = function (id) {
     return document.getElementById(id);
   };
   var code, stars, endVal, options;
   var demo = new CountUp('myTargetElement', 100);
-  var codeVisualizer = document.getElementById('codeVisualizer');
-  var errorSection = document.getElementById('errorSection');
-  document.getElementById('version').innerHTML = demo.version;
-  // HANDLERS
-  input('startVal').onchange = updateCodeVisualizer;
-  input('endVal').onchange = updateCodeVisualizer;
-  input('decimalPlaces').onchange = updateCodeVisualizer;
-  input('duration').onchange = updateCodeVisualizer;
-  input('separator').onchange = updateCodeVisualizer;
-  input('decimal').onchange = updateCodeVisualizer;
-  input('prefix').onchange = updateCodeVisualizer;
-  input('suffix').onchange = updateCodeVisualizer;
-  input('useEasing').onclick = updateCodeVisualizer;
-  input('useGrouping').onclick = updateCodeVisualizer;
-  input('useOnComplete').onclick = updateCodeVisualizer;
-  input('easingFnsDropdown').onchange = updateCodeVisualizer;
-  input('numeralsDropdown').onchange = updateCodeVisualizer;
-  document.getElementById('swapValues').onclick = function () {
-    var oldStartVal = input('startVal').value;
-    var oldEndVal = input('endVal').value;
-    input('startVal').value = oldEndVal;
-    input('endVal').value = oldStartVal;
+  var codeVisualizer = el('codeVisualizer');
+  var errorSection = el('errorSection');
+  el('version').innerHTML = demo.version;
+
+  document.querySelectorAll('.updateCodeVis').forEach(elem => elem.onchange = updateCodeVisualizer);
+
+  el('swapValues').onclick = function () {
+    var oldStartVal = el('startVal').value;
+    var oldEndVal = el('endVal').value;
+    el('startVal').value = oldEndVal;
+    el('endVal').value = oldStartVal;
     updateCodeVisualizer();
   };
-  document.getElementById('start').onclick = createCountUp;
-  document.getElementById('apply').onclick = createCountUp;
-  document.getElementById('pauseResume').onclick = function () {
+  el('start').onclick = createCountUp;
+  el('apply').onclick = createCountUp;
+  el('pauseResume').onclick = function () {
     code += '<br>demo.pauseResume();';
     codeVisualizer.innerHTML = code;
     demo.pauseResume();
   };
-  document.getElementById('reset').onclick = function () {
+  el('reset').onclick = function () {
     code += '<br>demo.reset();';
     codeVisualizer.innerHTML = code;
     demo.reset();
   };
-  document.getElementById('update').onclick = function () {
-    var updateVal = input('updateVal').value;
+  el('update').onclick = function () {
+    var updateVal = el('updateVal').value;
     var num = updateVal ? updateVal : 0;
     code += "<br>demo.update(" + num + ");";
     codeVisualizer.innerHTML = code;
     demo.update(num);
   };
-  input('updateVal').onchange = function () {
-    var updateVal = input('updateVal').value;
+  el('updateVal').onchange = function () {
+    var updateVal = el('updateVal').value;
     var num = updateVal ? updateVal : 0;
     code += '<br>demo.update(' + num + ');';
     codeVisualizer.innerHTML = code;
@@ -72,7 +61,7 @@ window.onload = function () {
     }
   };
   function getEasingFn() {
-    var fn = input('easingFnsDropdown').value;
+    var fn = el('easingFnsDropdown').value;
     if (fn === 'easeOutExpo') {
       return null;
     }
@@ -92,7 +81,7 @@ window.onload = function () {
     return '';
   }
   function getNumerals() {
-    var numeralsCode = input('numeralsDropdown').value;
+    var numeralsCode = el('numeralsDropdown').value;
     // optionally provide alternates for 0-9
     switch (numeralsCode) {
       case 'ea': // Eastern Arabic
@@ -110,7 +99,7 @@ window.onload = function () {
     demo = new CountUp('myTargetElement', endVal, options);
     if (!demo.error) {
       errorSection.style.display = 'none';
-      if (input('useOnComplete').checked) {
+      if (el('useOnComplete').checked) {
         demo.start(methodToCallOnComplete);
       }
       else {
@@ -129,18 +118,18 @@ window.onload = function () {
     alert('COMPLETE!');
   }
   function establishOptionsFromInputs() {
-    endVal = Number(input('endVal').value);
+    endVal = Number(el('endVal').value);
     options = {
-      startVal: input('startVal').value,
-      decimalPlaces: input('decimalPlaces').value,
-      duration: Number(input('duration').value),
-      useEasing: input('useEasing').checked,
-      useGrouping: input('useGrouping').checked,
+      startVal: el('startVal').value,
+      decimalPlaces: el('decimalPlaces').value,
+      duration: Number(el('duration').value),
+      useEasing: el('useEasing').checked,
+      useGrouping: el('useGrouping').checked,
       easingFn: typeof getEasingFn() === 'undefined' ? null : getEasingFn(),
-      separator: input('separator').value,
-      decimal: input('decimal').value,
-      prefix: input('prefix').value,
-      suffix: input('suffix').value,
+      separator: el('separator').value,
+      decimal: el('decimal').value,
+      prefix: el('prefix').value,
+      suffix: el('suffix').value,
       numerals: getNumerals()
     };
     // unset null values so they don't overwrite defaults
@@ -181,7 +170,7 @@ window.onload = function () {
     opts += (options.prefix.length) ? indentedLine("prefix: '" + options.prefix + "'") : '';
     opts += (options.suffix.length) ? indentedLine("suffix: '" + options.suffix + "'") : '';
     opts += (options.numerals && options.numerals.length) ?
-      indentedLine("numerals: '" + stringifyArray(options.numerals) + "'") : '';
+      indentedLine("numerals: " + stringifyArray(options.numerals)) : '';
     if (opts.length) {
       code += "const options = {<br>" + opts + "};<br>";
       code += "let demo = new CountUp('myTargetElement', " + endVal + ", options);<br>";
@@ -190,7 +179,7 @@ window.onload = function () {
       code += "let demo = new CountUp('myTargetElement', " + endVal + ");<br>";
     }
     code += 'if (!demo.error) {<br>';
-    code += (input('useOnComplete').checked) ?
+    code += (el('useOnComplete').checked) ?
       indentedLine('demo.start(methodToCallOnComplete)', true) : indentedLine('demo.start()', true);
     code += '} else {<br>';
     code += indentedLine('console.error(demo.error)', true);
@@ -211,7 +200,7 @@ window.onload = function () {
             var data = JSON.parse(getStars.responseText);
             stars = data.stargazers_count;
             // change input values
-            input('endVal').value = stars;
+            el('endVal').value = stars;
             createCountUp();
           }
         }

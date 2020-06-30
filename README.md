@@ -10,7 +10,7 @@ CountUp.js supports all browsers. MIT license.
 
 ## Jump to:
 
-- **[New in 2.0](#new-in-2.0)**
+- **[Features](#features)**
 - **[Usage](#usage)**
 - **[Including CountUp](#including-countup)**
 - **[Contributing](#contributing)**
@@ -26,13 +26,10 @@ CountUp.js supports all browsers. MIT license.
 - **[CountUp.js jQuery Plugin](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)**
 
 
-## New in 2.0
-
-- Completely rewritten in **Typescript**! The distributed code is still Javascript.
-- **New** cleaner [method signature](#example).
-- Tests with **Jest**. As much code coverage as possible mocking requestAnimationFrame.
+## Features
+- **Highly customizeable** with a large range of options, you can even substitute numerals.
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
-- **Separate bundles** for with and without the requestAnimationFrame polyfill. Choose `countUp.min.js` for modern browsers or `countUp.withPolyfill.min.js` for IE9 and older, and Opera mini.
+- **Separate bundles** for modern and legacy browsers, with and without the requestAnimationFrame polyfill. Choose `countUp.min.js` for modern browsers or `countUp.withPolyfill.min.js` for IE9 and older, and Opera mini.
 
 ## Usage:
 
@@ -125,7 +122,7 @@ This is what I used in the demo. Checkout index.html and demo.js.
 
 main.js:
 ```js
-import { CountUp } from './js/CountUp.min.js';
+import { CountUp } from './js/countUp.min.js';
 
 window.onload = function() {
   var countUp = new CountUp('target', 2000);
@@ -135,25 +132,16 @@ window.onload = function() {
 
 Include in your html. Notice the `type` attribute:
 ```
-<script src="./js/countUp.min.js" type="module"></script>
 <script src="./main.js" type="module"></script>
 ```
 🎉 Done! Keep in mind to run locally you'll need a simple local server setup like [this](https://www.npmjs.com/package/http-server) (test the demo locally by running `npm run serve`) because otherwise you may see a CORS error when your browser tries to load the script as a module.
 
-### Example with Webpack
+### For Webpack and other build systems
+Import from the package, instead of the file location:
 
-main.js:
 ```js
 import { CountUp } from 'countup.js';
-
-window.onload = function () {
-  var countUp = new CountUp('countup', 2000);
-  countUp.start();
-}
 ```
-🎉 Done!
-
-_If you have included CountUp in another type of project and want to help the community, please add it to the README and make a PR._
 
 ### UMD module
 
@@ -171,6 +159,7 @@ numAnim.start()
 Before you make a pull request, please be sure to follow these instructions:
 
 1. Do your work on `src/countUp.ts`
+1. Lint: `npm run lint`
 1. Run tests: `npm t`
-1. Run `npm run build`, which copies and minifies the .js files to the `dist` folder.
-1. Serve the demo by running `npm run serve` and visit http://localhost:8080 to make sure it counts.
+1. Build: `npm run build`
+1. Serve the demo by running `npm start` and check the demo to make sure it counts.

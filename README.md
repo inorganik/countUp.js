@@ -110,7 +110,7 @@ countUp.update(989);
 
 ## Including CountUp
 
-CountUp v2 is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers, though a UMD module is [also included](#umd-module). For compatibility with IE and older versions of Firefox (< 60), if you are not using a build tool, you will need a [module loader polyfill](https://github.com/ModuleLoader/browser-es-module-loader). You can read more about ES6 modules, using the module polyfill and more [here](https://www.sitepoint.com/using-es-modules/).
+CountUp v2 is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers, though a UMD module is [also included](#umd-module). For compatibility with IE and older versions of Firefox (< 60), if you are not using a build tool, you will need a [module loader polyfill](https://github.com/ModuleLoader/browser-es-module-loader) (used in the demo). You can read more about ES6 modules, using the module polyfill and more [here](https://www.sitepoint.com/using-es-modules/).
 
 For the examples below, first install CountUp. This will give you the latest:
 ```

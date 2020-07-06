@@ -1,4 +1,4 @@
-import { CountUp } from './dist/countUp.js';
+import { CountUp } from '../dist/countUp.js';
 
 window.onload = function () {
   var el = function (id) {

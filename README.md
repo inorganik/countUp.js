@@ -110,7 +110,7 @@ countUp.update(989);
 
 ## Including CountUp
 
-CountUp v2 is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers, though a UMD module is [also included](#umd-module). For compatibility with IE and older versions of Firefox (< 60), if you are not using a build tool, you will need a [module loader polyfill](https://github.com/ModuleLoader/browser-es-module-loader) (used in the demo). You can read more about ES6 modules, using the module polyfill and more [here](https://www.sitepoint.com/using-es-modules/).
+CountUp v2 is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers, though a UMD module is [also included](#umd-module).
 
 For the examples below, first install CountUp. This will give you the latest:
 ```
@@ -131,10 +131,18 @@ window.onload = function() {
 ```
 
 Include in your html. Notice the `type` attribute:
-```
+```html
 <script src="./main.js" type="module"></script>
 ```
-🎉 Done! Keep in mind to run locally you'll need a simple local server setup like [this](https://www.npmjs.com/package/http-server) (test the demo locally by running `npm run serve`) because otherwise you may see a CORS error when your browser tries to load the script as a module.
+
+To support IE and legacy browsers, use the `nomodule` script tag to include separate scripts that don't use the module syntax:
+
+```html
+<script nomodule src="js/countUp.umd.js"></script>
+<script nomodule src="js/main-for-legacy.js"></script>
+```
+
+To run module-enabled scripts locally, you'll need a simple local server setup like [this](https://www.npmjs.com/package/http-server) (test the demo locally by running `npm run serve`) because otherwise you may see a CORS error when your browser tries to load the script as a module.
 
 ### For Webpack and other build systems
 Import from the package, instead of the file location:

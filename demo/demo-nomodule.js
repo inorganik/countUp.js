@@ -1,4 +1,5 @@
-// same as demo.js but with a different instantiation of CountUp
+// same as demo.js but with a different instantiation of CountUp,
+// and no lambdas
 
 window.onload = function () {
   var el = function (id) {
@@ -10,7 +11,10 @@ window.onload = function () {
   var errorSection = el('errorSection');
   el('version').innerHTML = demo.version;
 
-  document.querySelectorAll('.updateCodeVis').forEach(elem => elem.onchange = updateCodeVisualizer);
+  var changeEls = document.querySelectorAll('.updateCodeVis');
+  for (var i = 0, len = changeEls.length; i < len; i++) {
+    changeEls[i].onchange = updateCodeVisualizer;
+  }
 
   el('swapValues').onclick = function () {
     var oldStartVal = el('startVal').value;

@@ -36,7 +36,6 @@ export class CountUp {
   private el: HTMLElement | HTMLInputElement;
   private rAF: any;
   private startTime: number;
-  private decimalMult: number;
   private remaining: number;
   private finalEndVal: number = null; // for smart easing
   private useEasing = true;
@@ -68,7 +67,6 @@ export class CountUp {
     this.frameVal = this.startVal;
     this.endVal = this.validateValue(endVal);
     this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
-    this.decimalMult = Math.pow(10, this.options.decimalPlaces);
     this.resetDuration();
     this.options.separator = String(this.options.separator);
     this.useEasing = this.options.useEasing;
@@ -188,7 +186,7 @@ export class CountUp {
     }
 
     // decimal
-    this.frameVal = Math.round(this.frameVal * this.decimalMult) / this.decimalMult;
+    this.frameVal = +Number(this.frameVal).toFixed(this.options.decimalPlaces);
 
     // format and print value
     this.printValue(this.frameVal);

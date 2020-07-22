@@ -23,7 +23,6 @@ export declare class CountUp {
     private el;
     private rAF;
     private startTime;
-    private decimalMult;
     private remaining;
     private finalEndVal;
     private useEasing;

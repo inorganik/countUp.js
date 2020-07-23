@@ -52,7 +52,7 @@ export class CountUp {
   constructor(
     private target: string | HTMLElement | HTMLInputElement,
     private endVal: number,
-    private options?: CountUpOptions
+    public options?: CountUpOptions
   ) {
     this.options = {
       ...this.defaults,

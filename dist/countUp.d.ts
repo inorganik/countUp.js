@@ -17,7 +17,7 @@ export interface CountUpOptions {
 export declare class CountUp {
     private target;
     private endVal;
-    private options?;
+    options?: CountUpOptions;
     version: string;
     private defaults;
     private el;

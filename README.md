@@ -169,5 +169,4 @@ Before you make a pull request, please be sure to follow these instructions:
 1. Do your work on `src/countUp.ts`
 1. Lint: `npm run lint`
 1. Run tests: `npm t`
-1. Build: `npm run build`
-1. Serve the demo by running `npm start` and check the demo to make sure it counts.
+1. Build and serve the demo by running `npm start` then check the demo to make sure it counts.

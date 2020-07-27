@@ -73,7 +73,7 @@
                     _this.frameVal = (_this.frameVal > _this.endVal) ? _this.endVal : _this.frameVal;
                 }
                 // decimal
-                _this.frameVal = Math.round(_this.frameVal * _this.decimalMult) / _this.decimalMult;
+                _this.frameVal = Number(_this.frameVal.toFixed(_this.options.decimalPlaces));
                 // format and print value
                 _this.printValue(_this.frameVal);
                 // whether to continue
@@ -128,7 +128,6 @@
             this.frameVal = this.startVal;
             this.endVal = this.validateValue(endVal);
             this.options.decimalPlaces = Math.max( this.options.decimalPlaces);
-            this.decimalMult = Math.pow(10, this.options.decimalPlaces);
             this.resetDuration();
             this.options.separator = String(this.options.separator);
             this.useEasing = this.options.useEasing;

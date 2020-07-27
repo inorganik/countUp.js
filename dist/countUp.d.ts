@@ -17,13 +17,12 @@ export interface CountUpOptions {
 export declare class CountUp {
     private target;
     private endVal;
-    private options?;
+    options?: CountUpOptions;
     version: string;
     private defaults;
     private el;
     private rAF;
     private startTime;
-    private decimalMult;
     private remaining;
     private finalEndVal;
     private useEasing;

@@ -73,7 +73,7 @@
                     _this.frameVal = (_this.frameVal > _this.endVal) ? _this.endVal : _this.frameVal;
                 }
                 // decimal
-                _this.frameVal = +Number(_this.frameVal).toFixed(_this.options.decimalPlaces);
+                _this.frameVal = Number(_this.frameVal.toFixed(_this.options.decimalPlaces));
                 // format and print value
                 _this.printValue(_this.frameVal);
                 // whether to continue

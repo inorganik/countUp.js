@@ -186,7 +186,7 @@ export class CountUp {
     }
 
     // decimal
-    this.frameVal = +Number(this.frameVal).toFixed(this.options.decimalPlaces);
+    this.frameVal = Number(this.frameVal.toFixed(this.options.decimalPlaces));
 
     // format and print value
     this.printValue(this.frameVal);

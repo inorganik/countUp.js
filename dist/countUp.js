@@ -16,7 +16,7 @@ var CountUp = /** @class */ (function () {
         this.target = target;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.0.6';
+        this.version = '2.0.7';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,
@@ -208,6 +208,7 @@ var CountUp = /** @class */ (function () {
         if (!this.finalEndVal) {
             this.resetDuration();
         }
+        this.finalEndVal = null;
         this.determineDirectionAndSmartEasing();
         this.rAF = requestAnimationFrame(this.count);
     };

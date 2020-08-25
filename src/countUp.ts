@@ -19,7 +19,7 @@ export interface CountUpOptions { // (default)
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.0.6';
+  version = '2.0.7';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -153,6 +153,7 @@ export class CountUp {
     if (!this.finalEndVal) {
       this.resetDuration();
     }
+    this.finalEndVal = null;
     this.determineDirectionAndSmartEasing();
     this.rAF = requestAnimationFrame(this.count);
   }

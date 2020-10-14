@@ -269,7 +269,7 @@ export class CountUp {
       x1 = x1.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
       x2 = x2.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
     }
-    return neg + this.options.prefix + ( x1 + x2 ).padStart( this.options.padStart ,'0') + this.options.suffix;
+    return neg + this.options.prefix + ( x1 + x2 ).padStart( this.options.padStart , '0' ) + this.options.suffix;
   }
 
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>

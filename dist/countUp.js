@@ -28,7 +28,8 @@ var CountUp = /** @class */ (function () {
             separator: ',',
             decimal: '.',
             prefix: '',
-            suffix: ''
+            suffix: '',
+            padStart: 0
         };
         this.finalEndVal = null; // for smart easing
         this.useEasing = true;
@@ -108,7 +109,7 @@ var CountUp = /** @class */ (function () {
                 x1 = x1.replace(/[0-9]/g, function (w) { return _this.options.numerals[+w]; });
                 x2 = x2.replace(/[0-9]/g, function (w) { return _this.options.numerals[+w]; });
             }
-            return neg + _this.options.prefix + x1 + x2 + _this.options.suffix;
+            return neg + _this.options.prefix + (x1 + x2).padStart(_this.options.padStart, '0') + _this.options.suffix;
         };
         this.easeOutExpo = function (t, b, c, d) {
             return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;

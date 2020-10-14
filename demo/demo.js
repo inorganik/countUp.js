@@ -130,6 +130,7 @@ window.onload = function () {
       decimal: el('decimal').value,
       prefix: el('prefix').value,
       suffix: el('suffix').value,
+      padStart: Number(el('padStart').value),
       numerals: getNumerals()
     };
     // unset null values so they don't overwrite defaults
@@ -169,6 +170,7 @@ window.onload = function () {
     opts += (options.decimal !== '.') ? indentedLine("decimal: '" + options.decimal + "'") : '';
     opts += (options.prefix.length) ? indentedLine("prefix: '" + options.prefix + "'") : '';
     opts += (options.suffix.length) ? indentedLine("suffix: '" + options.suffix + "'") : '';
+    opts += (options.padStart) ? indentedLine("padStart: " + options.padStart) : '';
     opts += (options.numerals && options.numerals.length) ?
       indentedLine("numerals: " + stringifyArray(options.numerals)) : '';
     if (opts.length) {

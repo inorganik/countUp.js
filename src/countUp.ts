@@ -13,6 +13,8 @@ export interface CountUpOptions { // (default)
   formattingFn?: (n: number) => string; // this function formats result
   prefix?: string; // text prepended to result
   suffix?: string; // text appended to result
+  padStart?: string; // text pad start to result
+  padEnd: string; // text pad end to result
   numerals?: string[]; // numeral glyph substitution
 }
 
@@ -31,7 +33,9 @@ export class CountUp {
     separator: ',',
     decimal: '.',
     prefix: '',
-    suffix: ''
+    suffix: '',
+    padStart: '',
+    padEnd: ''
   };
   private el: HTMLElement | HTMLInputElement;
   private rAF: any;

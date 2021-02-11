@@ -22,17 +22,17 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@types/jest": "^24.9.1",
-		"browserify": "^16.5.1",
+		"browserify": "^16.5.2",
 		"del": "^3.0.0",
 		"gulp": "^4.0.2",
 		"gulp-concat": "^2.6.1",
 		"gulp-uglify": "^3.0.2",
 		"http-server": "^0.12.3",
 		"jest": "^24.9.0",
-		"rollup": "^2.18.1",
+		"rollup": "^2.38.5",
 		"ts-jest": "^24.3.0",
 		"tslint": "^5.20.1",
-		"typescript": "^3.9.5",
+		"typescript": "^3.9.9",
 		"uglify-es": "^3.3.9"
 	},
 	"types": "./dist/countUp.d.ts"

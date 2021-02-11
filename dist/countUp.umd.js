@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = global || self, factory(global.countUp = {}));
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.countUp = {}));
 }(this, (function (exports) { 'use strict';
 
     var __assign = (undefined && undefined.__assign) || function () {
@@ -127,7 +127,7 @@
             this.startVal = this.validateValue(this.options.startVal);
             this.frameVal = this.startVal;
             this.endVal = this.validateValue(endVal);
-            this.options.decimalPlaces = Math.max( this.options.decimalPlaces);
+            this.options.decimalPlaces = Math.max(this.options.decimalPlaces);
             this.resetDuration();
             this.options.separator = String(this.options.separator);
             this.useEasing = this.options.useEasing;

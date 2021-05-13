@@ -12,6 +12,7 @@ export interface CountUpOptions {
     formattingFn?: (n: number) => string;
     prefix?: string;
     suffix?: string;
+    padStart?: number;
     numerals?: string[];
 }
 export declare class CountUp {

@@ -13,6 +13,7 @@ export interface CountUpOptions { // (default)
   formattingFn?: (n: number) => string; // this function formats result
   prefix?: string; // text prepended to result
   suffix?: string; // text appended to result
+  padStart?: number; // text pad start to result
   numerals?: string[]; // numeral glyph substitution
 }
 
@@ -31,7 +32,8 @@ export class CountUp {
     separator: ',',
     decimal: '.',
     prefix: '',
-    suffix: ''
+    suffix: '',
+    padStart: 0
   };
   private el: HTMLElement | HTMLInputElement;
   private rAF: any;
@@ -267,7 +269,7 @@ export class CountUp {
       x1 = x1.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
       x2 = x2.replace(/[0-9]/g, (w) => this.options.numerals[+w]);
     }
-    return neg + this.options.prefix + x1 + x2 + this.options.suffix;
+    return neg + this.options.prefix + ( x1 + x2 ).padStart( this.options.padStart , '0' ) + this.options.suffix;
   }
 
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>

@@ -1,9 +1,10 @@
 {
 	"name": "countup.js",
 	"description": "Animates a numerical value by counting to it",
-	"version": "2.0.7",
+	"version": "2.0.8",
 	"license": "MIT",
-	"main": "./dist/countUp.min.js",
+	"main": "./dist/countUp.umd.js",
+	"module": "./dist/countUp.min.js",
 	"author": "@inorganik",
 	"repository": {
 		"type": "git",
@@ -29,10 +30,10 @@
 		"gulp-uglify": "^3.0.2",
 		"http-server": "^0.12.3",
 		"jest": "^24.9.0",
-		"rollup": "^2.38.5",
+		"rollup": "^2.54.0",
 		"ts-jest": "^24.3.0",
 		"tslint": "^5.20.1",
-		"typescript": "^3.9.9",
+		"typescript": "^3.9.10",
 		"uglify-es": "^3.3.9"
 	},
 	"types": "./dist/countUp.d.ts"

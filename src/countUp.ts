@@ -82,7 +82,7 @@ export class CountUp {
   }
 
   // determines where easing starts and whether to count down or up
-  private determineDirectionAndSmartEasing() {
+  private determineDirectionAndSmartEasing(): void {
     const end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
     this.countDown = (this.startVal > end);
     const animateAmount = end - this.startVal;
@@ -103,7 +103,7 @@ export class CountUp {
   }
 
   // start animation
-  start(callback?: (args?: any) => any) {
+  start(callback?: (args?: any) => any): void {
     if (this.error) {
       return;
     }
@@ -118,7 +118,7 @@ export class CountUp {
   }
 
   // pause/resume animation
-  pauseResume() {
+  pauseResume(): void {
     if (!this.paused) {
       cancelAnimationFrame(this.rAF);
     } else {
@@ -132,7 +132,7 @@ export class CountUp {
   }
 
   // reset to startVal so animation can be run again
-  reset() {
+  reset(): void {
     cancelAnimationFrame(this.rAF);
     this.paused = true;
     this.resetDuration();
@@ -142,7 +142,7 @@ export class CountUp {
   }
 
   // pass a new endVal and start animation
-  update(newEndVal: string | number) {
+  update(newEndVal: string | number): void {
     cancelAnimationFrame(this.rAF);
     this.startTime = null;
     this.endVal = this.validateValue(newEndVal);
@@ -158,7 +158,7 @@ export class CountUp {
     this.rAF = requestAnimationFrame(this.count);
   }
 
-  count = (timestamp: number) => {
+  count = (timestamp: number): void => {
     if (!this.startTime) { this.startTime = timestamp; }
 
     const progress = timestamp - this.startTime;
@@ -205,7 +205,7 @@ export class CountUp {
     }
   }
 
-  printValue(val: number) {
+  printValue(val: number): void {
     const result = this.formattingFn(val);
 
     if (this.el.tagName === 'INPUT') {
@@ -218,7 +218,7 @@ export class CountUp {
     }
   }
 
-  ensureNumber(n: any) {
+  ensureNumber(n: any): boolean {
     return (typeof n === 'number' && !isNaN(n));
   }
 
@@ -232,7 +232,7 @@ export class CountUp {
     }
   }
 
-  private resetDuration() {
+  private resetDuration(): void {
     this.startTime = null;
     this.duration = Number(this.options.duration) * 1000;
     this.remaining = this.duration;
@@ -243,13 +243,12 @@ export class CountUp {
   formatNumber = (num: number): string => {
     const neg = (num < 0) ? '-' : '';
     let result: string,
-      x: string[],
       x1: string,
       x2: string,
       x3: string;
     result = Math.abs(num).toFixed(this.options.decimalPlaces);
     result += '';
-    x = result.split('.');
+    const x = result.split('.');
     x1 = x[0];
     x2 = x.length > 1 ? this.options.decimal + x[1] : '';
     if (this.options.useGrouping) {
@@ -271,6 +270,6 @@ export class CountUp {
   }
 
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>
-    c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b
+    c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
 
 }

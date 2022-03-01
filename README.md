@@ -109,6 +109,23 @@ Update the end value and animate:
 ```js
 countUp.update(989);
 ```
+
+### Animate when the element is scrolled into view
+
+Use the scroll spy option to animate when the element is scrolled into view. When using scroll spy, just initialize CountUp but do not call start();
+
+```js
+const countUp = new CountUp('targetId', 989, { enableScrollSpy: true });
+```
+
+**Troubleshooting scroll spy**
+
+CountUp checks the scroll position as soon as it's initialized. So if you initialize it before the DOM renders and your target element is in view before any scrolling, you'll need to re-check the scroll position after the page renders:
+
+```js
+// after DOM has rendered
+countUp.handleScroll();
+```
 ---
 
 ## Including CountUp

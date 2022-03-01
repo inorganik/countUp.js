@@ -54,7 +54,7 @@ export class CountUp {
   frameVal: number;
 
   constructor(
-    private target: string | HTMLElement | HTMLInputElement,
+    target: string | HTMLElement | HTMLInputElement,
     private endVal: number,
     public options?: CountUpOptions
   ) {
@@ -86,8 +86,28 @@ export class CountUp {
 
     // scroll spy
     if (window !== undefined && this.options.enableScrollSpy) {
-      window.onscroll = () => this.handleScroll();
-      this.handleScroll();
+      // set up global array of onscroll functions
+      window['onScrollFns'] = window['onScrollFns'] || [];
+      window['onScrollFns'].push(() => this.handleScroll(this));
+      window.onscroll = () => {
+        window['onScrollFns'].forEach((fn) => fn());
+      };
+      this.handleScroll(this);
+    }
+  }
+
+  handleScroll(self: CountUp): void {
+    if (!self) return;
+    const scrollY = window?.scrollY;
+    const bottomOfScroll = window?.innerHeight + window?.scrollY;
+    const bottomOfEl = self.el.offsetTop + self.el.offsetHeight;
+    if (bottomOfEl < bottomOfScroll && bottomOfEl > scrollY && self.paused) {
+      // in view
+      self.paused = false;
+      setTimeout(() => self.start(), self.options.scrollSpyDelay);
+    } else if (scrollY > bottomOfEl && !self.paused) {
+      // scrolled past
+      self.reset();
     }
   }
 
@@ -109,20 +129,6 @@ export class CountUp {
       this.useEasing = false;
     } else {
       this.useEasing = this.options.useEasing;
-    }
-  }
-
-  private handleScroll(): void {
-    const scrollY = window?.scrollY;
-    const bottomOfScroll = window?.innerHeight + window?.scrollY;
-    const bottomOfEl = this.el.offsetTop + this.el.offsetHeight;
-    if (bottomOfEl < bottomOfScroll && bottomOfEl > scrollY && this.paused) {
-      // in view
-      this.paused = false;
-      setTimeout(() => this.start(), this.options.scrollSpyDelay);
-    } else if (scrollY > bottomOfEl && !this.paused) {
-      // scrolled past
-      this.reset();
     }
   }
 

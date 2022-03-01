@@ -101,15 +101,14 @@ export class CountUp {
   }
 
   handleScroll(self: CountUp): void {
-    if (!self) return;
-    const scrollY = window?.scrollY;
-    const bottomOfScroll = window?.innerHeight + window?.scrollY;
+    if (!self || !window) return;
+    const bottomOfScroll = window.innerHeight +  window.scrollY;
     const bottomOfEl = self.el.offsetTop + self.el.offsetHeight;
-    if (bottomOfEl < bottomOfScroll && bottomOfEl > scrollY && self.paused) {
+    if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
       // in view
       self.paused = false;
       setTimeout(() => self.start(), self.options.scrollSpyDelay);
-    } else if (scrollY > bottomOfEl && !self.paused) {
+    } else if ( window.scrollY > bottomOfEl && !self.paused) {
       // scrolled past
       self.reset();
     }

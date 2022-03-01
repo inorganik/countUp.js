@@ -153,17 +153,16 @@ var CountUp = /** @class */ (function () {
         }
     }
     CountUp.prototype.handleScroll = function (self) {
-        if (!self)
+        if (!self || !window)
             return;
-        var scrollY = window === null || window === void 0 ? void 0 : window.scrollY;
-        var bottomOfScroll = (window === null || window === void 0 ? void 0 : window.innerHeight) + (window === null || window === void 0 ? void 0 : window.scrollY);
+        var bottomOfScroll = window.innerHeight + window.scrollY;
         var bottomOfEl = self.el.offsetTop + self.el.offsetHeight;
-        if (bottomOfEl < bottomOfScroll && bottomOfEl > scrollY && self.paused) {
+        if (bottomOfEl < bottomOfScroll && bottomOfEl > window.scrollY && self.paused) {
             // in view
             self.paused = false;
             setTimeout(function () { return self.start(); }, self.options.scrollSpyDelay);
         }
-        else if (scrollY > bottomOfEl && !self.paused) {
+        else if (window.scrollY > bottomOfEl && !self.paused) {
             // scrolled past
             self.reset();
         }

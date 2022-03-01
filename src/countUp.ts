@@ -86,13 +86,17 @@ export class CountUp {
 
     // scroll spy
     if (window !== undefined && this.options.enableScrollSpy) {
-      // set up global array of onscroll functions
-      window['onScrollFns'] = window['onScrollFns'] || [];
-      window['onScrollFns'].push(() => this.handleScroll(this));
-      window.onscroll = () => {
-        window['onScrollFns'].forEach((fn) => fn());
-      };
-      this.handleScroll(this);
+      if (!this.error) {
+        // set up global array of onscroll functions
+        window['onScrollFns'] = window['onScrollFns'] || [];
+        window['onScrollFns'].push(() => this.handleScroll(this));
+        window.onscroll = () => {
+          window['onScrollFns'].forEach((fn) => fn());
+        };
+        this.handleScroll(this);
+      } else {
+        console.error(this.error, target);
+      }
     }
   }
 

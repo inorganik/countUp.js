@@ -144,13 +144,18 @@
             }
             // scroll spy
             if (window !== undefined && this.options.enableScrollSpy) {
-                // set up global array of onscroll functions
-                window['onScrollFns'] = window['onScrollFns'] || [];
-                window['onScrollFns'].push(function () { return _this.handleScroll(_this); });
-                window.onscroll = function () {
-                    window['onScrollFns'].forEach(function (fn) { return fn(); });
-                };
-                this.handleScroll(this);
+                if (!this.error) {
+                    // set up global array of onscroll functions
+                    window['onScrollFns'] = window['onScrollFns'] || [];
+                    window['onScrollFns'].push(function () { return _this.handleScroll(_this); });
+                    window.onscroll = function () {
+                        window['onScrollFns'].forEach(function (fn) { return fn(); });
+                    };
+                    this.handleScroll(this);
+                }
+                else {
+                    console.error(this.error, target);
+                }
             }
         }
         CountUp.prototype.handleScroll = function (self) {

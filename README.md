@@ -27,6 +27,7 @@ CountUp.js supports all browsers. MIT license.
 
 
 ## Features
+- **Scroll spy** - new in 2.1.0. Use option `enableScrollSpy`.
 - **Highly customizeable** with a large range of options, you can even substitute numerals.
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
 - **Separate bundles** for modern and legacy browsers, with and without the requestAnimationFrame polyfill. Choose `countUp.min.js` for modern browsers or `countUp.withPolyfill.min.js` for IE9 and older, and Opera mini.
@@ -59,6 +60,8 @@ interface CountUpOptions {
   prefix?: string; // text prepended to result
   suffix?: string; // text appended to result
   numerals?: string[]; // numeral glyph substitution
+  enableScrollSpy?: boolean; // start animation when target is in view
+  scrollSpyDelay?: number; // delay (ms) after target comes into view
 }
 ```
 

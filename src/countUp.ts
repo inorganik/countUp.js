@@ -14,12 +14,14 @@ export interface CountUpOptions { // (default)
   prefix?: string; // text prepended to result
   suffix?: string; // text appended to result
   numerals?: string[]; // numeral glyph substitution
+  enableScrollSpy?: boolean; // start animation when target is in view
+  scrollSpyDelay?: number; // delay (ms) after target comes into view
 }
 
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.0.8';
+  version = '2.1.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -31,7 +33,9 @@ export class CountUp {
     separator: ',',
     decimal: '.',
     prefix: '',
-    suffix: ''
+    suffix: '',
+    enableScrollSpy: false,
+    scrollSpyDelay: 200,
   };
   private el: HTMLElement | HTMLInputElement;
   private rAF: any;
@@ -79,6 +83,12 @@ export class CountUp {
     } else {
       this.error = '[CountUp] target is null or undefined';
     }
+
+    // scroll spy
+    if (window !== undefined && this.options.enableScrollSpy) {
+      window.onscroll = () => this.handleScroll();
+      this.handleScroll();
+    }
   }
 
   // determines where easing starts and whether to count down or up
@@ -99,6 +109,20 @@ export class CountUp {
       this.useEasing = false;
     } else {
       this.useEasing = this.options.useEasing;
+    }
+  }
+
+  private handleScroll(): void {
+    const scrollY = window?.scrollY;
+    const bottomOfScroll = window?.innerHeight + window?.scrollY;
+    const bottomOfEl = this.el.offsetTop + this.el.offsetHeight;
+    if (bottomOfEl < bottomOfScroll && bottomOfEl > scrollY && this.paused) {
+      // in view
+      this.paused = false;
+      setTimeout(() => this.start(), this.options.scrollSpyDelay);
+    } else if (scrollY > bottomOfEl && !this.paused) {
+      // scrolled past
+      this.reset();
     }
   }
 

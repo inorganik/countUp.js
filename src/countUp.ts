@@ -14,12 +14,14 @@ export interface CountUpOptions { // (default)
   prefix?: string; // text prepended to result
   suffix?: string; // text appended to result
   numerals?: string[]; // numeral glyph substitution
+  enableScrollSpy?: boolean; // start animation when target is in view
+  scrollSpyDelay?: number; // delay (ms) after target comes into view
 }
 
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.0.8';
+  version = '2.1.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -31,7 +33,9 @@ export class CountUp {
     separator: ',',
     decimal: '.',
     prefix: '',
-    suffix: ''
+    suffix: '',
+    enableScrollSpy: false,
+    scrollSpyDelay: 200,
   };
   private el: HTMLElement | HTMLInputElement;
   private rAF: any;
@@ -50,7 +54,7 @@ export class CountUp {
   frameVal: number;
 
   constructor(
-    private target: string | HTMLElement | HTMLInputElement,
+    target: string | HTMLElement | HTMLInputElement,
     private endVal: number,
     public options?: CountUpOptions
   ) {
@@ -78,6 +82,35 @@ export class CountUp {
       this.printValue(this.startVal);
     } else {
       this.error = '[CountUp] target is null or undefined';
+    }
+
+    // scroll spy
+    if (window !== undefined && this.options.enableScrollSpy) {
+      if (!this.error) {
+        // set up global array of onscroll functions
+        window['onScrollFns'] = window['onScrollFns'] || [];
+        window['onScrollFns'].push(() => this.handleScroll(this));
+        window.onscroll = () => {
+          window['onScrollFns'].forEach((fn) => fn());
+        };
+        this.handleScroll(this);
+      } else {
+        console.error(this.error, target);
+      }
+    }
+  }
+
+  handleScroll(self: CountUp): void {
+    if (!self || !window) return;
+    const bottomOfScroll = window.innerHeight +  window.scrollY;
+    const bottomOfEl = self.el.offsetTop + self.el.offsetHeight;
+    if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
+      // in view
+      self.paused = false;
+      setTimeout(() => self.start(), self.options.scrollSpyDelay);
+    } else if ( window.scrollY > bottomOfEl && !self.paused) {
+      // scrolled past
+      self.reset();
     }
   }
 

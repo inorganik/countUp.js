@@ -262,7 +262,7 @@ var CountUp = /** @class */ (function () {
     CountUp.prototype.validateValue = function (value) {
         var newValue = Number(value);
         if (!this.ensureNumber(newValue)) {
-            this.error = "[CountUp] invalid start or end value: " + value;
+            this.error = "[CountUp] invalid start or end value: ".concat(value);
             return null;
         }
         else {

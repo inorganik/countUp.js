@@ -6,6 +6,7 @@ module.exports = {
     '^.+\\.ts?$': 'ts-jest'
   },
   testRegex: '(\\.|/)(test|spec)\\.ts?$',
+  testEnvironment: 'jsdom',
   moduleFileExtensions: [
     'ts',
     'js',

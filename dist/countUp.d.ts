@@ -15,6 +15,7 @@ export interface CountUpOptions {
     numerals?: string[];
     enableScrollSpy?: boolean;
     scrollSpyDelay?: number;
+    scrollSpyOnce?: boolean;
 }
 export declare class CountUp {
     private endVal;
@@ -36,6 +37,7 @@ export declare class CountUp {
     duration: number;
     paused: boolean;
     frameVal: number;
+    once: boolean;
     constructor(target: string | HTMLElement | HTMLInputElement, endVal: number, options?: CountUpOptions);
     handleScroll(self: CountUp): void;
     private determineDirectionAndSmartEasing;

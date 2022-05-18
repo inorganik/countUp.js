@@ -62,6 +62,7 @@ interface CountUpOptions {
   numerals?: string[]; // numeral glyph substitution
   enableScrollSpy?: boolean; // start animation when target is in view
   scrollSpyDelay?: number; // delay (ms) after target comes into view
+  scrollSpyOnce?: boolean; // run only once
 }
 ```
 

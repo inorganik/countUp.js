@@ -191,3 +191,12 @@ Before you make a pull request, please be sure to follow these instructions:
 1. Lint: `npm run lint`
 1. Run tests: `npm t`
 1. Build and serve the demo by running `npm start` then check the demo to make sure it counts.
+
+<!-- PUBLISHING
+
+1. bump version in package.json and countUp.ts
+2. npm run build
+3. commit changes
+4. npm publish
+
+-->

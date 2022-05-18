@@ -16,6 +16,7 @@ export interface CountUpOptions { // (default)
   numerals?: string[]; // numeral glyph substitution
   enableScrollSpy?: boolean; // start animation when target is in view
   scrollSpyDelay?: number; // delay (ms) after target comes into view
+  scrollSpyOnce?: boolean; // run only once
 }
 
 // playground: stackblitz.com/edit/countup-typescript
@@ -36,6 +37,7 @@ export class CountUp {
     suffix: '',
     enableScrollSpy: false,
     scrollSpyDelay: 200,
+    scrollSpyOnce: false,
   };
   private el: HTMLElement | HTMLInputElement;
   private rAF: any;
@@ -52,6 +54,7 @@ export class CountUp {
   duration: number;
   paused = true;
   frameVal: number;
+  once = false;
 
   constructor(
     target: string | HTMLElement | HTMLInputElement,
@@ -101,13 +104,15 @@ export class CountUp {
   }
 
   handleScroll(self: CountUp): void {
-    if (!self || !window) return;
+    if (!self || !window || self.once) return;
     const bottomOfScroll = window.innerHeight +  window.scrollY;
     const bottomOfEl = self.el.offsetTop + self.el.offsetHeight;
     if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
       // in view
       self.paused = false;
       setTimeout(() => self.start(), self.options.scrollSpyDelay);
+      if (self.options.scrollSpyOnce)
+        self.once = true;
     } else if ( window.scrollY > bottomOfEl && !self.paused) {
       // scrolled past
       self.reset();

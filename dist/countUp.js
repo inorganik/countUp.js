@@ -30,6 +30,7 @@ var CountUp = /** @class */ (function () {
             suffix: '',
             enableScrollSpy: false,
             scrollSpyDelay: 200,
+            scrollSpyOnce: false,
         };
         this.finalEndVal = null; // for smart easing
         this.useEasing = true;
@@ -37,6 +38,7 @@ var CountUp = /** @class */ (function () {
         this.error = '';
         this.startVal = 0;
         this.paused = true;
+        this.once = false;
         this.count = function (timestamp) {
             if (!_this.startTime) {
                 _this.startTime = timestamp;
@@ -153,7 +155,7 @@ var CountUp = /** @class */ (function () {
         }
     }
     CountUp.prototype.handleScroll = function (self) {
-        if (!self || !window)
+        if (!self || !window || self.once)
             return;
         var bottomOfScroll = window.innerHeight + window.scrollY;
         var bottomOfEl = self.el.offsetTop + self.el.offsetHeight;
@@ -161,6 +163,8 @@ var CountUp = /** @class */ (function () {
             // in view
             self.paused = false;
             setTimeout(function () { return self.start(); }, self.options.scrollSpyDelay);
+            if (self.options.scrollSpyOnce)
+                self.once = true;
         }
         else if (window.scrollY > bottomOfEl && !self.paused) {
             // scrolled past

@@ -106,7 +106,8 @@ export class CountUp {
   handleScroll(self: CountUp): void {
     if (!self || !window || self.once) return;
     const bottomOfScroll = window.innerHeight +  window.scrollY;
-    const bottomOfEl = self.el.offsetTop + self.el.offsetHeight;
+    const rect = self.el.getBoundingClientRect();
+    const bottomOfEl = rect.top + rect.height + window.pageYOffset;
     if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
       // in view
       self.paused = false;

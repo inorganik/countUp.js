@@ -15,7 +15,7 @@ var CountUp = /** @class */ (function () {
         var _this = this;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.2.0';
+        this.version = '2.3.0';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,
@@ -158,7 +158,8 @@ var CountUp = /** @class */ (function () {
         if (!self || !window || self.once)
             return;
         var bottomOfScroll = window.innerHeight + window.scrollY;
-        var bottomOfEl = self.el.offsetTop + self.el.offsetHeight;
+        var rect = self.el.getBoundingClientRect();
+        var bottomOfEl = rect.top + rect.height + window.pageYOffset;
         if (bottomOfEl < bottomOfScroll && bottomOfEl > window.scrollY && self.paused) {
             // in view
             self.paused = false;

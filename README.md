@@ -7,6 +7,7 @@ CountUp.js supports all browsers. MIT license.
 
 ## [Try the demo](https://inorganik.github.io/countUp.js)
 
+Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-typescript)
 
 ## Jump to:
 
@@ -34,7 +35,7 @@ CountUp.js supports all browsers. MIT license.
 
 ## Usage:
 
-**On npm**: `countup.js`
+**On npm** as: `countup.js`. You can import as a module or include the UMD script and access CountUp as a global. See [detailed instructions](#including-countup) below.
 
 **Params**:
 - `target: string | HTMLElement | HTMLInputElement` - id of html element, input, svg text element, or DOM element reference where counting occurs

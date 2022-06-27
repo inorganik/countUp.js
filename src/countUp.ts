@@ -22,7 +22,7 @@ export interface CountUpOptions { // (default)
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.2.0';
+  version = '2.3.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,

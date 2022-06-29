@@ -88,7 +88,7 @@ export class CountUp {
     }
 
     // scroll spy
-    if (window !== undefined && this.options.enableScrollSpy) {
+    if (typeof window !== 'undefined' && this.options.enableScrollSpy) {
       if (!this.error) {
         // set up global array of onscroll functions
         window['onScrollFns'] = window['onScrollFns'] || [];

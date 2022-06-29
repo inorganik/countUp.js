@@ -15,7 +15,7 @@ var CountUp = /** @class */ (function () {
         var _this = this;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.3.0';
+        this.version = '2.3.1';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,
@@ -139,7 +139,7 @@ var CountUp = /** @class */ (function () {
             this.error = '[CountUp] target is null or undefined';
         }
         // scroll spy
-        if (window !== undefined && this.options.enableScrollSpy) {
+        if (typeof window !== 'undefined' && this.options.enableScrollSpy) {
             if (!this.error) {
                 // set up global array of onscroll functions
                 window['onScrollFns'] = window['onScrollFns'] || [];

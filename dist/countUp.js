@@ -55,20 +55,11 @@ var CountUp = /** @class */ (function () {
                 }
             }
             else {
-                if (_this.countDown) {
-                    _this.frameVal = _this.startVal - ((_this.startVal - _this.endVal) * (progress / _this.duration));
-                }
-                else {
-                    _this.frameVal = _this.startVal + (_this.endVal - _this.startVal) * (progress / _this.duration);
-                }
+                _this.frameVal = _this.startVal + (_this.endVal - _this.startVal) * (progress / _this.duration);
             }
             // don't go past endVal since progress can exceed duration in the last frame
-            if (_this.countDown) {
-                _this.frameVal = (_this.frameVal < _this.endVal) ? _this.endVal : _this.frameVal;
-            }
-            else {
-                _this.frameVal = (_this.frameVal > _this.endVal) ? _this.endVal : _this.frameVal;
-            }
+            var wentPast = _this.countDown ? _this.frameVal < _this.endVal : _this.frameVal > _this.endVal;
+            _this.frameVal = wentPast ? _this.endVal : _this.frameVal;
             // decimal
             _this.frameVal = Number(_this.frameVal.toFixed(_this.options.decimalPlaces));
             // format and print value
@@ -179,7 +170,7 @@ var CountUp = /** @class */ (function () {
         var animateAmount = end - this.startVal;
         console.log('end', end, 'animate amount', animateAmount);
         console.log('abs animate amount', Math.abs(animateAmount));
-        if (Math.abs(animateAmount) > this.options.smartEasingThreshold) {
+        if (Math.abs(animateAmount) > this.options.smartEasingThreshold && this.options.useEasing) {
             this.finalEndVal = end;
             var up = (this.countDown) ? 1 : -1;
             this.endVal = end + (up * this.options.smartEasingAmount);
@@ -243,7 +234,7 @@ var CountUp = /** @class */ (function () {
             return;
         }
         this.startVal = this.frameVal;
-        if (!this.finalEndVal) {
+        if (this.finalEndVal == null) {
             this.resetDuration();
         }
         this.finalEndVal = null;

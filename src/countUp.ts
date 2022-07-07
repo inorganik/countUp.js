@@ -191,7 +191,7 @@ export class CountUp {
       return;
     }
     this.startVal = this.frameVal;
-    if (!this.finalEndVal) {
+    if (this.finalEndVal == null) {
       this.resetDuration();
     }
     this.finalEndVal = null;

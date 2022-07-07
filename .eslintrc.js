@@ -14,6 +14,7 @@ module.exports = {
     'no-prototype-builtins': 'off',
   },
   env: {
-    browser: true
+    browser: true,
+    es6: true,
   }
 };

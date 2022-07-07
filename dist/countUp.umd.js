@@ -183,6 +183,8 @@
             var end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
             this.countDown = (this.startVal > end);
             var animateAmount = end - this.startVal;
+            console.log('end', end, 'animate amount', animateAmount);
+            console.log('abs animate amount', Math.abs(animateAmount));
             if (Math.abs(animateAmount) > this.options.smartEasingThreshold) {
                 this.finalEndVal = end;
                 var up = (this.countDown) ? 1 : -1;

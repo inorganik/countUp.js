@@ -125,7 +125,9 @@ export class CountUp {
     const end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
     this.countDown = (this.startVal > end);
     const animateAmount = end - this.startVal;
-    if (Math.abs(animateAmount) > this.options.smartEasingThreshold) {
+    console.log('end', end, 'animate amount', animateAmount);
+    console.log('abs animate amount', Math.abs(animateAmount));
+    if (Math.abs(animateAmount) > this.options.smartEasingThreshold && this.options.useEasing) {
       this.finalEndVal = end;
       const up = (this.countDown) ? 1 : -1;
       this.endVal = end + (up * this.options.smartEasingAmount);
@@ -211,19 +213,12 @@ export class CountUp {
         this.frameVal = this.easingFn(progress, this.startVal, this.endVal - this.startVal, this.duration);
       }
     } else {
-      if (this.countDown) {
-        this.frameVal = this.startVal - ((this.startVal - this.endVal) * (progress / this.duration));
-      } else {
-        this.frameVal = this.startVal + (this.endVal - this.startVal) * (progress / this.duration);
-      }
+      this.frameVal = this.startVal + (this.endVal - this.startVal) * (progress / this.duration);
     }
 
     // don't go past endVal since progress can exceed duration in the last frame
-    if (this.countDown) {
-      this.frameVal = (this.frameVal < this.endVal) ? this.endVal : this.frameVal;
-    } else {
-      this.frameVal = (this.frameVal > this.endVal) ? this.endVal : this.frameVal;
-    }
+    const wentPast = this.countDown ? this.frameVal < this.endVal : this.frameVal > this.endVal;
+    this.frameVal = wentPast ? this.endVal : this.frameVal;
 
     // decimal
     this.frameVal = Number(this.frameVal.toFixed(this.options.decimalPlaces));

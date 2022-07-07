@@ -118,7 +118,7 @@ window.onload = function () {
     }
   }
   function methodToCallOnComplete() {
-    console.log('COMPLETE!');
+    console.log('COMPLETE! (no module)');
     alert('COMPLETE!');
   }
   function establishOptionsFromInputs() {

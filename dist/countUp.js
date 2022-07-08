@@ -104,6 +104,7 @@ var CountUp = /** @class */ (function () {
             }
             return neg + _this.options.prefix + x1 + x2 + _this.options.suffix;
         };
+        // t: current time, b: beginning value, c: change in value, d: duration
         this.easeOutExpo = function (t, b, c, d) {
             return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
         };
@@ -168,8 +169,6 @@ var CountUp = /** @class */ (function () {
         var end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
         this.countDown = (this.startVal > end);
         var animateAmount = end - this.startVal;
-        console.log('end', end, 'animate amount', animateAmount);
-        console.log('abs animate amount', Math.abs(animateAmount));
         if (Math.abs(animateAmount) > this.options.smartEasingThreshold && this.options.useEasing) {
             this.finalEndVal = end;
             var up = (this.countDown) ? 1 : -1;
@@ -180,12 +179,13 @@ var CountUp = /** @class */ (function () {
             this.endVal = end;
             this.finalEndVal = null;
         }
-        if (this.finalEndVal) {
+        if (this.finalEndVal !== null) {
             this.useEasing = false;
         }
         else {
             this.useEasing = this.options.useEasing;
         }
+        console.log('abs animate amount', Math.abs(animateAmount), 'use easing', this.useEasing);
     };
     // start animation
     CountUp.prototype.start = function (callback) {

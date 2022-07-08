@@ -22,7 +22,7 @@ export interface CountUpOptions { // (default)
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.3.1';
+  version = '2.3.2';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -90,7 +90,7 @@ export class CountUp {
     // scroll spy
     if (typeof window !== 'undefined' && this.options.enableScrollSpy) {
       if (!this.error) {
-        // set up global array of onscroll functions
+        // set up global array of onscroll functions to handle multiple instances
         window['onScrollFns'] = window['onScrollFns'] || [];
         window['onScrollFns'].push(() => this.handleScroll(this));
         window.onscroll = () => {
@@ -120,13 +120,16 @@ export class CountUp {
     }
   }
 
-  // determines where easing starts and whether to count down or up
+  /**
+   * Smart easing works by breaking the animation into 2 parts, the second part being smartEasingAmount
+   * and first part being the total amount minus the smartEasingAmount. It works by disabling easing
+   * for the first part and enabling it on the second part. It is used if usingEasing is true and
+   * the end val exceeds smartEasingThreshold.
+   */
   private determineDirectionAndSmartEasing(): void {
     const end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
     this.countDown = (this.startVal > end);
     const animateAmount = end - this.startVal;
-    console.log('end', end, 'animate amount', animateAmount);
-    console.log('abs animate amount', Math.abs(animateAmount));
     if (Math.abs(animateAmount) > this.options.smartEasingThreshold && this.options.useEasing) {
       this.finalEndVal = end;
       const up = (this.countDown) ? 1 : -1;
@@ -136,7 +139,8 @@ export class CountUp {
       this.endVal = end;
       this.finalEndVal = null;
     }
-    if (this.finalEndVal) {
+    if (this.finalEndVal !== null) {
+      // setting final end val indicates smart easing
       this.useEasing = false;
     } else {
       this.useEasing = this.options.useEasing;
@@ -303,6 +307,7 @@ export class CountUp {
     return neg + this.options.prefix + x1 + x2 + this.options.suffix;
   }
 
+  // t: current time, b: beginning value, c: change in value, d: duration
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
 

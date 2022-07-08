@@ -117,7 +117,7 @@ window.onload = function () {
   }
   function calculateAnimationTime() {
     const duration = Date.now() - startTime;
-    console.log('actual animation duration:', duration);
+    console.log('actual animation duration (ms):', duration);
   }
   function methodToCallOnComplete() {
     calculateAnimationTime();

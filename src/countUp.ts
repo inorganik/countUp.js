@@ -121,10 +121,10 @@ export class CountUp {
   }
 
   /**
-   * Smart easing works by breaking the animation into 2 parts, the second part being smartEasingAmount
-   * and first part being the total amount minus the smartEasingAmount. It works by disabling easing
-   * for the first part and enabling it on the second part. It is used if usingEasing is true and
-   * the end val exceeds smartEasingThreshold.
+   * Smart easing works by breaking the animation into 2 parts, the second part being the
+   * smartEasingAmount and first part being the total amount minus the smartEasingAmount. It works
+   * by disabling easing for the first part and enabling it on the second part. It is used if
+   * usingEasing is true and the total animation amount exceeds the smartEasingThreshold.
    */
   private determineDirectionAndSmartEasing(): void {
     const end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
@@ -140,7 +140,7 @@ export class CountUp {
       this.finalEndVal = null;
     }
     if (this.finalEndVal !== null) {
-      // setting final end val indicates smart easing
+      // setting finalEndVal indicates smart easing
       this.useEasing = false;
     } else {
       this.useEasing = this.options.useEasing;

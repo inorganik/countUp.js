@@ -15,7 +15,7 @@ var CountUp = /** @class */ (function () {
         var _this = this;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.3.1';
+        this.version = '2.3.2';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,
@@ -133,7 +133,7 @@ var CountUp = /** @class */ (function () {
         // scroll spy
         if (typeof window !== 'undefined' && this.options.enableScrollSpy) {
             if (!this.error) {
-                // set up global array of onscroll functions
+                // set up global array of onscroll functions to handle multiple instances
                 window['onScrollFns'] = window['onScrollFns'] || [];
                 window['onScrollFns'].push(function () { return _this.handleScroll(_this); });
                 window.onscroll = function () {
@@ -164,7 +164,12 @@ var CountUp = /** @class */ (function () {
             self.reset();
         }
     };
-    // determines where easing starts and whether to count down or up
+    /**
+     * Smart easing works by breaking the animation into 2 parts, the second part being the
+     * smartEasingAmount and first part being the total amount minus the smartEasingAmount. It works
+     * by disabling easing for the first part and enabling it on the second part. It is used if
+     * usingEasing is true and the total animation amount exceeds the smartEasingThreshold.
+     */
     CountUp.prototype.determineDirectionAndSmartEasing = function () {
         var end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
         this.countDown = (this.startVal > end);
@@ -180,12 +185,12 @@ var CountUp = /** @class */ (function () {
             this.finalEndVal = null;
         }
         if (this.finalEndVal !== null) {
+            // setting finalEndVal indicates smart easing
             this.useEasing = false;
         }
         else {
             this.useEasing = this.options.useEasing;
         }
-        console.log('abs animate amount', Math.abs(animateAmount), 'use easing', this.useEasing);
     };
     // start animation
     CountUp.prototype.start = function (callback) {

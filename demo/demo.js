@@ -8,6 +8,7 @@ window.onload = function () {
   var demo = new CountUp('myTargetElement', 100);
   var codeVisualizer = el('codeVisualizer');
   var errorSection = el('errorSection');
+  var startTime;
   el('version').innerHTML = demo.version;
 
   document.querySelectorAll('.updateCodeVis').forEach(elem => elem.onchange = updateCodeVisualizer);
@@ -99,11 +100,12 @@ window.onload = function () {
     demo = new CountUp('myTargetElement', endVal, options);
     if (!demo.error) {
       errorSection.style.display = 'none';
+      startTime = Date.now();
       if (el('useOnComplete').checked) {
         demo.start(methodToCallOnComplete);
       }
       else {
-        demo.start();
+        demo.start(() => calculateAnimationTime());
       }
       updateCodeVisualizer();
     }
@@ -113,7 +115,12 @@ window.onload = function () {
       console.error(demo.error);
     }
   }
+  function calculateAnimationTime() {
+    const duration = Date.now() - startTime;
+    console.log('actual animation duration (ms):', duration);
+  }
   function methodToCallOnComplete() {
+    calculateAnimationTime();
     console.log('COMPLETE!');
     alert('COMPLETE!');
   }

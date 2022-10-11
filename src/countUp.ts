@@ -225,7 +225,10 @@ export class CountUp {
     this.frameVal = wentPast ? this.endVal : this.frameVal;
 
     // decimal
-    this.frameVal = Number(this.frameVal.toFixed(this.options.decimalPlaces));
+    if(this.options.decimalPlaces) {
+      this.frameVal = this.frameVal.toFixed(this.options.decimalPlaces);
+    }
+    this.frameVal = Number(this.frameVal);
 
     // format and print value
     this.printValue(this.frameVal);
@@ -284,7 +287,10 @@ export class CountUp {
       x1: string,
       x2: string,
       x3: string;
-    result = Math.abs(num).toFixed(this.options.decimalPlaces);
+    result = Math.abs(num);
+    if(this.options.decimalPlaces) {
+      result = Math.abs(num).toFixed(this.options.decimalPlaces);
+    }
     result += '';
     const x = result.split('.');
     x1 = x[0];

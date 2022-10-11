@@ -226,7 +226,7 @@ export class CountUp {
 
     // decimal
     if(this.options.decimalPlaces) {
-      this.frameVal = this.frameVal.toFixed(this.options.decimalPlaces);
+      this.frameVal = Number(this.frameVal.toFixed(this.options.decimalPlaces)(;
     }
     this.frameVal = Number(this.frameVal);
 
@@ -287,7 +287,7 @@ export class CountUp {
       x1: string,
       x2: string,
       x3: string;
-    result = Math.abs(num);
+    result = Math.abs(num).toString();
     if(this.options.decimalPlaces) {
       result = Math.abs(num).toFixed(this.options.decimalPlaces);
     }

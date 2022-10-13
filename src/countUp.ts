@@ -291,7 +291,7 @@ export class CountUp {
     if (this.options.decimalPlaces) {
       result = Math.abs(num).toFixed(this.options.decimalPlaces);
     } else {
-      result = Math.abs(parseInt(num.toString())).toString();
+      result = Math.abs(parseInt(num?.toString())).toString();
     }
     result += '';
     const x = result.split('.');

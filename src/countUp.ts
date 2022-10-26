@@ -3,6 +3,7 @@ export interface CountUpOptions { // (default)
   decimalPlaces?: number; // number of decimal places (0)
   duration?: number; // animation duration in seconds (2)
   useGrouping?: boolean; // example: 1,000 vs 1000 (true)
+  useIndianSeparators?: boolean; // example: 1,00,000 vs 1,00,000 (false)
   useEasing?: boolean; // ease animation (true)
   smartEasingThreshold?: number; // smooth easing for large numbers above this if useEasing (999)
   smartEasingAmount?: number; // amount to be eased for numbers above threshold (333)
@@ -22,13 +23,14 @@ export interface CountUpOptions { // (default)
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.3.2';
+  version = '2.4.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
     duration: 2,
     useEasing: true,
     useGrouping: true,
+    useIndianSeparators: false,
     smartEasingThreshold: 999,
     smartEasingAmount: 333,
     separator: ',',
@@ -280,10 +282,7 @@ export class CountUp {
 
   formatNumber = (num: number): string => {
     const neg = (num < 0) ? '-' : '';
-    let result: string,
-      x1: string,
-      x2: string,
-      x3: string;
+    let result: string, x1: string, x2: string, x3: string;
     result = Math.abs(num).toFixed(this.options.decimalPlaces);
     result += '';
     const x = result.split('.');
@@ -291,10 +290,16 @@ export class CountUp {
     x2 = x.length > 1 ? this.options.decimal + x[1] : '';
     if (this.options.useGrouping) {
       x3 = '';
+      let factor = 3, j = 0;
       for (let i = 0, len = x1.length; i < len; ++i) {
-        if (i !== 0 && (i % 3) === 0) {
+        if (this.options.useIndianSeparators && i === 4) {
+          factor = 2;
+          j = 1;
+        }
+        if (i !== 0 && (j % factor) === 0) {
           x3 = this.options.separator + x3;
         }
+        j++;
         x3 = x1[len - i - 1] + x3;
       }
       x1 = x3;

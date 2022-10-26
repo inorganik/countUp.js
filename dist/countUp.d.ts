@@ -3,6 +3,7 @@ export interface CountUpOptions {
     decimalPlaces?: number;
     duration?: number;
     useGrouping?: boolean;
+    useIndianSeparators?: boolean;
     useEasing?: boolean;
     smartEasingThreshold?: number;
     smartEasingAmount?: number;

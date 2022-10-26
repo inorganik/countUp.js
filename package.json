@@ -15,7 +15,7 @@
 		"build:umd": "rollup dist/countUp.js --format umd --file dist/countUp.umd.js --name countUp",
 		"clean": "gulp clean",
 		"lint": "eslint -c .eslintrc.js --ext .ts ./src",
-		"serve": "http-server ./",
+		"serve": "http-server -o -c-1 ./",
 		"start": "npm run build && npm run serve",
 		"test": "jest",
 		"test:watch": "jest --watch"

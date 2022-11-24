@@ -157,6 +157,7 @@
                 return;
             var bottomOfScroll = window.innerHeight + window.scrollY;
             var rect = self.el.getBoundingClientRect();
+            var topOfEl = rect.top + window.pageYOffset;
             var bottomOfEl = rect.top + rect.height + window.pageYOffset;
             if (bottomOfEl < bottomOfScroll && bottomOfEl > window.scrollY && self.paused) {
                 // in view
@@ -165,8 +166,9 @@
                 if (self.options.scrollSpyOnce)
                     self.once = true;
             }
-            else if (window.scrollY > bottomOfEl && !self.paused) {
-                // scrolled past
+            else if ((window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
+                !self.paused) {
+                // out of view
                 self.reset();
             }
         };

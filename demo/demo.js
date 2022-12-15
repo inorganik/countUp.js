@@ -94,7 +94,9 @@ window.onload = function () {
     }
   }
   var stringifyArray = function (arr) { return '[\'' + arr.join('\', \'') + '\']'; };
+
   // COUNTUP AND CODE VISUALIZER
+
   function createCountUp() {
     establishOptionsFromInputs();
     demo = new CountUp('myTargetElement', endVal, options);
@@ -132,6 +134,7 @@ window.onload = function () {
       duration: Number(el('duration').value),
       useEasing: el('useEasing').checked,
       useGrouping: el('useGrouping').checked,
+      useIndianSeparators: el('useIndianSeparators').checked,
       easingFn: typeof getEasingFn() === 'undefined' ? null : getEasingFn(),
       separator: el('separator').value,
       decimal: el('decimal').value,
@@ -172,6 +175,7 @@ window.onload = function () {
     opts += (options.useEasing) ? '' : indentedLine("useEasing: " + options.useEasing);
     opts += (options.useEasing && options.easingFn) ? indentedLine("easingFn") : '';
     opts += (options.useGrouping) ? '' : indentedLine("useGrouping: " + options.useGrouping);
+    opts += (options.useIndianSeparators) ? indentedLine("useIndianSeparators: " + options.useIndianSeparators) : '';
     opts += (options.separator !== ',') ? indentedLine("separator: '" + options.separator + "'") : '';
     opts += (options.decimal !== '.') ? indentedLine("decimal: '" + options.decimal + "'") : '';
     opts += (options.prefix.length) ? indentedLine("prefix: '" + options.prefix + "'") : '';

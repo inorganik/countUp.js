@@ -15,13 +15,14 @@ var CountUp = /** @class */ (function () {
         var _this = this;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.3.2';
+        this.version = '2.4.0';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,
             duration: 2,
             useEasing: true,
             useGrouping: true,
+            useIndianSeparators: false,
             smartEasingThreshold: 999,
             smartEasingAmount: 333,
             separator: ',',
@@ -89,10 +90,16 @@ var CountUp = /** @class */ (function () {
             x2 = x.length > 1 ? _this.options.decimal + x[1] : '';
             if (_this.options.useGrouping) {
                 x3 = '';
+                var factor = 3, j = 0;
                 for (var i = 0, len = x1.length; i < len; ++i) {
-                    if (i !== 0 && (i % 3) === 0) {
+                    if (_this.options.useIndianSeparators && i === 4) {
+                        factor = 2;
+                        j = 1;
+                    }
+                    if (i !== 0 && (j % factor) === 0) {
                         x3 = _this.options.separator + x3;
                     }
+                    j++;
                     x3 = x1[len - i - 1] + x3;
                 }
                 x1 = x3;

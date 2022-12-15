@@ -50,6 +50,7 @@ interface CountUpOptions {
   decimalPlaces?: number; // number of decimal places (0)
   duration?: number; // animation duration in seconds (2)
   useGrouping?: boolean; // example: 1,000 vs 1000 (true)
+  useIndianSeparators?: boolean; // example: 1,00,000 vs 100,000 (false)
   useEasing?: boolean; // ease animation (true)
   smartEasingThreshold?: number; // smooth easing for large numbers above this if useEasing (999)
   smartEasingAmount?: number; // amount to be eased for numbers above threshold (333)

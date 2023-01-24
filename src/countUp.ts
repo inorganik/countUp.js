@@ -23,7 +23,7 @@ export interface CountUpOptions { // (default)
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.4.0';
+  version = '2.4.1';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -247,7 +247,7 @@ export class CountUp {
 
   printValue(val: number): void {
     const result = this.formattingFn(val);
-
+    if (!this.el) return;
     if (this.el.tagName === 'INPUT') {
       const input = this.el as HTMLInputElement;
       input.value = result;

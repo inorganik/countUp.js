@@ -21,7 +21,7 @@
             var _this = this;
             this.endVal = endVal;
             this.options = options;
-            this.version = '2.4.0';
+            this.version = '2.4.1';
             this.defaults = {
                 startVal: 0,
                 decimalPlaces: 0,
@@ -261,6 +261,8 @@
         };
         CountUp.prototype.printValue = function (val) {
             var result = this.formattingFn(val);
+            if (!this.el)
+                return;
             if (this.el.tagName === 'INPUT') {
                 var input = this.el;
                 input.value = result;

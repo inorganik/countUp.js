@@ -19,9 +19,9 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 
 ## CountUp for frameworks and plugins:
 
-- **[CountUp.js Angular 2+ Module](https://github.com/inorganik/ngx-countUp)**
-- **[CountUp.js Angular 1.x Module](https://github.com/inorganik/countUp.js-angular1)**
-- **[CountUp.js React](https://github.com/glennreyes/react-countup)**
+- **[CountUp.js with Angular 2+](https://github.com/inorganik/ngx-countUp)**
+- **[CountUp.js with Angular 1.x](https://github.com/inorganik/countUp.js-angular1)**
+- **[CountUp.js with React](https://gist.github.com/inorganik/2cf776865a4c65c12857027870e9898e)**
 - **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2)**
 - **[CountUp.js WordPress Plugin](https://wordpress.org/plugins/countup-js/)**
 - **[CountUp.js jQuery Plugin](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)**

@@ -22,6 +22,7 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 - **[CountUp.js with Angular 2+](https://github.com/inorganik/ngx-countUp)**
 - **[CountUp.js with Angular 1.x](https://github.com/inorganik/countUp.js-angular1)**
 - **[CountUp.js with React](https://gist.github.com/inorganik/2cf776865a4c65c12857027870e9898e)**
+- **[CountUp.js with Svelte](https://gist.github.com/inorganik/85a66941ab88cc10c5fa5b26aead5f2a)**
 - **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2)**
 - **[CountUp.js WordPress Plugin](https://wordpress.org/plugins/countup-js/)**
 - **[CountUp.js jQuery Plugin](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)**

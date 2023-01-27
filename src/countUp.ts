@@ -120,9 +120,9 @@ handleScroll(self: CountUp): void {
 		if (self.options.scrollSpyOnce)
 		self.once = true;
 	} else if (
-          (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
-          !self.paused
-        ) {
+      (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
+      !self.paused
+    ) {
 		// out of view
 		self.reset();
 	}

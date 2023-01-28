@@ -21,7 +21,7 @@
             var _this = this;
             this.endVal = endVal;
             this.options = options;
-            this.version = '2.4.1';
+            this.version = '2.4.2';
             this.defaults = {
                 startVal: 0,
                 decimalPlaces: 0,

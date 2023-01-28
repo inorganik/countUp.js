@@ -105,7 +105,7 @@ export class CountUp {
     }
   }
 
-handleScroll(self: CountUp): void {
+  handleScroll(self: CountUp): void {
     if (!self || !window || self.once) return;
     const bottomOfScroll = window.innerHeight +  window.scrollY;
     const rect = self.el.getBoundingClientRect();
@@ -124,7 +124,7 @@ handleScroll(self: CountUp): void {
       // out of view
       self.reset();
     }
-}
+  }
 
   /**
    * Smart easing works by breaking the animation into 2 parts, the second part being the

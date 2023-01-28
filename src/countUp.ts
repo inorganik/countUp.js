@@ -116,7 +116,7 @@ export class CountUp {
       self.paused = false;
       setTimeout(() => self.start(), self.options.scrollSpyDelay);
       if (self.options.scrollSpyOnce)
-      self.once = true;
+        self.once = true;
     } else if (
         (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
         !self.paused

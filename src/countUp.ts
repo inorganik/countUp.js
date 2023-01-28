@@ -106,26 +106,24 @@ export class CountUp {
   }
 
 handleScroll(self: CountUp): void {
-  if (!self || !window || self.once) return;
-	
-  const bottomOfScroll = window.innerHeight +  window.scrollY;
-  const rect = self.el.getBoundingClientRect();
-  const topOfEl = rect.top + window.pageYOffset
-  const bottomOfEl = rect.top + rect.height + window.pageYOffset;
-	
-  if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
-		// in view
-    self.paused = false;
-    setTimeout(() => self.start(), self.options.scrollSpyDelay);
-    if (self.options.scrollSpyOnce)
-    self.once = true;
-  } else if (
-      (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
-      !self.paused
-    ) {
-    // out of view
-    self.reset();
-  }
+    if (!self || !window || self.once) return;
+    const bottomOfScroll = window.innerHeight +  window.scrollY;
+    const rect = self.el.getBoundingClientRect();
+    const topOfEl = rect.top + window.pageYOffset
+    const bottomOfEl = rect.top + rect.height + window.pageYOffset;
+    if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
+      // in view
+      self.paused = false;
+      setTimeout(() => self.start(), self.options.scrollSpyDelay);
+      if (self.options.scrollSpyOnce)
+      self.once = true;
+    } else if (
+        (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
+        !self.paused
+      ) {
+      // out of view
+      self.reset();
+    }
 }
 
   /**

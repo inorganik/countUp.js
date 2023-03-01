@@ -18,7 +18,7 @@ export interface CountUpOptions { // (default)
   enableScrollSpy?: boolean; // start animation when target is in view
   scrollSpyDelay?: number; // delay (ms) after target comes into view
   scrollSpyOnce?: boolean; // run only once
-  onCompleteCallback?: () => any; // callback function on completion
+  onCompleteCallback?: () => any; // gets called when animation completes
 }
 
 // playground: stackblitz.com/edit/countup-typescript

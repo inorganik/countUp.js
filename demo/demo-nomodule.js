@@ -105,12 +105,7 @@ window.onload = function () {
     demo = new countUp.CountUp('myTargetElement', endVal, options);
     if (!demo.error) {
       errorSection.style.display = 'none';
-      if (el('useOnComplete').checked) {
-        demo.start(methodToCallOnComplete);
-      }
-      else {
-        demo.start();
-      }
+      demo.start();
       updateCodeVisualizer();
     }
     else {
@@ -137,7 +132,8 @@ window.onload = function () {
       decimal: el('decimal').value,
       prefix: el('prefix').value,
       suffix: el('suffix').value,
-      numerals: getNumerals()
+      numerals: getNumerals(),
+      onCompleteCallback: el('useOnComplete').checked ? methodToCallOnComplete : null
     };
     // unset null values so they don't overwrite defaults
     for (var key in options) {
@@ -179,6 +175,8 @@ window.onload = function () {
     opts += (options.suffix.length) ? indentedLine("suffix: '" + options.suffix + "'") : '';
     opts += (options.numerals && options.numerals.length) ?
       indentedLine("numerals: " + stringifyArray(options.numerals)) : '';
+    opts += (options.onCompleteCallback) ? indentedLine("onCompleteCallback: methodToCallOnComplete") : '';
+
     if (opts.length) {
       code += "const options = {<br>" + opts + "};<br>";
       code += "let demo = new CountUp('myTargetElement', " + endVal + ", options);<br>";
@@ -187,8 +185,7 @@ window.onload = function () {
       code += "let demo = new CountUp('myTargetElement', " + endVal + ");<br>";
     }
     code += 'if (!demo.error) {<br>';
-    code += (el('useOnComplete').checked) ?
-      indentedLine('demo.start(methodToCallOnComplete)', true) : indentedLine('demo.start()', true);
+    code += indentedLine('demo.start()', true);
     code += '} else {<br>';
     code += indentedLine('console.error(demo.error)', true);
     code += '}';

@@ -17,6 +17,7 @@ export interface CountUpOptions {
     enableScrollSpy?: boolean;
     scrollSpyDelay?: number;
     scrollSpyOnce?: boolean;
+    onCompleteCallback?: () => any;
 }
 export declare class CountUp {
     private endVal;
@@ -32,7 +33,6 @@ export declare class CountUp {
     private countDown;
     formattingFn: (num: number) => string;
     easingFn?: (t: number, b: number, c: number, d: number) => number;
-    callback: (args?: any) => any;
     error: string;
     startVal: number;
     duration: number;

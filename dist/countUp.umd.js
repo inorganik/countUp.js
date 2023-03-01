@@ -21,7 +21,7 @@
             var _this = this;
             this.endVal = endVal;
             this.options = options;
-            this.version = '2.4.2';
+            this.version = '2.5.0';
             this.defaults = {
                 startVal: 0,
                 decimalPlaces: 0,
@@ -80,8 +80,8 @@
                     _this.update(_this.finalEndVal);
                 }
                 else {
-                    if (_this.callback) {
-                        _this.callback();
+                    if (_this.options.onCompleteCallback) {
+                        _this.options.onCompleteCallback();
                     }
                 }
             };
@@ -212,7 +212,9 @@
             if (this.error) {
                 return;
             }
-            this.callback = callback;
+            if (callback) {
+                this.options.onCompleteCallback = callback;
+            }
             if (this.duration > 0) {
                 this.determineDirectionAndSmartEasing();
                 this.paused = false;

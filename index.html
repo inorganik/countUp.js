@@ -10,21 +10,21 @@
 
 	<title>CountUp.js</title>
 
-  <link rel="stylesheet" type="text/css" href="https://inorganik.github.io/assets/css/style.css?v=20210211">
+  <link rel="stylesheet" type="text/css" href="https://inorganik.github.io/assets/css/style.css">
 
   <script src="demo/demo.js" type="module"></script>
   <script nomodule src="dist/countUp.umd.js"></script>
   <script nomodule src="demo/demo-nomodule.js"></script>
 
-	<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	<!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXSCCPQ13N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-	ga('create', 'UA-7742845-9', 'inorganik.github.io');
-	ga('send', 'pageview');
-	</script>
+    gtag('config', 'G-QXSCCPQ13N');
+  </script>
 </head>
 
 <body>
@@ -33,7 +33,7 @@
 		<header>
 			<div id="github"><a class="block" href="https://inorganik.github.io"></a></div>
 			<div class="leaderLine">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</div>
-			<div id="logo"><a class="block" href="https://inorganik.net"></a></div>
+			<div id="logo"><a class="block" href="https://inorganik.net" alt="inorganik produce, inc"></a></div>
 		</header>
 		<section>
 			<div class="col full">
@@ -42,8 +42,7 @@
 			<div class="col full">
 				<p>CountUp.js is a dependency-free, lightweight JavaScript class that can be used to quickly create animations that display numerical data in a more interesting way.</p>
 				<p>Install via npm/yarn using the package name &nbsp;<code class="indigo large">countup.js</code>.</p>
-				<p>🆒&nbsp; Get updates about what I&rsquo;m working on <a href="https://inorganik.net">here</a>!</p>
-				<h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/CountUp.js">Download on Github</a></h3>
+				<h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/CountUp.js">View on Github</a></h3>
 			</div>
 		</section>
 		<section>
@@ -116,7 +115,7 @@
 					<input type="text" value="6789" id="updateVal" style="width:80px">
 				</div>
 				<div class="inlineLeft">
-					<input type="checkbox" id="useOnComplete"><label class="inlineLabel">Alert on complete</label>
+					<input type="checkbox" id="useOnComplete" class="updateCodeVis"><label class="inlineLabel">Alert on complete</label>
 				</div>
 			</form>
 		</section>

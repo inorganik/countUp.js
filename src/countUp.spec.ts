@@ -66,6 +66,14 @@ describe('CountUp', () => {
       expect(getTargetHtml()).toEqual('100');
     });
 
+    it('should use a callback provided to start', () => {
+      const cb = jest.fn();
+      countUp.start(cb);
+
+      expect(getTargetHtml()).toEqual('100');
+      expect(cb).toHaveBeenCalled();
+    });
+
     it('should pause when pauseResume is called', () => {
       countUp.start();
       // resetRAF();
@@ -243,6 +251,16 @@ describe('CountUp', () => {
       countUp.start();
 
       expect(getTargetHtml()).toEqual('!))');
+    });
+
+    it('should respect the onCompleteCallback option', () => {
+      const options = { onCompleteCallback: jest.fn() };
+      const callbackSpy = jest.spyOn(options, 'onCompleteCallback');
+      countUp = new CountUp('target', 100, options);
+      countUp.start();
+
+      expect(getTargetHtml()).toEqual('100');
+      expect(callbackSpy).toHaveBeenCalled();
     });
   });
 });

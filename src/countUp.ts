@@ -18,12 +18,13 @@ export interface CountUpOptions { // (default)
   enableScrollSpy?: boolean; // start animation when target is in view
   scrollSpyDelay?: number; // delay (ms) after target comes into view
   scrollSpyOnce?: boolean; // run only once
+  onCompleteCallback?: () => any; // gets called when animation completes
 }
 
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.4.2';
+  version = '2.5.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -50,7 +51,6 @@ export class CountUp {
   private countDown = false;
   formattingFn: (num: number) => string;
   easingFn?: (t: number, b: number, c: number, d: number) => number;
-  callback: (args?: any) => any;
   error = '';
   startVal = 0;
   duration: number;
@@ -158,7 +158,9 @@ export class CountUp {
     if (this.error) {
       return;
     }
-    this.callback = callback;
+    if (callback) {
+      this.options.onCompleteCallback = callback;
+    }
     if (this.duration > 0) {
       this.determineDirectionAndSmartEasing();
       this.paused = false;
@@ -243,8 +245,8 @@ export class CountUp {
       // smart easing
       this.update(this.finalEndVal);
     } else {
-      if (this.callback) {
-        this.callback();
+      if (this.options.onCompleteCallback) {
+        this.options.onCompleteCallback();
       }
     }
   }

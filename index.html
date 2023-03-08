@@ -13,9 +13,9 @@
   <link rel="stylesheet" type="text/css" href="https://inorganik.github.io/assets/css/style.css">
 
   <script src="demo/demo.js" type="module"></script>
-  <script nomodule src="dist/countUp.umd.js"></script>
+  <!-- <script nomodule src="dist/countUp.umd.js"></script>
   <script nomodule src="demo/demo-nomodule.js"></script>
-
+  -->
 	<!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXSCCPQ13N"></script>
   <script>
@@ -101,6 +101,22 @@
 				<div class="inlineLeft marginRight">
 					<input type="text" value="" id="suffix" style="width:50px; padding:0 5px;" class="updateCodeVis">
 					<label class="inlineLabel">Suffix</label>
+				</div>
+			</form>
+		</section>
+		<section>
+			<form>
+				<h4 class="inlineLeft noMargin weight300">Flaps:</h4>
+				<div class="inlineLeft marginLeft marginRight">
+					<input id="useFlaps" type="checkbox" checked><label for="useFlaps" class="inlineLabel updateCodeVis">Use flaps</label>
+				</div>
+				<div class="inlineLeft marginRight">
+					<input type="number" value="0.8" id="flapDuration" step=".1" style="width:60px" class="updateCodeVis">
+					<label class="inlineLabel">Duration</label>
+				</div>
+				<div class="inlineLeft marginRight">
+					<input type="number" value="0.0" id="flapDelay" step=".1" style="width:60px" class="updateCodeVis">
+					<label class="inlineLabel">Delay Last</label>
 				</div>
 			</form>
 		</section>

@@ -26,7 +26,7 @@ export interface CountUpOptions { // (default)
 
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
-  version = "2.5.0";
+  version = '2.5.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -36,10 +36,10 @@ export class CountUp {
     useIndianSeparators: false,
     smartEasingThreshold: 999,
     smartEasingAmount: 333,
-    separator: ",",
-    decimal: ".",
-    prefix: "",
-    suffix: "",
+    separator: ',',
+    decimal: '.',
+    prefix: '',
+    suffix: '',
     enableScrollSpy: false,
     scrollSpyDelay: 200,
     scrollSpyOnce: false,
@@ -58,7 +58,7 @@ export class CountUp {
   private cells_flaps: any = null;
   formattingFn: (num: number) => string;
   easingFn?: (t: number, b: number, c: number, d: number) => number;
-  error = "";
+  error = '';
   startVal = 0;
   duration: number;
   paused = true;
@@ -88,25 +88,25 @@ export class CountUp {
     this.resetDuration();
     this.options.separator = String(this.options.separator);
     this.useEasing = this.options.useEasing;
-    if (this.options.separator === "") {
+    if (this.options.separator === '') {
       this.options.useGrouping = false;
     }
     this.el =
-      typeof target === "string" ? document.getElementById(target) : target;
+      typeof target === 'string' ? document.getElementById(target) : target;
     if (this.el) {
       this.printValue(this.startVal);
     } else {
-      this.error = "[CountUp] target is null or undefined";
+      this.error = '[CountUp] target is null or undefined';
     }
 
     // scroll spy
-    if (typeof window !== "undefined" && this.options.enableScrollSpy) {
+    if (typeof window !== 'undefined' && this.options.enableScrollSpy) {
       if (!this.error) {
         // set up global array of onscroll functions to handle multiple instances
-        window["onScrollFns"] = window["onScrollFns"] || [];
-        window["onScrollFns"].push(() => this.handleScroll(this));
+        window['onScrollFns'] = window['onScrollFns'] || [];
+        window['onScrollFns'].push(() => this.handleScroll(this));
         window.onscroll = () => {
-          window["onScrollFns"].forEach((fn) => fn());
+          window['onScrollFns'].forEach((fn) => fn());
         };
         this.handleScroll(this);
       } else {
@@ -289,10 +289,10 @@ export class CountUp {
   printFlaps(result: string) {
     if (!this.cells_flaps) {
       // avoid adding more than once
-      if (!document.querySelector("style[flap]")) {
+      if (!document.querySelector('style[flap]')) {
         // add styles for flap numbers
-        var style = document.createElement("style");
-        style.setAttribute("flap", "flap");
+        var style = document.createElement('style');
+        style.setAttribute('flap', 'flap');
         style.innerHTML = `
           .flap-numbers{display: inline-flex; line-height: 100%;overflow-y: hidden;}
           .flap-numbers > span{display: flex; flex-direction:column;justify-content: start; align-items: center; height: 1em; will-change: transform; transform: translateY(0)}
@@ -300,19 +300,19 @@ export class CountUp {
         document.head.appendChild(style);
       }
       // create wrapper
-      this.el.innerHTML = "<div class='flap-numbers'></div>";
+      this.el.innerHTML = '<div class="flap-numbers"></div>';
       // create array cells_flaps information
       this.cells_flaps = [];
     }
 
     //blank space
-    const blank = "<span style='color:transparent'>0</span>";
+    const blank = '<span style="color:transparent">0</span>';
     const transitionFlap = `transform ${this.options.flapDuration}s ease-out`;
 
     // appearing new cells_flaps
     for (var i = this.cells_flaps.length; i < result.length; i++) {
       // create a container
-      const container = document.createElement("span");
+      const container = document.createElement('span');
       container.style.transition = transitionFlap;
       // add a first transparent cell
       container.innerHTML = blank;
@@ -327,16 +327,16 @@ export class CountUp {
     }
 
     function appendDigit(cell, newDigit) {
-      console.log("appendDigit", newDigit);
+      console.log('appendDigit', newDigit);
 
       cell.position--;
       cell.container.appendChild(newDigit);
       cell.lastTimeAdd = +new Date();
 
       console.log(
-        "cell.position",
+        'cell.position',
         cell.position,
-        "container.children",
+        'container.children',
         cell.container.children.length
       );
 
@@ -350,7 +350,7 @@ export class CountUp {
     }
 
     function pushDigit(cell: any, newDigit: any, options: CountUpOptions) {
-      console.log("pushDigit", newDigit);
+      console.log('pushDigit', newDigit);
       // if there was another cell waiting to be added, we add it here
       if (cell.nextToAdd) {
         appendDigit(cell, cell.nextToAdd);
@@ -360,7 +360,7 @@ export class CountUp {
 
       const now = +new Date();
       const delayTime = options.flapDelay * 1000 - (now - cell.lastTimeAdd);
-      console.log("delayTime", delayTime);
+      console.log('delayTime', delayTime);
 
       // if we are in slow animation, we just add digit
       if (
@@ -373,7 +373,7 @@ export class CountUp {
         // if not, we delay the push
         cell.nextToAdd = newDigit;
         cell.lastTimer = setTimeout(() => {
-          console.log("addLast", cell.nextToAdd);
+          console.log('addLast', cell.nextToAdd);
           appendDigit(cell, cell.nextToAdd);
           cell.nextToAdd = null;
         }, options.flapDuration * 1000);
@@ -388,10 +388,10 @@ export class CountUp {
       var ch = i < result.length ? result.charAt(i) : null;
       const cell = this.cells_flaps[i];
       if (cell.current != ch) {
-        console.log("new digit appear", ch);
+        console.log('new digit appear', ch);
         cell.current = ch;
 
-        var newDigit = document.createElement("span");
+        var newDigit = document.createElement('span');
         newDigit.innerHTML = ch === null ? blank : ch;
 
         // the last delay animation only if there is a minimum of 3 elements
@@ -404,17 +404,17 @@ export class CountUp {
         clearTimeout(cell.timerClean);
         // when animation end, we can remove all extra animated cells
         cell.timerClean = setTimeout(function () {
-          console.log("clear digits");
+          console.log('clear digits');
           cell.timerClean = null;
           if (cell.container.children.length < 3) return;
-          cell.container.style.transition = "none"; // temporally clear animation transition
+          cell.container.style.transition = 'none'; // temporally clear animation transition
           requestAnimationFrame(() => {
             cell.position = -1;
             // we remove all childs except last
             while (cell.container.children.length > 1)
               cell.container.removeChild(cell.container.firstChild);
             //insert blank space (forcing width to avoid weird behaviour in comma)
-            const digitBlank = document.createElement("span");
+            const digitBlank = document.createElement('span');
             digitBlank.innerHTML = blank;
             cell.container.insertBefore(digitBlank, cell.container.firstChild);
             // set scroll to last cell position
@@ -435,11 +435,11 @@ export class CountUp {
       this.printFlaps(result);
       return;
     }
-    console.log("normal");
-    if (this.el.tagName === "INPUT") {
+    console.log('normal');
+    if (this.el.tagName === 'INPUT') {
       const input = this.el as HTMLInputElement;
       input.value = result;
-    } else if (this.el.tagName === "text" || this.el.tagName === "tspan") {
+    } else if (this.el.tagName === 'text' || this.el.tagName === 'tspan') {
       this.el.textContent = result;
     } else {
       this.el.innerHTML = result;
@@ -447,7 +447,7 @@ export class CountUp {
   }
 
   ensureNumber(n: any): boolean {
-    return typeof n === "number" && !isNaN(n);
+    return typeof n === 'number' && !isNaN(n);
   }
 
   validateValue(value: string | number): number {
@@ -469,15 +469,15 @@ export class CountUp {
   // default format and easing functions
 
   formatNumber = (num: number): string => {
-    const neg = num < 0 ? "-" : "";
+    const neg = num < 0 ? '-' : '';
     let result: string, x1: string, x2: string, x3: string;
     result = Math.abs(num).toFixed(this.options.decimalPlaces);
-    result += "";
-    const x = result.split(".");
+    result += '';
+    const x = result.split('.');
     x1 = x[0];
-    x2 = x.length > 1 ? this.options.decimal + x[1] : "";
+    x2 = x.length > 1 ? this.options.decimal + x[1] : '';
     if (this.options.useGrouping) {
-      x3 = "";
+      x3 = '';
       let factor = 3,
         j = 0;
       for (let i = 0, len = x1.length; i < len; ++i) {

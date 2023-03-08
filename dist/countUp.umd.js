@@ -38,10 +38,15 @@
                 enableScrollSpy: false,
                 scrollSpyDelay: 200,
                 scrollSpyOnce: false,
+                // Marcel Soler
+                flaps: false,
+                flapDuration: 0.8,
+                flapDelay: 0.25,
             };
             this.finalEndVal = null; // for smart easing
             this.useEasing = true;
             this.countDown = false;
+            this.cells_flaps = null;
             this.error = '';
             this.startVal = 0;
             this.paused = true;
@@ -263,10 +268,142 @@
             this.determineDirectionAndSmartEasing();
             this.rAF = requestAnimationFrame(this.count);
         };
+        // Marcel Soler
+        CountUp.prototype.printFlaps = function (result) {
+            if (!this.cells_flaps) {
+                // avoid adding more than once
+                if (!document.querySelector('style[flap]')) {
+                    // add styles for flap numbers
+                    var style = document.createElement('style');
+                    style.setAttribute('flap', 'flap');
+                    style.innerHTML = "\n          .flap-numbers{display: inline-flex; line-height: 100%;overflow-y: hidden;}\n          .flap-numbers > span{display: flex; flex-direction:column;justify-content: start; align-items: center; height: 1em; will-change: transform; transform: translateY(0)}\n          ";
+                    document.head.appendChild(style);
+                }
+                // create wrapper
+                this.el.innerHTML = '<div class="flap-numbers"></div>';
+                // create array cells_flaps information
+                this.cells_flaps = [];
+            }
+            //blank space
+            var blank = '<span style="color:transparent">0</span>';
+            var transitionFlap = "transform ".concat(this.options.flapDuration, "s ease-out");
+            // appearing new cells_flaps
+            for (var i = this.cells_flaps.length; i < result.length; i++) {
+                // create a container
+                var container = document.createElement('span');
+                container.style.transition = transitionFlap;
+                // add a first transparent cell
+                container.innerHTML = blank;
+                this.el.firstChild.appendChild(container);
+                // prepare data id cell
+                this.cells_flaps.push({
+                    container: container,
+                    current: undefined,
+                    position: 0,
+                    new: true,
+                });
+            }
+            function appendDigit(cell, newDigit) {
+                console.log('appendDigit', newDigit);
+                cell.position--;
+                cell.container.appendChild(newDigit);
+                cell.lastTimeAdd = +new Date();
+                console.log('cell.position', cell.position, 'container.children', cell.container.children.length);
+                // we need to stablish transition at first number, using timeout
+                if (cell.new) {
+                    cell.new = false;
+                    requestAnimationFrame(function () {
+                        cell.container.style.transform = "translateY(".concat(cell.position, "em)");
+                    });
+                }
+                else
+                    cell.container.style.transform = "translateY(".concat(cell.position, "em)");
+            }
+            function pushDigit(cell, newDigit, options) {
+                console.log('pushDigit', newDigit);
+                // if there was another cell waiting to be added, we add it here
+                if (cell.nextToAdd) {
+                    appendDigit(cell, cell.nextToAdd);
+                    clearTimeout(cell.lastTimer);
+                    cell.nextToAdd = null;
+                }
+                var now = +new Date();
+                var delayTime = options.flapDelay * 1000 - (now - cell.lastTimeAdd);
+                console.log('delayTime', delayTime);
+                // if we are in slow animation, we just add digit
+                if (options.flapDelay <= 0 ||
+                    now - cell.lastTimeAdd >= delayTime * 1.05) {
+                    appendDigit(cell, newDigit);
+                    cell.nextToAdd = null;
+                }
+                else {
+                    // if not, we delay the push
+                    cell.nextToAdd = newDigit;
+                    cell.lastTimer = setTimeout(function () {
+                        console.log('addLast', cell.nextToAdd);
+                        appendDigit(cell, cell.nextToAdd);
+                        cell.nextToAdd = null;
+                    }, options.flapDuration * 1000);
+                }
+            }
+            // we add all sequence cells_flaps that are new in result
+            // or remove cells no more exist (we put blank cells)
+            var len = Math.max(result.length, this.cells_flaps.length);
+            var _loop_1 = function () {
+                // cell has changed
+                ch = i < result.length ? result.charAt(i) : null;
+                var cell = this_1.cells_flaps[i];
+                if (cell.current != ch) {
+                    console.log('new digit appear', ch);
+                    cell.current = ch;
+                    newDigit = document.createElement('span');
+                    newDigit.innerHTML = ch === null ? blank : ch;
+                    // the last delay animation only if there is a minimum of 3 elements
+                    if (cell.container.children.length < 4) {
+                        appendDigit(cell, newDigit);
+                    }
+                    else {
+                        pushDigit(cell, newDigit, this_1.options);
+                    }
+                    clearTimeout(cell.timerClean);
+                    // when animation end, we can remove all extra animated cells
+                    cell.timerClean = setTimeout(function () {
+                        console.log('clear digits');
+                        cell.timerClean = null;
+                        if (cell.container.children.length < 3)
+                            return;
+                        cell.container.style.transition = 'none'; // temporally clear animation transition
+                        requestAnimationFrame(function () {
+                            cell.position = -1;
+                            // we remove all childs except last
+                            while (cell.container.children.length > 1)
+                                cell.container.removeChild(cell.container.firstChild);
+                            //insert blank space (forcing width to avoid weird behaviour in comma)
+                            var digitBlank = document.createElement('span');
+                            digitBlank.innerHTML = blank;
+                            cell.container.insertBefore(digitBlank, cell.container.firstChild);
+                            // set scroll to last cell position
+                            cell.container.style.transform = "translateY(".concat(cell.position, "em)");
+                            requestAnimationFrame(function () {
+                                cell.container.style.transition = transitionFlap; // restart animation transition
+                            });
+                        });
+                    }, this_1.options.flapDuration * 1000 * 3);
+                }
+            };
+            var this_1 = this, ch, newDigit;
+            for (var i = 0; i < len; i++) {
+                _loop_1();
+            }
+        };
         CountUp.prototype.printValue = function (val) {
             var result = this.formattingFn(val);
             if (!this.el)
                 return;
+            if (this.options.flaps) {
+                this.printFlaps(result);
+                return;
+            }
             if (this.el.tagName === 'INPUT') {
                 var input = this.el;
                 input.value = result;

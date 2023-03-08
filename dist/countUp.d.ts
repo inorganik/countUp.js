@@ -18,6 +18,9 @@ export interface CountUpOptions {
     scrollSpyDelay?: number;
     scrollSpyOnce?: boolean;
     onCompleteCallback?: () => any;
+    flaps?: boolean;
+    flapDuration?: number;
+    flapDelay?: number;
 }
 export declare class CountUp {
     private endVal;
@@ -31,6 +34,7 @@ export declare class CountUp {
     private finalEndVal;
     private useEasing;
     private countDown;
+    private cells_flaps;
     formattingFn: (num: number) => string;
     easingFn?: (t: number, b: number, c: number, d: number) => number;
     error: string;
@@ -53,6 +57,7 @@ export declare class CountUp {
     reset(): void;
     update(newEndVal: string | number): void;
     count: (timestamp: number) => void;
+    printFlaps(result: string): void;
     printValue(val: number): void;
     ensureNumber(n: any): boolean;
     validateValue(value: string | number): number;

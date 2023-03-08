@@ -20,9 +20,9 @@ export interface CountUpOptions {
   scrollSpyDelay?: number // delay (ms) after target comes into view
   scrollSpyOnce?: boolean // run only once
   onCompleteCallback?: () => any // gets called when animation completes,
-  flaps?: boolean // cells are flaps thanks to Marcel Soler
+  flaps?: boolean // digits are flaps thanks to Marcel Soler
   flapDuration?: number // flap animation in seconds,
-  flapDelay?: number // delay last cell in animation, in seconds, 0 to deactivate
+  flapDelay?: number // delay last digit in animation, in seconds, 0 to deactivate
 }
 
 // playground: stackblitz.com/edit/countup-typescript

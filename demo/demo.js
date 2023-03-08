@@ -132,7 +132,10 @@ window.onload = function () {
       prefix: el('prefix').value,
       suffix: el('suffix').value,
       numerals: getNumerals(),
-      onCompleteCallback: el('useOnComplete').checked ? calculateAnimationTime : null
+      onCompleteCallback: el('useOnComplete').checked ? calculateAnimationTime : null,
+      flaps: el('useFlaps').checked,
+      flapDuration: el('flapDuration').value,
+      flapDelay: el('flapDelay').value
     };
     // unset null values so they don't overwrite defaults
     for (var key in options) {
@@ -174,6 +177,9 @@ window.onload = function () {
     opts += (options.suffix.length) ? indentedLine("suffix: '" + options.suffix + "'") : '';
     opts += (options.numerals && options.numerals.length) ?
       indentedLine("numerals: " + stringifyArray(options.numerals)) : '';
+    opts += (options.flaps) ? indentedLine("flaps: true") : '';
+    opts += (options.flapDuration) ? indentedLine("flapDuration: " + options.flapDuration) : '';
+    opts += (options.flapDelay) ? indentedLine("flapDelay: " + options.flapDelay) : '';
     opts += (options.onCompleteCallback) ? indentedLine("onCompleteCallback: methodToCallOnComplete") : '';
 
     if (opts.length) {

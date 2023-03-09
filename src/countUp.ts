@@ -261,7 +261,9 @@ export class CountUp {
 
   // Marcel Soler
   printFlaps(result: string) {
+    var createdNow = false
     if (!this.cells_flaps) {
+      createdNow = true
       // avoid adding more than once
       if (!document.querySelector('style[flap]')) {
         // add styles for flap numbers
@@ -289,13 +291,13 @@ export class CountUp {
       const container = document.createElement('span');
       container.style.transition = transitionFlap;
       // add a first transparent cell
-      container.innerHTML = blank;
+      container.innerHTML = createdNow?'':blank;
       this.el.firstChild.appendChild(container);
       // prepare data id cell
       this.cells_flaps.push({
         container,
         current: undefined,
-        position: 0,
+        position: createdNow?1:0,
         new: true,
       });
     }

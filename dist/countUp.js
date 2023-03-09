@@ -264,7 +264,9 @@ var CountUp = /** @class */ (function () {
     };
     // Marcel Soler
     CountUp.prototype.printFlaps = function (result) {
+        var createdNow = false;
         if (!this.cells_flaps) {
+            createdNow = true;
             // avoid adding more than once
             if (!document.querySelector('style[flap]')) {
                 // add styles for flap numbers
@@ -287,22 +289,20 @@ var CountUp = /** @class */ (function () {
             var container = document.createElement('span');
             container.style.transition = transitionFlap;
             // add a first transparent cell
-            container.innerHTML = blank;
+            container.innerHTML = createdNow ? '' : blank;
             this.el.firstChild.appendChild(container);
             // prepare data id cell
             this.cells_flaps.push({
                 container: container,
                 current: undefined,
-                position: 0,
+                position: createdNow ? 1 : 0,
                 new: true,
             });
         }
         function appendDigit(cell, newDigit) {
-            console.log('appendDigit', newDigit);
             cell.position--;
             cell.container.appendChild(newDigit);
             cell.lastTimeAdd = +new Date();
-            console.log('cell.position', cell.position, 'container.children', cell.container.children.length);
             // we need to stablish transition at first number, using timeout
             if (cell.new) {
                 cell.new = false;
@@ -314,7 +314,6 @@ var CountUp = /** @class */ (function () {
                 cell.container.style.transform = "translateY(".concat(cell.position, "em)");
         }
         function pushDigit(cell, newDigit, options) {
-            console.log('pushDigit', newDigit);
             // if there was another cell waiting to be added, we add it here
             if (cell.nextToAdd) {
                 appendDigit(cell, cell.nextToAdd);
@@ -323,7 +322,6 @@ var CountUp = /** @class */ (function () {
             }
             var now = +new Date();
             var delayTime = options.flapDelay * 1000 - (now - cell.lastTimeAdd);
-            console.log('delayTime', delayTime);
             // if we are in slow animation, we just add digit
             if (options.flapDelay <= 0 ||
                 now - cell.lastTimeAdd >= delayTime * 1.05) {
@@ -334,7 +332,6 @@ var CountUp = /** @class */ (function () {
                 // if not, we delay the push
                 cell.nextToAdd = newDigit;
                 cell.lastTimer = setTimeout(function () {
-                    console.log('addLast', cell.nextToAdd);
                     appendDigit(cell, cell.nextToAdd);
                     cell.nextToAdd = null;
                 }, options.flapDuration * 1000);
@@ -348,7 +345,6 @@ var CountUp = /** @class */ (function () {
             ch = i < result.length ? result.charAt(i) : null;
             var cell = this_1.cells_flaps[i];
             if (cell.current != ch) {
-                console.log('new digit appear', ch);
                 cell.current = ch;
                 newDigit = document.createElement('span');
                 newDigit.innerHTML = ch === null ? blank : ch;
@@ -362,7 +358,6 @@ var CountUp = /** @class */ (function () {
                 clearTimeout(cell.timerClean);
                 // when animation end, we can remove all extra animated cells
                 cell.timerClean = setTimeout(function () {
-                    console.log('clear digits');
                     cell.timerClean = null;
                     if (cell.container.children.length < 3)
                         return;

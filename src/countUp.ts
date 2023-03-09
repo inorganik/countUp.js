@@ -301,18 +301,10 @@ export class CountUp {
     }
 
     function appendDigit(cell, newDigit) {
-      console.log('appendDigit', newDigit);
 
       cell.position--;
       cell.container.appendChild(newDigit);
       cell.lastTimeAdd = +new Date();
-
-      console.log(
-        'cell.position',
-        cell.position,
-        'container.children',
-        cell.container.children.length
-      );
 
       // we need to stablish transition at first number, using timeout
       if (cell.new) {
@@ -324,7 +316,6 @@ export class CountUp {
     }
 
     function pushDigit(cell: any, newDigit: any, options: CountUpOptions) {
-      console.log('pushDigit', newDigit);
       // if there was another cell waiting to be added, we add it here
       if (cell.nextToAdd) {
         appendDigit(cell, cell.nextToAdd);
@@ -334,7 +325,6 @@ export class CountUp {
 
       const now = +new Date();
       const delayTime = options.flapDelay * 1000 - (now - cell.lastTimeAdd);
-      console.log('delayTime', delayTime);
 
       // if we are in slow animation, we just add digit
       if (
@@ -347,7 +337,6 @@ export class CountUp {
         // if not, we delay the push
         cell.nextToAdd = newDigit;
         cell.lastTimer = setTimeout(() => {
-          console.log('addLast', cell.nextToAdd);
           appendDigit(cell, cell.nextToAdd);
           cell.nextToAdd = null;
         }, options.flapDuration * 1000);
@@ -362,7 +351,6 @@ export class CountUp {
       var ch = i < result.length ? result.charAt(i) : null;
       const cell = this.cells_flaps[i];
       if (cell.current != ch) {
-        console.log('new digit appear', ch);
         cell.current = ch;
 
         var newDigit = document.createElement('span');
@@ -378,7 +366,6 @@ export class CountUp {
         clearTimeout(cell.timerClean);
         // when animation end, we can remove all extra animated cells
         cell.timerClean = setTimeout(function () {
-          console.log('clear digits');
           cell.timerClean = null;
           if (cell.container.children.length < 3) return;
           cell.container.style.transition = 'none'; // temporally clear animation transition

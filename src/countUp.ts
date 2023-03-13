@@ -19,12 +19,17 @@ export interface CountUpOptions { // (default)
   scrollSpyDelay?: number; // delay (ms) after target comes into view
   scrollSpyOnce?: boolean; // run only once
   onCompleteCallback?: () => any; // gets called when animation completes
+  plugin?: CountUpPlugin; // for alternate animations
+}
+
+export declare interface CountUpPlugin {
+  render(elem: HTMLElement, formatted: string): void;
 }
 
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.5.0';
+  version = '2.6.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -42,13 +47,13 @@ export class CountUp {
     scrollSpyDelay: 200,
     scrollSpyOnce: false,
   };
-  private el: HTMLElement | HTMLInputElement;
   private rAF: any;
   private startTime: number;
   private remaining: number;
   private finalEndVal: number = null; // for smart easing
   private useEasing = true;
   private countDown = false;
+  el: HTMLElement | HTMLInputElement;
   formattingFn: (num: number) => string;
   easingFn?: (t: number, b: number, c: number, d: number) => number;
   error = '';
@@ -252,8 +257,12 @@ export class CountUp {
   }
 
   printValue(val: number): void {
-    const result = this.formattingFn(val);
     if (!this.el) return;
+    const result = this.formattingFn(val);
+    if (this.options.plugin?.render) {
+      this.options.plugin.render(this.el, result);
+      return;
+    }
     if (this.el.tagName === 'INPUT') {
       const input = this.el as HTMLInputElement;
       input.value = result;

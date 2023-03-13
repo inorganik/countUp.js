@@ -15,6 +15,7 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 - **[Usage](#usage)**
 - **[Including CountUp](#including-countup)**
 - **[Contributing](#contributing)**
+- **[Creating Animation Plugins](#creating-animation-plugins)**
 
 
 ## CountUp for frameworks and plugins:
@@ -25,7 +26,7 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 - **[CountUp.js with Svelte](https://gist.github.com/inorganik/85a66941ab88cc10c5fa5b26aead5f2a)**
 - **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2)**
 - **[CountUp.js WordPress Plugin](https://wordpress.org/plugins/countup-js/)**
-- **[CountUp.js jQuery Plugin](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)**
+- **[CountUp.js with jQuery](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)**
 
 
 ## Features
@@ -67,6 +68,7 @@ interface CountUpOptions {
   scrollSpyDelay?: number; // delay (ms) after target comes into view
   scrollSpyOnce?: boolean; // run only once
   onCompleteCallback?: () => any; // gets called when animation completes
+  plugin?: CountUpPlugin; // for alternate animations
 }
 ```
 
@@ -207,3 +209,30 @@ Before you make a pull request, please be sure to follow these instructions:
 4. npm publish
 
 -->
+
+---
+
+## Creating Animation Plugins
+
+CountUp supports plugins as of v2.6.0. Plugins implement their own render method to display each frame's formatted value. A class instance or object can be passed to the `plugin` property of CountUpOptions, and the plugin's render method will be called instead of CountUp's.
+
+```ts
+export declare interface CountUpPlugin {
+  render(elem: HTMLElement, formatted: string): void;
+}
+```
+
+An example of a plugin:
+```ts
+export class SomePlugin implements CountUpPlugin {
+  // ...some properties here
+
+  constructor(options: SomePluginOptions) {
+    // ...setup code here if you need it
+  }
+
+  render(elem: HTMLElement, formatted: string): void {
+    // render DOM here
+  }
+}
+```

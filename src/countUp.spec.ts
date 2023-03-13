@@ -1,4 +1,4 @@
-import { CountUp } from './countUp';
+import { CountUp, CountUpPlugin } from './countUp';
 
 describe('CountUp', () => {
 
@@ -261,6 +261,21 @@ describe('CountUp', () => {
 
       expect(getTargetHtml()).toEqual('100');
       expect(callbackSpy).toHaveBeenCalled();
+    });
+
+    it('should respect the plugin option', () => {
+      const plugin: CountUpPlugin = {
+        render: (el, result) => {
+          el.innerHTML = result;
+        }
+      };
+      countUp = new CountUp('target', 1000, {
+        plugin,
+        useGrouping: true
+      });
+      countUp.start();
+
+      expect(getTargetHtml()).toEqual('1,000');
     });
   });
 });

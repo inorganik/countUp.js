@@ -18,19 +18,23 @@ export interface CountUpOptions {
     scrollSpyDelay?: number;
     scrollSpyOnce?: boolean;
     onCompleteCallback?: () => any;
+    plugin?: CountUpPlugin;
+}
+export declare interface CountUpPlugin {
+    render(elem: HTMLElement, formatted: string): void;
 }
 export declare class CountUp {
     private endVal;
     options?: CountUpOptions;
     version: string;
     private defaults;
-    private el;
     private rAF;
     private startTime;
     private remaining;
     private finalEndVal;
     private useEasing;
     private countDown;
+    el: HTMLElement | HTMLInputElement;
     formattingFn: (num: number) => string;
     easingFn?: (t: number, b: number, c: number, d: number) => number;
     error: string;

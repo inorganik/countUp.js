@@ -269,10 +269,13 @@ describe('CountUp', () => {
           el.innerHTML = result;
         }
       };
-      countUp = new CountUp('target', 100, { plugin });
+      countUp = new CountUp('target', 1000, {
+        plugin,
+        useGrouping: true
+      });
       countUp.start();
 
-      expect(getTargetHtml()).toEqual('100');
+      expect(getTargetHtml()).toEqual('1,000');
     });
   });
 });

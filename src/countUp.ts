@@ -19,11 +19,11 @@ export interface CountUpOptions { // (default)
   scrollSpyDelay?: number; // delay (ms) after target comes into view
   scrollSpyOnce?: boolean; // run only once
   onCompleteCallback?: () => any; // gets called when animation completes
-  plugin?: CountUpPlugin; // for alternate animation styles
+  plugin?: CountUpPlugin; // for alternate animations
 }
 
 export declare interface CountUpPlugin {
-  render(elem: HTMLElement | HTMLInputElement, formatted: string): void;
+  render(elem: HTMLElement, formatted: string): void;
 }
 
 // playground: stackblitz.com/edit/countup-typescript

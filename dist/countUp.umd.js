@@ -21,7 +21,7 @@
             var _this = this;
             this.endVal = endVal;
             this.options = options;
-            this.version = '2.5.0';
+            this.version = '2.6.0';
             this.defaults = {
                 startVal: 0,
                 decimalPlaces: 0,
@@ -264,9 +264,14 @@
             this.rAF = requestAnimationFrame(this.count);
         };
         CountUp.prototype.printValue = function (val) {
-            var result = this.formattingFn(val);
+            var _a;
             if (!this.el)
                 return;
+            var result = this.formattingFn(val);
+            if ((_a = this.options.plugin) === null || _a === void 0 ? void 0 : _a.render) {
+                this.options.plugin.render(this.el, result);
+                return;
+            }
             if (this.el.tagName === 'INPUT') {
                 var input = this.el;
                 input.value = result;

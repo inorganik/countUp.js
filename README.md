@@ -22,7 +22,6 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
 - **Plugins** allow for alternate animations like the [Odometer plugin](https://www.npmjs.com/package/odometer_countup)
 ![Odomoeter plugin](./demo/images/odometer_plugin.gif)
-- **Separate bundles** for different needs. Choose `dist/countUp.min.js` to use an ES6 module, or `dist/countUp.umd.js` for a UMD module. Separately include `dist/requestAnimationFrame.polyfill.js` if you want to support IE9 and older, and Opera mini.
 
 ## Usage:
 
@@ -156,7 +155,7 @@ If you'd like to make your own plugin, see [the docs](#creating-animation-plugin
 
 ## Including CountUp
 
-CountUp is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers, though a UMD module is [also included](#umd-module).
+CountUp is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers, though a UMD module is [also included](#umd-module), along with a separate requestAnimationFrame polyfill (see below).
 
 For the examples below, first install CountUp. This will give you the latest:
 ```
@@ -205,6 +204,10 @@ CountUp is also wrapped as a UMD module in `./dist/countUp.umd.js` and it expose
 var numAnim = new countUp.CountUp('myTarget', 2000);
 numAnim.start()
 ```
+
+### requestAnimationFrame polyfill
+
+You can include `dist/requestAnimationFrame.polyfill.js` if you want to support IE9 and older, and Opera mini.
 
 ---
 

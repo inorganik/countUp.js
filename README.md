@@ -22,7 +22,7 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
 - **Plugins** allow for alternate animations like the [Odometer plugin](https://www.npmjs.com/package/odometer_countup)
 ![Odomoeter plugin](./demo/images/odometer_plugin.gif)
-- **Separate bundles** for modern and legacy browsers, with and without the requestAnimationFrame polyfill. Choose `countUp.min.js` for modern browsers or `countUp.withPolyfill.min.js` for IE9 and older, and Opera mini.
+- **Separate bundles** for different needs. Choose `dist/countUp.min.js` to use an ES6 module, or `dist/countUp.umd.js` for a UMD module. Separately include `dist/requestAnimationFrame.polyfill.js` if you want to support IE9 and older, and Opera mini.
 
 ## Usage:
 

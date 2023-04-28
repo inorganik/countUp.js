@@ -3,9 +3,10 @@
 	"description": "Animates a numerical value by counting to it",
 	"version": "2.6.1",
 	"license": "MIT",
-	"main": "./dist/countUp.umd.js",
+	"author": "Jamie Perkins",
+	"main": "./dist/countUp.min.js",
 	"module": "./dist/countUp.min.js",
-	"author": "@inorganik",
+	"types": "./dist/countUp.d.ts",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/inorganik/countUp.js.git"
@@ -35,6 +36,5 @@
 		"rollup-plugin-terser": "^7.0.2",
 		"ts-jest": "^28.0.8",
 		"typescript": "^4.8.4"
-	},
-	"types": "./dist/countUp.d.ts"
+	}
 }

@@ -11,33 +11,34 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 
 ## Jump to:
 
-- **[Features](#features)**
 - **[Usage](#usage)**
 - **[Including CountUp](#including-countup)**
 - **[Contributing](#contributing)**
 - **[Creating Animation Plugins](#creating-animation-plugins)**
 
-
-## CountUp for frameworks and plugins:
-
-- **[CountUp.js with Angular 2+](https://github.com/inorganik/ngx-countUp)**
-- **[CountUp.js with Angular 1.x](https://github.com/inorganik/countUp.js-angular1)**
-- **[CountUp.js with React](https://gist.github.com/inorganik/2cf776865a4c65c12857027870e9898e)**
-- **[CountUp.js with Svelte](https://gist.github.com/inorganik/85a66941ab88cc10c5fa5b26aead5f2a)**
-- **[CountUp.js Vue component wrapper](https://github.com/xlsdg/vue-countup-v2)**
-- **[CountUp.js WordPress Plugin](https://wordpress.org/plugins/countup-js/)**
-- **[CountUp.js with jQuery](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)**
-
-
 ## Features
-- **Animate when element scrolls into view** - new in v2.1.0. Use option `enableScrollSpy`.
+- **Animate when element scrolls into view.** Use option `enableScrollSpy`.
 - **Highly customizeable** with a large range of options, you can even substitute numerals.
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
+- **Plugins** allow for alternate animations like the [Odometer plugin](https://www.npmjs.com/package/odometer_countup)
+![Odomoeter plugin](./demo/images/odometer_plugin.gif)
 - **Separate bundles** for modern and legacy browsers, with and without the requestAnimationFrame polyfill. Choose `countUp.min.js` for modern browsers or `countUp.withPolyfill.min.js` for IE9 and older, and Opera mini.
 
 ## Usage:
 
-**On npm** as: `countup.js`. You can import as a module or include the UMD script and access CountUp as a global. See [detailed instructions](#including-countup) below.
+**Use CountUp with:**
+
+- [Angular 2+](https://github.com/inorganik/ngx-countUp)
+- [Angular 1.x](https://github.com/inorganik/countUp.js-angular1)
+- [React](https://gist.github.com/inorganik/2cf776865a4c65c12857027870e9898e)
+- [Svelte](https://gist.github.com/inorganik/85a66941ab88cc10c5fa5b26aead5f2a)
+- [Vue](https://github.com/xlsdg/vue-countup-v2)
+- [WordPress](https://wordpress.org/plugins/countup-js/)
+- [jQuery](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)
+
+**Use CountUp directly:**
+
+On npm as `countup.js`. You can import as a module, or include the UMD script and access CountUp as a global. See [detailed instructions](#including-countup) on including CountUp.
 
 **Params**:
 - `target: string | HTMLElement | HTMLInputElement` - id of html element, input, svg text element, or DOM element reference where counting occurs
@@ -120,7 +121,8 @@ Update the end value and animate:
 countUp.update(989);
 ```
 
-### Animate when the element is scrolled into view
+---
+### **Animate when the element is scrolled into view**
 
 Use the scroll spy option to animate when the element is scrolled into view. When using scroll spy, just initialize CountUp but do not call start();
 
@@ -136,6 +138,20 @@ CountUp checks the scroll position as soon as it's initialized. So if you initia
 // after DOM has rendered
 countUp.handleScroll();
 ```
+---
+### **Alternate animations with plugins**
+
+Currently there's just one plugin, the **[Odometer Plugin](https://github.com/msoler75/odometer_countup.js)**.
+
+To use a plugin, use the plugin option:
+```js
+const countUp = new CountUp('targetId', 5234, {
+  plugin: new Odometer({ duration: 2.3, lastDigitDelay: 0 }),
+  duration: 3.0
+});
+```
+If you'd like to make your own plugin, see [the docs](#creating-animation-plugins) below!
+
 ---
 
 ## Including CountUp
@@ -236,3 +252,5 @@ export class SomePlugin implements CountUpPlugin {
   }
 }
 ```
+
+If you make a plugin, be sure to create a PR to add it to this README!

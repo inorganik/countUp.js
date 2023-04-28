@@ -121,15 +121,8 @@ Update the end value and animate:
 countUp.update(989);
 ```
 
-### Alternate animations with plugins
-
-**[Odometer Plugin](https://www.npmjs.com/package/odometer_countup)**
-
-![Odomoeter plugin](./demo/images/odometer_plugin.gif)
-
-If you'd like to make your own plugin, see [the docs](#creating-animation-plugins) below!
-
-### Animate when the element is scrolled into view
+---
+### **Animate when the element is scrolled into view**
 
 Use the scroll spy option to animate when the element is scrolled into view. When using scroll spy, just initialize CountUp but do not call start();
 
@@ -145,6 +138,20 @@ CountUp checks the scroll position as soon as it's initialized. So if you initia
 // after DOM has rendered
 countUp.handleScroll();
 ```
+---
+### **Alternate animations with plugins**
+
+Currently there's just one plugin, the **[Odometer Plugin](https://github.com/msoler75/odometer_countup.js)**.
+
+To use a plugin, use the plugin option:
+```js
+const countUp = new CountUp('targetId', 5234, {
+  plugin: new Odometer({ duration: 2.3, lastDigitDelay: 0 }),
+  duration: 3.0
+});
+```
+If you'd like to make your own plugin, see [the docs](#creating-animation-plugins) below!
+
 ---
 
 ## Including CountUp
@@ -245,3 +252,5 @@ export class SomePlugin implements CountUpPlugin {
   }
 }
 ```
+
+If you make a plugin, be sure to create a PR to add it to this README!

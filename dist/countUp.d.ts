@@ -49,7 +49,7 @@ export declare class CountUp {
      * Smart easing works by breaking the animation into 2 parts, the second part being the
      * smartEasingAmount and first part being the total amount minus the smartEasingAmount. It works
      * by disabling easing for the first part and enabling it on the second part. It is used if
-     * usingEasing is true and the total animation amount exceeds the smartEasingThreshold.
+     * useEasing is true and the total animation amount exceeds the smartEasingThreshold.
      */
     private determineDirectionAndSmartEasing;
     start(callback?: (args?: any) => any): void;

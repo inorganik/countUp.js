@@ -7,6 +7,7 @@ export default [
     output: {
       file: 'dist/countUp.min.js',
     },
+    context: 'window',
     plugins: [
       terser(), // minify the output
     ],
@@ -19,6 +20,7 @@ export default [
       name: 'countUp',
       format: 'umd',
     },
+    context: 'window',
     plugins: [
       terser(),
     ],

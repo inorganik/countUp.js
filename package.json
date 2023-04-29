@@ -25,7 +25,6 @@
 		"@typescript-eslint/eslint-plugin": "^5.41.0",
 		"@typescript-eslint/eslint-plugin-tslint": "^5.41.0",
 		"@typescript-eslint/parser": "^5.41.0",
-		"browserify": "^17.0.0",
 		"eslint": "^8.26.0",
 		"eslint-plugin-import": "^2.26.0",
 		"http-server": "^14.1.1",

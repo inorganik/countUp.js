@@ -21,6 +21,7 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 - **Highly customizeable** with a large range of options, you can even substitute numerals.
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
 - **Plugins** allow for alternate animations like the [Odometer plugin](https://www.npmjs.com/package/odometer_countup)
+
 ![Odomoeter plugin](./demo/images/odometer_plugin.gif)
 
 ## Usage:
@@ -142,7 +143,7 @@ countUp.handleScroll();
 
 Currently there's just one plugin, the **[Odometer Plugin](https://github.com/msoler75/odometer_countup.js)**.
 
-To use a plugin, use the plugin option:
+To use a plugin, you'll need to first install the plugin package. Then you can include it and use the plugin option. See each plugin's docs for more detailed info.
 ```js
 const countUp = new CountUp('targetId', 5234, {
   plugin: new Odometer({ duration: 2.3, lastDigitDelay: 0 }),

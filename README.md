@@ -21,8 +21,8 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 - **Highly customizeable** with a large range of options, you can even substitute numerals.
 - **Smart easing**: CountUp intelligently defers easing until it gets close enough to the end value for easing to be visually noticeable. Configureable in the [options](#options).
 - **Plugins** allow for alternate animations like the [Odometer plugin](https://www.npmjs.com/package/odometer_countup)
+
 ![Odomoeter plugin](./demo/images/odometer_plugin.gif)
-- **Separate bundles** for modern and legacy browsers, with and without the requestAnimationFrame polyfill. Choose `countUp.min.js` for modern browsers or `countUp.withPolyfill.min.js` for IE9 and older, and Opera mini.
 
 ## Usage:
 
@@ -143,7 +143,7 @@ countUp.handleScroll();
 
 Currently there's just one plugin, the **[Odometer Plugin](https://github.com/msoler75/odometer_countup.js)**.
 
-To use a plugin, use the plugin option:
+To use a plugin, you'll need to first install the plugin package. Then you can include it and use the plugin option. See each plugin's docs for more detailed info.
 ```js
 const countUp = new CountUp('targetId', 5234, {
   plugin: new Odometer({ duration: 2.3, lastDigitDelay: 0 }),
@@ -156,7 +156,7 @@ If you'd like to make your own plugin, see [the docs](#creating-animation-plugin
 
 ## Including CountUp
 
-CountUp is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers, though a UMD module is [also included](#umd-module).
+CountUp is distributed as an ES6 module because it is the most standardized and most widely compatible module for browsers, though a UMD module is [also included](#umd-module), along with a separate requestAnimationFrame polyfill (see below).
 
 For the examples below, first install CountUp. This will give you the latest:
 ```
@@ -205,6 +205,10 @@ CountUp is also wrapped as a UMD module in `./dist/countUp.umd.js` and it expose
 var numAnim = new countUp.CountUp('myTarget', 2000);
 numAnim.start()
 ```
+
+### requestAnimationFrame polyfill
+
+You can include `dist/requestAnimationFrame.polyfill.js` if you want to support IE9 and older, and Opera mini.
 
 ---
 

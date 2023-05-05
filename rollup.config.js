@@ -1,4 +1,4 @@
-import { terser } from 'rollup-plugin-terser';
+import { terser } from "rollup-plugin-terser";
 /**
  * Regarding "(!) `this` has been rewritten to `undefined`" warning:
  * It occurs because of typescript's Object.assign polyfill, which uses
@@ -7,12 +7,22 @@ import { terser } from 'rollup-plugin-terser';
  * is not run in the browser. Allowing rollup to rewrite this to undefined
  * on just the global scope is harmless and doesn't break anything.
  */
+
 export default [
+  // ES module build
+  {
+    input: "dist/countUp.js",
+    output: {
+      file: "dist/countUp.esm.js",
+      format: "es",
+    },
+    plugins: [terser()],
+  },
   // minified build
   {
-    input: 'dist/countUp.js',
+    input: "dist/countUp.js",
     output: {
-      file: 'dist/countUp.min.js',
+      file: "dist/countUp.min.js",
     },
     plugins: [
       terser(), // minify the output
@@ -20,14 +30,12 @@ export default [
   },
   // UMD build
   {
-    input: 'dist/countUp.js',
+    input: "dist/countUp.js",
     output: {
-      file: 'dist/countUp.umd.js',
-      name: 'countUp',
-      format: 'umd',
+      file: "dist/countUp.umd.js",
+      name: "countUp",
+      format: "umd",
     },
-    plugins: [
-      terser(),
-    ],
-  }
+    plugins: [terser()],
+  },
 ];

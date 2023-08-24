@@ -69,6 +69,7 @@ interface CountUpOptions {
   scrollSpyDelay?: number; // delay (ms) after target comes into view
   scrollSpyOnce?: boolean; // run only once
   onCompleteCallback?: () => any; // gets called when animation completes
+  onStartCallback?: () => any; // gets called when animation start
   plugin?: CountUpPlugin; // for alternate animations
 }
 ```
@@ -89,7 +90,13 @@ Pass options:
 const countUp = new CountUp('targetId', 5234, options);
 ```
 
-with optional callback:
+with optional start callback:
+
+```js
+const countUp = new CountUp('targetId', 5234, { onStartCallback: someMethod });
+```
+
+with optional complete callback:
 
 ```js
 const countUp = new CountUp('targetId', 5234, { onCompleteCallback: someMethod });

@@ -30,7 +30,7 @@ export declare interface CountUpPlugin {
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.7.1';
+  version = '2.8.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -115,7 +115,7 @@ export class CountUp {
     if (!self || !window || self.once) return;
     const bottomOfScroll = window.innerHeight +  window.scrollY;
     const rect = self.el.getBoundingClientRect();
-    const topOfEl = rect.top + window.pageYOffset
+    const topOfEl = rect.top + window.pageYOffset;
     const bottomOfEl = rect.top + rect.height + window.pageYOffset;
     if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
       // in view
@@ -164,7 +164,7 @@ export class CountUp {
     if (this.error) {
       return;
     }
-    if(this.options.onStartCallback) {
+    if (this.options.onStartCallback) {
       this.options.onStartCallback();
     }
     if (callback) {

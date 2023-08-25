@@ -263,6 +263,16 @@ describe('CountUp', () => {
       expect(callbackSpy).toHaveBeenCalled();
     });
 
+    it('should respect the onStartCallback option', () => {
+      const options = { onStartCallback: jest.fn() };
+      const callbackSpy = jest.spyOn(options, 'onStartCallback');
+      countUp = new CountUp('target', 100, options);
+      countUp.start();
+
+      expect(callbackSpy).toHaveBeenCalled();
+      expect(getTargetHtml()).toEqual('100');
+    });
+
     it('should respect the plugin option', () => {
       const plugin: CountUpPlugin = {
         render: (el, result) => {

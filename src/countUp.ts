@@ -19,6 +19,7 @@ export interface CountUpOptions { // (default)
   scrollSpyDelay?: number; // delay (ms) after target comes into view
   scrollSpyOnce?: boolean; // run only once
   onCompleteCallback?: () => any; // gets called when animation completes
+  onStartCallback?: () => any; // gets called when animation starts
   plugin?: CountUpPlugin; // for alternate animations
 }
 
@@ -162,6 +163,9 @@ export class CountUp {
   start(callback?: (args?: any) => any): void {
     if (this.error) {
       return;
+    }
+    if(this.options.onStartCallback) {
+      this.options.onStartCallback();
     }
     if (callback) {
       this.options.onCompleteCallback = callback;

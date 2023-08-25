@@ -206,6 +206,9 @@ var CountUp = /** @class */ (function () {
         if (this.error) {
             return;
         }
+        if (this.options.onStartCallback) {
+            this.options.onStartCallback();
+        }
         if (callback) {
             this.options.onCompleteCallback = callback;
         }

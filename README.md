@@ -24,6 +24,8 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 
 ![Odomoeter plugin](./demo/images/odometer_plugin.gif)
 
+hi
+
 ## Usage:
 
 **Use CountUp with:**

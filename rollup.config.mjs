@@ -1,4 +1,4 @@
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 /**
  * Regarding "(!) `this` has been rewritten to `undefined`" warning:
  * It occurs because of typescript's Object.assign polyfill, which uses

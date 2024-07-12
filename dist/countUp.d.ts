@@ -20,6 +20,7 @@ export interface CountUpOptions {
     onCompleteCallback?: () => any;
     onStartCallback?: () => any;
     plugin?: CountUpPlugin;
+    reduceMotion?: boolean | 'auto';
 }
 export declare interface CountUpPlugin {
     render(elem: HTMLElement, formatted: string): void;
@@ -64,4 +65,6 @@ export declare class CountUp {
     private resetDuration;
     formatNumber: (num: number) => string;
     easeOutExpo: (t: number, b: number, c: number, d: number) => number;
+    private prefersReducedMotion;
+    private motionOK;
 }

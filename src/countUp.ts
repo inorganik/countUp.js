@@ -21,6 +21,7 @@ export interface CountUpOptions { // (default)
   onCompleteCallback?: () => any; // gets called when animation completes
   onStartCallback?: () => any; // gets called when animation starts
   plugin?: CountUpPlugin; // for alternate animations
+  reduceMotion?: boolean | 'auto'; // 'auto' respects user preference
 }
 
 export declare interface CountUpPlugin {
@@ -47,6 +48,7 @@ export class CountUp {
     enableScrollSpy: false,
     scrollSpyDelay: 200,
     scrollSpyOnce: false,
+    reduceMotion: 'auto',
   };
   private rAF: any;
   private startTime: number;
@@ -170,7 +172,7 @@ export class CountUp {
     if (callback) {
       this.options.onCompleteCallback = callback;
     }
-    if (this.duration > 0) {
+    if (this.duration > 0 && this.motionOK()) {
       this.determineDirectionAndSmartEasing();
       this.paused = false;
       this.rAF = requestAnimationFrame(this.count);
@@ -335,4 +337,9 @@ export class CountUp {
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
 
+  private prefersReducedMotion;
+  private motionOK = () => {
+    if (this.prefersReducedMotion === undefined) this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    return !this.options.reduceMotion || (this.options.reduceMotion === 'auto' && !this.prefersReducedMotion.matches)
+  }
 }

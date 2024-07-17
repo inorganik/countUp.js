@@ -116,11 +116,6 @@ var CountUp = /** @class */ (function () {
         this.easeOutExpo = function (t, b, c, d) {
             return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
         };
-        this.motionOK = function () {
-            if (_this.prefersReducedMotion === undefined)
-                _this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-            return !_this.options.reduceMotion || (_this.options.reduceMotion === 'auto' && !_this.prefersReducedMotion.matches);
-        };
         this.options = __assign(__assign({}, this.defaults), options);
         this.formattingFn = (this.options.formattingFn) ?
             this.options.formattingFn : this.formatNumber;
@@ -158,6 +153,9 @@ var CountUp = /** @class */ (function () {
                 console.error(this.error, target);
             }
         }
+        this.reduceMotion = (this.options.reduceMotion === 'auto') ?
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches :
+            this.options.reduceMotion;
     }
     CountUp.prototype.handleScroll = function (self) {
         if (!self || !window || self.once)
@@ -218,7 +216,7 @@ var CountUp = /** @class */ (function () {
         if (callback) {
             this.options.onCompleteCallback = callback;
         }
-        if (this.duration > 0 && this.motionOK()) {
+        if (this.duration > 0 && !this.reduceMotion) {
             this.determineDirectionAndSmartEasing();
             this.paused = false;
             this.rAF = requestAnimationFrame(this.count);

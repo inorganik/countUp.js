@@ -36,6 +36,7 @@ export declare class CountUp {
     private finalEndVal;
     private useEasing;
     private countDown;
+    private reduceMotion;
     el: HTMLElement | HTMLInputElement;
     formattingFn: (num: number) => string;
     easingFn?: (t: number, b: number, c: number, d: number) => number;
@@ -65,6 +66,4 @@ export declare class CountUp {
     private resetDuration;
     formatNumber: (num: number) => string;
     easeOutExpo: (t: number, b: number, c: number, d: number) => number;
-    private prefersReducedMotion;
-    private motionOK;
 }

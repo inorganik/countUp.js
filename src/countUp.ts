@@ -21,7 +21,7 @@ export interface CountUpOptions { // (default)
   onCompleteCallback?: () => any; // gets called when animation completes
   onStartCallback?: () => any; // gets called when animation starts
   plugin?: CountUpPlugin; // for alternate animations
-  reduceMotion?: boolean | 'auto'; // 'auto' respects user preference
+  respectPrefersReducedMotion?: boolean; // https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
 }
 
 export declare interface CountUpPlugin {
@@ -48,7 +48,7 @@ export class CountUp {
     enableScrollSpy: false,
     scrollSpyDelay: 200,
     scrollSpyOnce: false,
-    reduceMotion: 'auto',
+    respectPrefersReducedMotion: true,
   };
   private rAF: any;
   private startTime: number;
@@ -56,7 +56,7 @@ export class CountUp {
   private finalEndVal: number = null; // for smart easing
   private useEasing = true;
   private countDown = false;
-  private reduceMotion: boolean;
+  private motionOK: boolean;
   el: HTMLElement | HTMLInputElement;
   formattingFn: (num: number) => string;
   easingFn?: (t: number, b: number, c: number, d: number) => number;
@@ -113,9 +113,8 @@ export class CountUp {
       }
     }
 
-    this.reduceMotion = (this.options.reduceMotion === 'auto') ?
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches :
-      this.options.reduceMotion;
+    this.motionOK = !this.options.respectPrefersReducedMotion ||
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
   handleScroll(self: CountUp): void {
@@ -177,7 +176,7 @@ export class CountUp {
     if (callback) {
       this.options.onCompleteCallback = callback;
     }
-    if (this.duration > 0 && !this.reduceMotion) {
+    if (this.duration > 0 && this.motionOK) {
       this.determineDirectionAndSmartEasing();
       this.paused = false;
       this.rAF = requestAnimationFrame(this.count);

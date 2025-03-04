@@ -35,6 +35,7 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 - [Vue](https://github.com/xlsdg/vue-countup-v2)
 - [WordPress](https://wordpress.org/plugins/countup-js/)
 - [jQuery](https://gist.github.com/inorganik/b63dbe5b3810ff2c0175aee4670a4732)
+- [custom element](https://github.com/lekoala/formidable-elements/blob/master/docs/count-up.md)
 
 **Use CountUp directly:**
 

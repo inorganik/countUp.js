@@ -21,6 +21,7 @@ export interface CountUpOptions { // (default)
   onCompleteCallback?: () => any; // gets called when animation completes
   onStartCallback?: () => any; // gets called when animation starts
   plugin?: CountUpPlugin; // for alternate animations
+  respectPrefersReducedMotion?: boolean; // https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
 }
 
 export declare interface CountUpPlugin {
@@ -47,6 +48,7 @@ export class CountUp {
     enableScrollSpy: false,
     scrollSpyDelay: 200,
     scrollSpyOnce: false,
+    respectPrefersReducedMotion: true,
   };
   private rAF: any;
   private startTime: number;
@@ -54,6 +56,7 @@ export class CountUp {
   private finalEndVal: number = null; // for smart easing
   private useEasing = true;
   private countDown = false;
+  private motionOK: boolean;
   el: HTMLElement | HTMLInputElement;
   formattingFn: (num: number) => string;
   easingFn?: (t: number, b: number, c: number, d: number) => number;
@@ -109,24 +112,27 @@ export class CountUp {
         console.error(this.error, target);
       }
     }
+
+    this.motionOK = !this.options.respectPrefersReducedMotion ||
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
   handleScroll(self: CountUp): void {
     if (!self || !window || self.once) return;
-    const bottomOfScroll = window.innerHeight +  window.scrollY;
+    const bottomOfScroll = window.innerHeight + window.scrollY;
     const rect = self.el.getBoundingClientRect();
     const topOfEl = rect.top + window.pageYOffset;
     const bottomOfEl = rect.top + rect.height + window.pageYOffset;
-    if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
+    if (bottomOfEl < bottomOfScroll && bottomOfEl > window.scrollY && self.paused) {
       // in view
       self.paused = false;
       setTimeout(() => self.start(), self.options.scrollSpyDelay);
       if (self.options.scrollSpyOnce)
         self.once = true;
     } else if (
-        (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
-        !self.paused
-      ) {
+      (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
+      !self.paused
+    ) {
       // out of view
       self.reset();
     }
@@ -170,7 +176,7 @@ export class CountUp {
     if (callback) {
       this.options.onCompleteCallback = callback;
     }
-    if (this.duration > 0) {
+    if (this.duration > 0 && this.motionOK) {
       this.determineDirectionAndSmartEasing();
       this.paused = false;
       this.rAF = requestAnimationFrame(this.count);
@@ -334,5 +340,4 @@ export class CountUp {
   // t: current time, b: beginning value, c: change in value, d: duration
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
-
 }

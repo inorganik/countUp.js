@@ -32,6 +32,7 @@ var CountUp = /** @class */ (function () {
             enableScrollSpy: false,
             scrollSpyDelay: 200,
             scrollSpyOnce: false,
+            respectPrefersReducedMotion: true,
         };
         this.finalEndVal = null; // for smart easing
         this.useEasing = true;
@@ -152,6 +153,8 @@ var CountUp = /** @class */ (function () {
                 console.error(this.error, target);
             }
         }
+        this.motionOK = !this.options.respectPrefersReducedMotion ||
+            !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
     CountUp.prototype.handleScroll = function (self) {
         if (!self || !window || self.once)
@@ -212,7 +215,7 @@ var CountUp = /** @class */ (function () {
         if (callback) {
             this.options.onCompleteCallback = callback;
         }
-        if (this.duration > 0) {
+        if (this.duration > 0 && this.motionOK) {
             this.determineDirectionAndSmartEasing();
             this.paused = false;
             this.rAF = requestAnimationFrame(this.count);

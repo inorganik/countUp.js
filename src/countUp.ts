@@ -30,7 +30,7 @@ export declare interface CountUpPlugin {
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.8.0';
+  version = '2.8.1';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,

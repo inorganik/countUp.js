@@ -12,6 +12,7 @@
 		"url": "git+https://github.com/inorganik/countUp.js.git"
 	},
 	"exports": {
+    "types": "./dist/countUp.d.ts",
 		"import": "./dist/countUp.min.js",
 		"require": "./dist/countUp.umd.js"
 	},

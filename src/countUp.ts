@@ -338,6 +338,6 @@ export class CountUp {
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
 
   removeSeparators(number: string): number {
-    return Number(number.split(',').join(''));
+    return parseFloat(number.replace(new RegExp(this.options.separator, 'g'), ''))
   }
 }

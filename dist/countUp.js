@@ -15,7 +15,7 @@ var CountUp = /** @class */ (function () {
         var _this = this;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.8.1';
+        this.version = '2.9.0';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,
@@ -120,6 +120,8 @@ var CountUp = /** @class */ (function () {
             this.options.formattingFn : this.formatNumber;
         this.easingFn = (this.options.easingFn) ?
             this.options.easingFn : this.easeOutExpo;
+        this.el = (typeof target === 'string') ? document.getElementById(target) : target;
+        endVal = endVal == null ? this.parse(this.el.innerHTML) : endVal;
         this.startVal = this.validateValue(this.options.startVal);
         this.frameVal = this.startVal;
         this.endVal = this.validateValue(endVal);
@@ -130,7 +132,6 @@ var CountUp = /** @class */ (function () {
         if (this.options.separator === '') {
             this.options.useGrouping = false;
         }
-        this.el = (typeof target === 'string') ? document.getElementById(target) : target;
         if (this.el) {
             this.printValue(this.startVal);
         }
@@ -297,6 +298,14 @@ var CountUp = /** @class */ (function () {
         this.startTime = null;
         this.duration = Number(this.options.duration) * 1000;
         this.remaining = this.duration;
+    };
+    CountUp.prototype.parse = function (number) {
+        // eslint-disable-next-line no-irregular-whitespace
+        var escapeRegExp = function (s) { return s.replace(/([.,'  ])/g, '\\$1'); };
+        var sep = escapeRegExp(this.options.separator);
+        var dec = escapeRegExp(this.options.decimal);
+        var num = number.replace(new RegExp(sep, 'g'), '').replace(new RegExp(dec, 'g'), '.');
+        return parseFloat(num);
     };
     return CountUp;
 }());

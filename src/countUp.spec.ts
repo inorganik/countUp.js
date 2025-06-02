@@ -57,48 +57,98 @@ describe('CountUp', () => {
     it('should return a value for version', () => {
       expect(countUp.version).toBeTruthy();
     });
+
+    it('should support getting endVal from the target element', () => {
+      document.body.innerHTML =
+      '<div>' +
+      '  <h1 id="target">1,500</h1>' +
+      '</div>';
+
+      countUp = new CountUp('target');
+      expect(countUp.endVal).toBe(1500);
+    });
+
+    it('should set an error when endVal is omitted and not in target element', () => {
+      document.body.innerHTML =
+      '<div>' +
+      '  <h1 id="target"></h1>' +
+      '</div>';
+      countUp = new CountUp('target');
+      expect(countUp.error.length).toBeGreaterThan(0);
+    });
+
+    it('should not call parse when an endVal is passed to the constructor', () => {
+      const parseSpy = jest.spyOn(CountUp.prototype, 'parse');
+
+      countUp = new CountUp('target', 0, { startVal: 100 });
+      expect(parseSpy).not.toHaveBeenCalled();
+      parseSpy.mockRestore();
+    });
   });
 
   describe('class methods', () => {
-    it('should count when start method is called', () => {
-      countUp.start();
+    describe('# start', () => {
+      it('should count when start method is called', () => {
+        countUp.start();
 
-      expect(getTargetHtml()).toEqual('100');
+        expect(getTargetHtml()).toEqual('100');
+      });
+
+      it('should use a callback provided to start', () => {
+        const cb = jest.fn();
+        countUp.start(cb);
+
+        expect(getTargetHtml()).toEqual('100');
+        expect(cb).toHaveBeenCalled();
+      });
     });
 
-    it('should use a callback provided to start', () => {
-      const cb = jest.fn();
-      countUp.start(cb);
+    describe('# pauseResume', () => {
+      it('should pause when pauseResume is called', () => {
+        countUp.start();
+        countUp.pauseResume();
 
-      expect(getTargetHtml()).toEqual('100');
-      expect(cb).toHaveBeenCalled();
+        expect(countUp.paused).toBeTruthy();
+      });
     });
 
-    it('should pause when pauseResume is called', () => {
-      countUp.start();
-      // resetRAF();
-      countUp.pauseResume();
+    describe('# reset', () => {
+      it('should reset when reset is called', () => {
+        countUp.start();
+        countUp.reset();
 
-      expect(countUp.paused).toBeTruthy();
+        expect(getTargetHtml()).toEqual('0');
+        expect(countUp.paused).toBeTruthy();
+      });
     });
 
-    it('should reset when reset is called', () => {
-      countUp.start();
-      countUp.reset();
+    describe('# update', () => {
+      it('should update when update is called', () => {
+        countUp.start();
+        expect(getTargetHtml()).toEqual('100');
 
-      expect(getTargetHtml()).toEqual('0');
-      expect(countUp.paused).toBeTruthy();
+        resetRAF();
+        countUp.update(200);
+        expect(getTargetHtml()).toEqual('200');
+      });
     });
 
-    it('should update when update is called', () => {
-      countUp.start();
-      expect(getTargetHtml()).toEqual('100');
+    describe('# parse', () => {
+      it('should properly parse numbers', () => {
+        countUp = new CountUp('target', 0);
+        const result0 = countUp.parse('14,921.00123');
 
-      resetRAF();
-      countUp.update(200);
-      expect(getTargetHtml()).toEqual('200');
+        countUp = new CountUp('target', 0, { separator: '.', decimal: ',' });
+        const result1 = countUp.parse('1.500,0');
+
+        countUp = new CountUp('target', 0, { separator: ' ' });
+        const result2 = countUp.parse('2 800');
+
+        expect(result0).toEqual(14921.00123);
+        expect(result1).toEqual(1500);
+        expect(result2).toEqual(2800);
+      });
     });
-
   });
 
   describe('various use-cases', () => {

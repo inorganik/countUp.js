@@ -42,8 +42,8 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 On npm as `countup.js`. You can import as a module, or include the UMD script and access CountUp as a global. See [detailed instructions](#including-countup) on including CountUp.
 
 **Params**:
-- `target: string | HTMLElement | HTMLInputElement` - id of html element, input, svg text element, or DOM element reference where counting occurs
-- `endVal: number` - the value you want to arrive at
+- `target: string | HTMLElement | HTMLInputElement` - id of html element, input, svg text element, or DOM element reference where counting occurs.
+- `endVal: number | null` - the value you want to arrive at. Leave null to use the number in the target element.
 - `options?: CountUpOptions` - optional configuration object for fine-grain control
 
 **Options** (defaults in parentheses): <a name="options"></a>

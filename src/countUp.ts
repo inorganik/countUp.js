@@ -66,7 +66,7 @@ export class CountUp {
 
   constructor(
     target: string | HTMLElement | HTMLInputElement,
-    private endVal: number,
+    private endVal?: number,
     public options?: CountUpOptions
   ) {
     this.options = {
@@ -78,6 +78,9 @@ export class CountUp {
     this.easingFn = (this.options.easingFn) ?
       this.options.easingFn : this.easeOutExpo;
 
+    this.el = (typeof target === 'string') ? document.getElementById(target) : target;
+    endVal = endVal == null ? this.removeSeparators(this.el.innerHTML) : endVal;
+
     this.startVal = this.validateValue(this.options.startVal);
     this.frameVal = this.startVal;
     this.endVal = this.validateValue(endVal);
@@ -88,7 +91,6 @@ export class CountUp {
     if (this.options.separator === '') {
       this.options.useGrouping = false;
     }
-    this.el = (typeof target === 'string') ? document.getElementById(target) : target;
     if (this.el) {
       this.printValue(this.startVal);
     } else {
@@ -335,4 +337,7 @@ export class CountUp {
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
 
+  removeSeparators(number: string): number {
+    return parseFloat(number.replace(new RegExp(this.options.separator, 'g'), ''))
+  }
 }

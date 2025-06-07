@@ -43,7 +43,6 @@ On npm as `countup.js`. You can import as a module, or include the UMD script an
 
 **Params**:
 - `target: string | HTMLElement | HTMLInputElement` - id of html element, input, svg text element, or DOM element reference where counting occurs.
-- `endVal: number | null` - the value you want to arrive at. Leave null to use the number in the target element.
 - `options?: CountUpOptions` - optional configuration object for fine-grain control
 
 **Options** (defaults in parentheses): <a name="options"></a>
@@ -51,6 +50,7 @@ On npm as `countup.js`. You can import as a module, or include the UMD script an
 ```ts
 interface CountUpOptions {
   startVal?: number; // number to start at (0)
+  endVal?: number; // the value you want to arrive at. If not set, will use the number in the target element.
   decimalPlaces?: number; // number of decimal places (0)
   duration?: number; // animation duration in seconds (2)
   useGrouping?: boolean; // example: 1,000 vs 1000 (true)
@@ -78,7 +78,7 @@ interface CountUpOptions {
 **Example usage**: <a name="example"></a>
 
 ```js
-const countUp = new CountUp('targetId', 5234);
+const countUp = new CountUp('targetId');
 if (!countUp.error) {
   countUp.start();
 } else {
@@ -88,13 +88,13 @@ if (!countUp.error) {
 
 Pass options:
 ```js
-const countUp = new CountUp('targetId', 5234, options);
+const countUp = new CountUp('targetId', options);
 ```
 
 with optional complete callback:
 
 ```js
-const countUp = new CountUp('targetId', 5234, { onCompleteCallback: someMethod });
+const countUp = new CountUp('targetId', { onCompleteCallback: someMethod });
 
 // or (passing fn to start will override options.onCompleteCallback)
 countUp.start(someMethod);
@@ -129,7 +129,7 @@ countUp.update(989);
 Use the scroll spy option to animate when the element is scrolled into view. When using scroll spy, just initialize CountUp but do not call start();
 
 ```js
-const countUp = new CountUp('targetId', 989, { enableScrollSpy: true });
+const countUp = new CountUp('targetId', { enableScrollSpy: true });
 ```
 
 **Troubleshooting scroll spy**
@@ -147,7 +147,7 @@ Currently there's just one plugin, the **[Odometer Plugin](https://github.com/ms
 
 To use a plugin, you'll need to first install the plugin package. Then you can include it and use the plugin option. See each plugin's docs for more detailed info.
 ```js
-const countUp = new CountUp('targetId', 5234, {
+const countUp = new CountUp('targetId', {
   plugin: new Odometer({ duration: 2.3, lastDigitDelay: 0 }),
   duration: 3.0
 });
@@ -173,7 +173,7 @@ main.js:
 import { CountUp } from './js/countUp.min.js';
 
 window.onload = function() {
-  var countUp = new CountUp('target', 2000);
+  var countUp = new CountUp('target', { endVal: 2000 });
   countUp.start();
 }
 ```
@@ -204,7 +204,7 @@ import { CountUp } from 'countup.js';
 CountUp is also wrapped as a UMD module in `./dist/countUp.umd.js` and it exposes CountUp as a global variable on the window scope. To use it, include `countUp.umd.js` in a script tag, and invoke it like so:
 
 ```js
-var numAnim = new countUp.CountUp('myTarget', 2000);
+var numAnim = new countUp.CountUp('myTarget');
 numAnim.start()
 ```
 

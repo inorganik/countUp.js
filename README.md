@@ -204,7 +204,7 @@ import { CountUp } from 'countup.js';
 CountUp is also wrapped as a UMD module in `./dist/countUp.umd.js` and it exposes CountUp as a global variable on the window scope. To use it, include `countUp.umd.js` in a script tag, and invoke it like so:
 
 ```js
-var numAnim = new countUp.CountUp('myTarget');
+var numAnim = new countUp.CountUp('myTarget', { endVal: 2000 });
 numAnim.start()
 ```
 

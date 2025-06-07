@@ -5,8 +5,8 @@ window.onload = function () {
   var el = function (id) {
     return document.getElementById(id);
   };
-  var code, stars, endVal, options;
-  var demo = new countUp.CountUp('myTargetElement', 100);
+  var code, stars, options;
+  var demo = new countUp.CountUp('myTargetElement', { endVal: 100 });
   var codeVisualizer = el('codeVisualizer');
   var errorSection = el('errorSection');
   el('version').innerHTML = demo.version;
@@ -102,7 +102,7 @@ window.onload = function () {
 
   function createCountUp() {
     establishOptionsFromInputs();
-    demo = new countUp.CountUp('myTargetElement', endVal, options);
+    demo = new countUp.CountUp('myTargetElement', options);
     if (!demo.error) {
       errorSection.style.display = 'none';
       demo.start();
@@ -119,9 +119,9 @@ window.onload = function () {
     alert('COMPLETE!');
   }
   function establishOptionsFromInputs() {
-    endVal = Number(el('endVal').value);
     options = {
       startVal: el('startVal').value,
+      endVal: el('endVal').value,
       decimalPlaces: el('decimalPlaces').value,
       duration: Number(el('duration').value),
       useEasing: el('useEasing').checked,
@@ -163,6 +163,7 @@ window.onload = function () {
     }
     var opts = '';
     opts += (options.startVal !== '0') ? indentedLine("startVal: " + options.startVal) : '';
+    opts += (options.endVal !== '0') ? indentedLine("endVal: " + options.endVal) : '';
     opts += (options.decimalPlaces !== '0') ? indentedLine("decimalPlaces: " + options.decimalPlaces) : '';
     opts += (options.duration !== 2) ? indentedLine("duration: " + options.duration) : '';
     opts += (options.useEasing) ? '' : indentedLine("useEasing: " + options.useEasing);
@@ -179,10 +180,10 @@ window.onload = function () {
 
     if (opts.length) {
       code += "const options = {<br>" + opts + "};<br>";
-      code += "let demo = new CountUp('myTargetElement', " + endVal + ", options);<br>";
+      code += "let demo = new CountUp('myTargetElement', options);<br>";
     }
     else {
-      code += "let demo = new CountUp('myTargetElement', " + endVal + ");<br>";
+      code += "let demo = new CountUp('myTargetElement');<br>";
     }
     code += 'if (!demo.error) {<br>';
     code += indentedLine('demo.start()', true);

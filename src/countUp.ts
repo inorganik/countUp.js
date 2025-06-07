@@ -1,5 +1,6 @@
 export interface CountUpOptions { // (default)
   startVal?: number; // number to start at (0)
+  endVal?: number; // number to end at (undefined)
   decimalPlaces?: number; // number of decimal places (0)
   duration?: number; // animation duration in seconds (2)
   useGrouping?: boolean; // example: 1,000 vs 1000 (true)
@@ -33,6 +34,7 @@ export class CountUp {
   version = '2.9.0';
   private defaults: CountUpOptions = {
     startVal: 0,
+    endVal: null,
     decimalPlaces: 0,
     duration: 2,
     useEasing: true,
@@ -59,6 +61,7 @@ export class CountUp {
   easingFn?: (t: number, b: number, c: number, d: number) => number;
   error = '';
   startVal = 0;
+  endVal?: number
   duration: number;
   paused = true;
   frameVal: number;
@@ -66,7 +69,6 @@ export class CountUp {
 
   constructor(
     target: string | HTMLElement | HTMLInputElement,
-    private endVal?: number | null,
     public options?: CountUpOptions
   ) {
     this.options = {
@@ -79,11 +81,11 @@ export class CountUp {
       this.options.easingFn : this.easeOutExpo;
 
     this.el = (typeof target === 'string') ? document.getElementById(target) : target;
-    endVal = endVal == null ? this.parse(this.el.innerHTML) : endVal;
+    this.endVal = this.options.endVal == null ? this.parse(this.el.innerHTML) : this.options.endVal;
 
     this.startVal = this.validateValue(this.options.startVal);
     this.frameVal = this.startVal;
-    this.endVal = this.validateValue(endVal);
+    this.endVal = this.validateValue(this.endVal);
     this.options.decimalPlaces = Math.max(0 || this.options.decimalPlaces);
     this.resetDuration();
     this.options.separator = String(this.options.separator);

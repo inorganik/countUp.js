@@ -156,6 +156,65 @@ describe('CountUp', () => {
       });
     });
 
+    describe('# onDestroy', () => {
+      it('should cancel a running animation', () => {
+        const cancelSpy = jest.spyOn(window, 'cancelAnimationFrame');
+        countUp.start();
+        countUp.onDestroy();
+
+        expect(cancelSpy).toHaveBeenCalled();
+      });
+
+      it('should set paused to true', () => {
+        countUp.start();
+        expect(countUp.paused).toBe(false);
+
+        countUp.onDestroy();
+        expect(countUp.paused).toBe(true);
+      });
+
+      it('should disconnect the observer', () => {
+        countUp = new CountUp('target', 100, { autoAnimate: true });
+        const observer = MockIntersectionObserver.instances[MockIntersectionObserver.instances.length - 1];
+        const disconnectSpy = jest.spyOn(observer, 'disconnect');
+
+        countUp.onDestroy();
+        expect(disconnectSpy).toHaveBeenCalled();
+      });
+
+      it('should clear onCompleteCallback', () => {
+        const cb = jest.fn();
+        countUp = new CountUp('target', 100, { onCompleteCallback: cb });
+
+        countUp.onDestroy();
+        expect(countUp.options.onCompleteCallback).toBeNull();
+      });
+
+      it('should clear onStartCallback', () => {
+        const cb = jest.fn();
+        countUp = new CountUp('target', 100, { onStartCallback: cb });
+
+        countUp.onDestroy();
+        expect(countUp.options.onStartCallback).toBeNull();
+      });
+
+      it('should prevent onCompleteCallback from firing after destroy', () => {
+        const cb = jest.fn();
+        countUp = new CountUp('target', 100, { onCompleteCallback: cb });
+        countUp.onDestroy();
+
+        resetRAF();
+        countUp.start();
+        expect(cb).not.toHaveBeenCalled();
+      });
+
+      it('should be safe to call on a fresh instance', () => {
+        countUp = new CountUp('target', 100);
+        expect(() => countUp.onDestroy()).not.toThrow();
+        expect(countUp.paused).toBe(true);
+      });
+    });
+
     describe('# parse', () => {
       it('should properly parse numbers', () => {
         countUp = new CountUp('target', 0);

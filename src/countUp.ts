@@ -172,6 +172,15 @@ export class CountUp {
     CountUp.observedElements.delete(this.el as HTMLElement);
   }
 
+  // teardown: cancel animation, disconnect observer, clear callbacks
+  onDestroy(): void {
+    cancelAnimationFrame(this.rAF);
+    this.paused = true;
+    this.unobserve();
+    this.options.onCompleteCallback = null;
+    this.options.onStartCallback = null;
+  }
+
   /**
    * Smart easing works by breaking the animation into 2 parts, the second part being the
    * smartEasingAmount and first part being the total amount minus the smartEasingAmount. It works

@@ -122,6 +122,19 @@ Update the end value and animate:
 countUp.update(989);
 ```
 
+Destroy the instance (cancels animation, disconnects observers, clears callbacks):
+
+```js
+countUp.onDestroy();
+```
+
+Call `onDestroy()` when removing a CountUp from the DOM, or before re-creating one on the same element:
+
+```js
+countUp.onDestroy();
+countUp = new CountUp('targetId', 1000, options);
+```
+
 ---
 ### **Auto animate when element becomes visible**
 

@@ -6,6 +6,7 @@ window.onload = function () {
   };
   var code, stars, endVal, options;
   var demo = new CountUp('myTargetElement', 100);
+  var scrollSpyCountUp, hiddenAtInitCountUp, insideModalCountUp;
   var codeVisualizer = el('codeVisualizer');
   var errorSection = el('errorSection');
   var startTime;
@@ -98,6 +99,7 @@ window.onload = function () {
   // COUNTUP AND CODE VISUALIZER
 
   function createCountUp() {
+    demo.onDestroy();
     establishOptionsFromInputs();
     demo = new CountUp('myTargetElement', endVal, options);
     if (!demo.error) {
@@ -192,10 +194,10 @@ window.onload = function () {
   }
   // SCROLL SPY TEST
   function createScrollSpyCountUp() {
+    if (scrollSpyCountUp) scrollSpyCountUp.onDestroy();
     establishOptionsFromInputs();
-    var scrollSpyOptions = Object.assign({}, options, { autoAnimate: true });
-    delete scrollSpyOptions.onCompleteCallback;
-    var scrollSpyCountUp = new CountUp('scrollSpyTarget', endVal, scrollSpyOptions);
+    var scrollSpyOptions = Object.assign({}, options, { autoAnimate: true, onCompleteCallback: null });
+    scrollSpyCountUp = new CountUp('scrollSpyTarget', endVal, scrollSpyOptions);
     if (scrollSpyCountUp.error) {
       console.error('scrollSpyCountUp error:', scrollSpyCountUp.error);
     }
@@ -206,10 +208,10 @@ window.onload = function () {
 
   // HIDDEN AT INIT TEST
   function createHiddenAtInitCountUp() {
+    if (hiddenAtInitCountUp) hiddenAtInitCountUp.onDestroy();
     establishOptionsFromInputs();
-    var hiddenOptions = Object.assign({}, options, { autoAnimate: true });
-    delete hiddenOptions.onCompleteCallback;
-    var hiddenAtInitCountUp = new CountUp('hiddenAtInitTarget', endVal, hiddenOptions);
+    var hiddenOptions = Object.assign({}, options, { autoAnimate: true, onCompleteCallback: null });
+    hiddenAtInitCountUp = new CountUp('hiddenAtInitTarget', endVal, hiddenOptions);
     if (hiddenAtInitCountUp.error) {
       console.error('hiddenAtInitCountUp error:', hiddenAtInitCountUp.error);
     }
@@ -217,16 +219,17 @@ window.onload = function () {
   createHiddenAtInitCountUp();
   el('apply').addEventListener('click', createHiddenAtInitCountUp);
   el('start').addEventListener('click', createHiddenAtInitCountUp);
-  el('showHiddenElement').onclick = function () {
-    el('hiddenAtInitTarget').style.display = '';
+  el('toggleVisibility').onclick = function () {
+    var target = el('hiddenAtInitTarget');
+    target.style.display = target.style.display === 'none' ? '' : 'none';
   };
 
   // INSIDE MODAL TEST
   function createInsideModalCountUp() {
+    if (insideModalCountUp) insideModalCountUp.onDestroy();
     establishOptionsFromInputs();
-    var modalOptions = Object.assign({}, options, { autoAnimate: true });
-    delete modalOptions.onCompleteCallback;
-    var insideModalCountUp = new CountUp('modalTarget', endVal, modalOptions);
+    var modalOptions = Object.assign({}, options, { autoAnimate: true, onCompleteCallback: null });
+    insideModalCountUp = new CountUp('modalTarget', endVal, modalOptions);
     if (insideModalCountUp.error) {
       console.error('insideModalCountUp error:', insideModalCountUp.error);
     }

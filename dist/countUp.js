@@ -9,7 +9,14 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-// playground: stackblitz.com/edit/countup-typescript
+/**
+ * Animates a number by counting to it.
+ * playground: stackblitz.com/edit/countup-typescript
+ *
+ * @param target - id of html element, input, svg text element, or DOM element reference where counting occurs.
+ * @param endVal - the value you want to arrive at.
+ * @param options - optional configuration object for fine-grain control
+ */
 var CountUp = /** @class */ (function () {
     function CountUp(target, endVal, options) {
         var _this = this;
@@ -40,6 +47,7 @@ var CountUp = /** @class */ (function () {
         this.startVal = 0;
         this.paused = true;
         this.once = false;
+        /** Animation frame callback — advances the value each frame. */
         this.count = function (timestamp) {
             if (!_this.startTime) {
                 _this.startTime = timestamp;
@@ -79,7 +87,7 @@ var CountUp = /** @class */ (function () {
                 }
             }
         };
-        // default format and easing functions
+        /** Default number formatter with grouping, decimals, prefix/suffix, and numeral substitution. */
         this.formatNumber = function (num) {
             var neg = (num < 0) ? '-' : '';
             var result, x1, x2, x3;
@@ -111,7 +119,13 @@ var CountUp = /** @class */ (function () {
             }
             return neg + _this.options.prefix + x1 + x2 + _this.options.suffix;
         };
-        // t: current time, b: beginning value, c: change in value, d: duration
+        /**
+         * Default easing function (easeOutExpo).
+         * @param t current time
+         * @param b beginning value
+         * @param c change in value
+         * @param d duration
+         */
         this.easeOutExpo = function (t, b, c, d) {
             return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
         };
@@ -156,6 +170,7 @@ var CountUp = /** @class */ (function () {
             }
         }
     }
+    /** Set up an IntersectionObserver to auto-animate when the target element appears. */
     CountUp.prototype.setupObserver = function () {
         var _this = this;
         var existing = CountUp.observedElements.get(this.el);
@@ -181,13 +196,19 @@ var CountUp = /** @class */ (function () {
         }, { threshold: 0 });
         this.observer.observe(this.el);
     };
+    /** Disconnect the IntersectionObserver and stop watching this element. */
     CountUp.prototype.unobserve = function () {
-        var _a, _b;
-        if (this.observer) {
-            console.log("[CountUp] unobserving ".concat(((_a = this.el) === null || _a === void 0 ? void 0 : _a.id) || 'element', ", endVal: ").concat(this.endVal));
-        }
-        (_b = this.observer) === null || _b === void 0 ? void 0 : _b.disconnect();
+        var _a;
+        (_a = this.observer) === null || _a === void 0 ? void 0 : _a.disconnect();
         CountUp.observedElements.delete(this.el);
+    };
+    /** Teardown: cancel animation, disconnect observer, clear callbacks. */
+    CountUp.prototype.onDestroy = function () {
+        cancelAnimationFrame(this.rAF);
+        this.paused = true;
+        this.unobserve();
+        this.options.onCompleteCallback = null;
+        this.options.onStartCallback = null;
     };
     /**
      * Smart easing works by breaking the animation into 2 parts, the second part being the
@@ -217,7 +238,7 @@ var CountUp = /** @class */ (function () {
             this.useEasing = this.options.useEasing;
         }
     };
-    // start animation
+    /** Start the animation. Optionally pass a callback that fires on completion. */
     CountUp.prototype.start = function (callback) {
         if (this.error) {
             return;
@@ -237,7 +258,7 @@ var CountUp = /** @class */ (function () {
             this.printValue(this.endVal);
         }
     };
-    // pause/resume animation
+    /** Toggle pause/resume on the animation. */
     CountUp.prototype.pauseResume = function () {
         if (!this.paused) {
             cancelAnimationFrame(this.rAF);
@@ -251,7 +272,7 @@ var CountUp = /** @class */ (function () {
         }
         this.paused = !this.paused;
     };
-    // reset to startVal so animation can be run again
+    /** Reset to startVal so the animation can be run again. */
     CountUp.prototype.reset = function () {
         cancelAnimationFrame(this.rAF);
         this.paused = true;
@@ -260,7 +281,7 @@ var CountUp = /** @class */ (function () {
         this.frameVal = this.startVal;
         this.printValue(this.startVal);
     };
-    // pass a new endVal and start animation
+    /** Pass a new endVal and start the animation. */
     CountUp.prototype.update = function (newEndVal) {
         cancelAnimationFrame(this.rAF);
         this.startTime = null;
@@ -276,6 +297,7 @@ var CountUp = /** @class */ (function () {
         this.determineDirectionAndSmartEasing();
         this.rAF = requestAnimationFrame(this.count);
     };
+    /** Format and render the given value to the target element. */
     CountUp.prototype.printValue = function (val) {
         var _a;
         if (!this.el)
@@ -296,9 +318,11 @@ var CountUp = /** @class */ (function () {
             this.el.innerHTML = result;
         }
     };
+    /** Return true if the value is a finite number. */
     CountUp.prototype.ensureNumber = function (n) {
         return (typeof n === 'number' && !isNaN(n));
     };
+    /** Validate and convert a value to a number, setting an error if invalid. */
     CountUp.prototype.validateValue = function (value) {
         var newValue = Number(value);
         if (!this.ensureNumber(newValue)) {
@@ -309,11 +333,13 @@ var CountUp = /** @class */ (function () {
             return newValue;
         }
     };
+    /** Reset startTime, duration, and remaining to their initial values. */
     CountUp.prototype.resetDuration = function () {
         this.startTime = null;
         this.duration = Number(this.options.duration) * 1000;
         this.remaining = this.duration;
     };
+    /** Parse a formatted string back to a number using the current separator/decimal options. */
     CountUp.prototype.parse = function (number) {
         // eslint-disable-next-line no-irregular-whitespace
         var escapeRegExp = function (s) { return s.replace(/([.,'  ])/g, '\\$1'); };

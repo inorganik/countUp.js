@@ -15,6 +15,10 @@
     h1.jumbo {
       line-height: 200px;
     }
+		.dot-matrix {
+			background-image:radial-gradient(circle, #ccc 1px, transparent 1px);
+			background-size:1em 1em;
+		}
   </style>
 
   <script src="demo/demo.js" type="module"></script>
@@ -83,9 +87,6 @@
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Options:</h4>
 				<div class="inlineLeft marginLeft marginRight">
-					<input id="autoAnimate" type="checkbox"><label class="inlineLabel updateCodeVis">Auto animate</label>
-				</div>
-				<div class="inlineLeft marginRight">
 					<input id="useGrouping" type="checkbox" checked><label class="inlineLabel updateCodeVis">Use grouping</label>
 				</div>
 				<div class="inlineLeft marginRight">
@@ -103,10 +104,7 @@
 					<input type="text" value="" id="prefix" style="width:50px; padding:0 5px;" class="updateCodeVis">
 					<label class="inlineLabel">Prefix</label>
 				</div>
-				<div class="inlineLeft marginRight">
-					<input type="text" value="" id="suffix" style="width:50px; padding:0 5px;" class="updateCodeVis">
-					<label class="inlineLabel">Suffix</label>
-				</div>
+			<h4 class="inlineLeft noMargin weight300">+ 10 more</h4>
 			</form>
 		</section>
 		<section>
@@ -155,16 +153,19 @@
 				</div>
 			</div>
 		</section>
-		<section id="scrollSpySection">
-			<h3>Auto animate (scroll down)</h3>
-			<div style="height:90vh;"></div>
-			<p style="margin: 0">Animates when scrolled into view</p>
+		<section id="scrollSpySection" style="padding:20px 0;">
+			<h3>Auto animate demos (scroll down)</h3>
+			<p>Use the <code class="indigo">autoAnimate</code> option to animate when the target element appears.</p>
+			<div class="dot-matrix" style="height:60vh;"></div>
 			<h1 class="jumbo" id="scrollSpyTarget">0</h1>
+			<div class="dot-matrix" style="height:20vh;"></div>
 		</section>
 		<section id="hiddenAtInitSection" style="padding-top:20px;">
 			<h3>Hidden at init</h3>
-			<h1 class="jumbo" id="hiddenAtInitTarget" style="display:none;">0</h1>
 			<p><input type="button" value="Toggle visibility" id="toggleVisibility"></p>
+			<div style="height: 200px;">
+			<h1 class="jumbo" id="hiddenAtInitTarget" style="display:none;">0</h1>
+			</div>
 		</section>
 		<section id="modalSection" style="padding-top:20px;">
 			<h3>Inside a modal</h3>
@@ -173,6 +174,7 @@
 				<h1 class="jumbo" id="modalTarget">0</h1>
 				<p><input type="button" value="Close" id="closeModal"></p>
 			</dialog>
+			<div class="dot-matrix" style="height:20vh"></div>
 		</section>
 	</div>
 </body>

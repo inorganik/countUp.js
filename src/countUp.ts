@@ -54,7 +54,14 @@ export declare interface CountUpPlugin {
   render(elem: HTMLElement, formatted: string): void;
 }
 
-// playground: stackblitz.com/edit/countup-typescript
+/**
+ * Animates a number by counting to it.
+ * playground: stackblitz.com/edit/countup-typescript
+ * 
+ * @param target - id of html element, input, svg text element, or DOM element reference where counting occurs.
+ * @param endVal - the value you want to arrive at.
+ * @param options - optional configuration object for fine-grain control
+ */
 export class CountUp {
 
   version = '2.10.0';
@@ -144,6 +151,7 @@ export class CountUp {
     }
   }
 
+  /** Set up an IntersectionObserver to auto-animate when the target element appears. */
   private setupObserver(): void {
     const existing = CountUp.observedElements.get(this.el as HTMLElement);
     if (existing) {
@@ -167,12 +175,13 @@ export class CountUp {
     this.observer.observe(this.el);
   }
 
+  /** Disconnect the IntersectionObserver and stop watching this element. */
   unobserve(): void {
     this.observer?.disconnect();
     CountUp.observedElements.delete(this.el as HTMLElement);
   }
 
-  // teardown: cancel animation, disconnect observer, clear callbacks
+  /** Teardown: cancel animation, disconnect observer, clear callbacks. */
   onDestroy(): void {
     cancelAnimationFrame(this.rAF);
     this.paused = true;
@@ -208,7 +217,7 @@ export class CountUp {
     }
   }
 
-  // start animation
+  /** Start the animation. Optionally pass a callback that fires on completion. */
   start(callback?: (args?: any) => any): void {
     if (this.error) {
       return;
@@ -228,7 +237,7 @@ export class CountUp {
     }
   }
 
-  // pause/resume animation
+  /** Toggle pause/resume on the animation. */
   pauseResume(): void {
     if (!this.paused) {
       cancelAnimationFrame(this.rAF);
@@ -242,7 +251,7 @@ export class CountUp {
     this.paused = !this.paused;
   }
 
-  // reset to startVal so animation can be run again
+  /** Reset to startVal so the animation can be run again. */
   reset(): void {
     cancelAnimationFrame(this.rAF);
     this.paused = true;
@@ -252,7 +261,7 @@ export class CountUp {
     this.printValue(this.startVal);
   }
 
-  // pass a new endVal and start animation
+  /** Pass a new endVal and start the animation. */
   update(newEndVal: string | number): void {
     cancelAnimationFrame(this.rAF);
     this.startTime = null;
@@ -269,6 +278,7 @@ export class CountUp {
     this.rAF = requestAnimationFrame(this.count);
   }
 
+  /** Animation frame callback — advances the value each frame. */
   count = (timestamp: number): void => {
     if (!this.startTime) { this.startTime = timestamp; }
 
@@ -309,6 +319,7 @@ export class CountUp {
     }
   }
 
+  /** Format and render the given value to the target element. */
   printValue(val: number): void {
     if (!this.el) return;
     const result = this.formattingFn(val);
@@ -326,10 +337,12 @@ export class CountUp {
     }
   }
 
+  /** Return true if the value is a finite number. */
   ensureNumber(n: any): boolean {
     return (typeof n === 'number' && !isNaN(n));
   }
 
+  /** Validate and convert a value to a number, setting an error if invalid. */
   validateValue(value: string | number): number {
     const newValue = Number(value);
     if (!this.ensureNumber(newValue)) {
@@ -340,14 +353,14 @@ export class CountUp {
     }
   }
 
+  /** Reset startTime, duration, and remaining to their initial values. */
   private resetDuration(): void {
     this.startTime = null;
     this.duration = Number(this.options.duration) * 1000;
     this.remaining = this.duration;
   }
 
-  // default format and easing functions
-
+  /** Default number formatter with grouping, decimals, prefix/suffix, and numeral substitution. */
   formatNumber = (num: number): string => {
     const neg = (num < 0) ? '-' : '';
     let result: string, x1: string, x2: string, x3: string;
@@ -380,10 +393,17 @@ export class CountUp {
     return neg + this.options.prefix + x1 + x2 + this.options.suffix;
   }
 
-  // t: current time, b: beginning value, c: change in value, d: duration
+  /**
+   * Default easing function (easeOutExpo).
+   * @param t current time
+   * @param b beginning value
+   * @param c change in value
+   * @param d duration
+   */
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
 
+  /** Parse a formatted string back to a number using the current separator/decimal options. */
   parse(number: string): number {
     // eslint-disable-next-line no-irregular-whitespace
     const escapeRegExp = (s: string) => s.replace(/([.,'  ])/g, '\\$1');

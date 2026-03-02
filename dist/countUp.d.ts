@@ -51,6 +51,14 @@ export interface CountUpOptions {
 export declare interface CountUpPlugin {
     render(elem: HTMLElement, formatted: string): void;
 }
+/**
+ * Animates a number by counting to it.
+ * playground: stackblitz.com/edit/countup-typescript
+ *
+ * @param target - id of html element, input, svg text element, or DOM element reference where counting occurs.
+ * @param endVal - the value you want to arrive at.
+ * @param options - optional configuration object for fine-grain control
+ */
 export declare class CountUp {
     private endVal?;
     options?: CountUpOptions;
@@ -74,8 +82,12 @@ export declare class CountUp {
     frameVal: number;
     once: boolean;
     constructor(target: string | HTMLElement | HTMLInputElement, endVal?: number | null, options?: CountUpOptions);
+    /** Set up an IntersectionObserver to auto-animate when the target element appears. */
     private setupObserver;
+    /** Disconnect the IntersectionObserver and stop watching this element. */
     unobserve(): void;
+    /** Teardown: cancel animation, disconnect observer, clear callbacks. */
+    onDestroy(): void;
     /**
      * Smart easing works by breaking the animation into 2 parts, the second part being the
      * smartEasingAmount and first part being the total amount minus the smartEasingAmount. It works
@@ -83,16 +95,34 @@ export declare class CountUp {
      * useEasing is true and the total animation amount exceeds the smartEasingThreshold.
      */
     private determineDirectionAndSmartEasing;
+    /** Start the animation. Optionally pass a callback that fires on completion. */
     start(callback?: (args?: any) => any): void;
+    /** Toggle pause/resume on the animation. */
     pauseResume(): void;
+    /** Reset to startVal so the animation can be run again. */
     reset(): void;
+    /** Pass a new endVal and start the animation. */
     update(newEndVal: string | number): void;
+    /** Animation frame callback — advances the value each frame. */
     count: (timestamp: number) => void;
+    /** Format and render the given value to the target element. */
     printValue(val: number): void;
+    /** Return true if the value is a finite number. */
     ensureNumber(n: any): boolean;
+    /** Validate and convert a value to a number, setting an error if invalid. */
     validateValue(value: string | number): number;
+    /** Reset startTime, duration, and remaining to their initial values. */
     private resetDuration;
+    /** Default number formatter with grouping, decimals, prefix/suffix, and numeral substitution. */
     formatNumber: (num: number) => string;
+    /**
+     * Default easing function (easeOutExpo).
+     * @param t current time
+     * @param b beginning value
+     * @param c change in value
+     * @param d duration
+     */
     easeOutExpo: (t: number, b: number, c: number, d: number) => number;
+    /** Parse a formatted string back to a number using the current separator/decimal options. */
     parse(number: string): number;
 }

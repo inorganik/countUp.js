@@ -125,14 +125,12 @@ window.onload = function () {
       startVal: el('startVal').value,
       decimalPlaces: el('decimalPlaces').value,
       duration: Number(el('duration').value),
-      autoAnimate: el('autoAnimate').checked,
       useGrouping: el('useGrouping').checked,
       useIndianSeparators: el('useIndianSeparators').checked,
       easingFn: typeof getEasingFn() === 'undefined' ? null : getEasingFn(),
       separator: el('separator').value,
       decimal: el('decimal').value,
       prefix: el('prefix').value,
-      suffix: el('suffix').value,
       numerals: getNumerals(),
       onCompleteCallback: el('useOnComplete').checked ? calculateAnimationTime : null
     };
@@ -166,14 +164,12 @@ window.onload = function () {
     opts += (options.startVal !== '0') ? indentedLine("startVal: " + options.startVal) : '';
     opts += (options.decimalPlaces !== '0') ? indentedLine("decimalPlaces: " + options.decimalPlaces) : '';
     opts += (options.duration !== 2) ? indentedLine("duration: " + options.duration) : '';
-    opts += (options.autoAnimate) ? indentedLine("autoAnimate: " + options.autoAnimate) : '';
     opts += (options.easingFn) ? indentedLine("easingFn") : '';
     opts += (options.useGrouping) ? '' : indentedLine("useGrouping: " + options.useGrouping);
     opts += (options.useIndianSeparators) ? indentedLine("useIndianSeparators: " + options.useIndianSeparators) : '';
     opts += (options.separator !== ',') ? indentedLine("separator: '" + options.separator + "'") : '';
     opts += (options.decimal !== '.') ? indentedLine("decimal: '" + options.decimal + "'") : '';
     opts += (options.prefix.length) ? indentedLine("prefix: '" + options.prefix + "'") : '';
-    opts += (options.suffix.length) ? indentedLine("suffix: '" + options.suffix + "'") : '';
     opts += (options.numerals && options.numerals.length) ?
       indentedLine("numerals: " + stringifyArray(options.numerals)) : '';
     opts += (options.onCompleteCallback) ? indentedLine("onCompleteCallback: methodToCallOnComplete") : '';

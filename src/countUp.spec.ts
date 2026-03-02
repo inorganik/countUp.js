@@ -1,5 +1,25 @@
 import { CountUp, CountUpPlugin } from './countUp';
 
+type IntersectionCallback = (entries: Partial<IntersectionObserverEntry>[]) => void;
+
+class MockIntersectionObserver {
+  callback: IntersectionCallback;
+  elements: Element[] = [];
+  static instances: MockIntersectionObserver[] = [];
+
+  constructor(callback: IntersectionCallback, _options?: IntersectionObserverInit) {
+    this.callback = callback;
+    MockIntersectionObserver.instances.push(this);
+  }
+  observe(el: Element) { this.elements.push(el); }
+  unobserve(el: Element) { this.elements = this.elements.filter(e => e !== el); }
+  disconnect() { this.elements = []; }
+
+  trigger(isIntersecting: boolean) {
+    this.callback(this.elements.map(target => ({ isIntersecting, target } as Partial<IntersectionObserverEntry>)));
+  }
+}
+
 describe('CountUp', () => {
 
   let countUp;
@@ -21,6 +41,9 @@ describe('CountUp', () => {
       '<div>' +
       '  <h1 id="target"></h1>' +
       '</div>';
+
+    (window as any).IntersectionObserver = MockIntersectionObserver;
+    MockIntersectionObserver.instances = [];
 
     countUp = new CountUp('target', 100);
     resetRAF();
@@ -336,6 +359,132 @@ describe('CountUp', () => {
       countUp.start();
 
       expect(getTargetHtml()).toEqual('1,000');
+    });
+  });
+
+  describe('autoAnimate (IntersectionObserver)', () => {
+
+    beforeEach(() => {
+      jest.useFakeTimers({ doNotFake: ['requestAnimationFrame'] });
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should create an IntersectionObserver when autoAnimate is true', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true });
+
+      expect(MockIntersectionObserver.instances.length).toBe(1);
+      expect(MockIntersectionObserver.instances[0].elements).toContain(countUp.el);
+    });
+
+    it('should not create an observer when autoAnimate is false', () => {
+      MockIntersectionObserver.instances = [];
+      countUp = new CountUp('target', 100);
+
+      expect(MockIntersectionObserver.instances.length).toBe(0);
+    });
+
+    it('should start animation when element becomes visible', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true, animationDelay: 0 });
+      resetRAF();
+      const observer = MockIntersectionObserver.instances[0];
+
+      observer.trigger(true);
+      jest.advanceTimersByTime(0);
+
+      expect(getTargetHtml()).toEqual('100');
+    });
+
+    it('should respect animationDelay before starting', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true, animationDelay: 500 });
+      resetRAF();
+      const startSpy = jest.spyOn(countUp, 'start');
+      const observer = MockIntersectionObserver.instances[0];
+
+      observer.trigger(true);
+      expect(startSpy).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(500);
+      expect(startSpy).toHaveBeenCalled();
+    });
+
+    it('should reset when element goes out of view', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true, animationDelay: 0 });
+      resetRAF();
+      const observer = MockIntersectionObserver.instances[0];
+
+      observer.trigger(true);
+      jest.advanceTimersByTime(0);
+      expect(getTargetHtml()).toEqual('100');
+
+      observer.trigger(false);
+      expect(countUp.paused).toBe(true);
+      expect(getTargetHtml()).toEqual('0');
+    });
+
+    it('should disconnect observer when animateOnce is true', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true, animateOnce: true, animationDelay: 0 });
+      const observer = MockIntersectionObserver.instances[0];
+      const disconnectSpy = jest.spyOn(observer, 'disconnect');
+
+      observer.trigger(true);
+      jest.advanceTimersByTime(0);
+
+      expect(disconnectSpy).toHaveBeenCalled();
+      expect(countUp.once).toBe(true);
+    });
+
+    it('should not disconnect observer when animateOnce is false', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true, animateOnce: false, animationDelay: 0 });
+      const observer = MockIntersectionObserver.instances[0];
+      const disconnectSpy = jest.spyOn(observer, 'disconnect');
+
+      observer.trigger(true);
+      jest.advanceTimersByTime(0);
+
+      expect(disconnectSpy).not.toHaveBeenCalled();
+    });
+
+    it('should support multiple independent instances', () => {
+      document.body.innerHTML =
+        '<h1 id="target1"></h1>' +
+        '<h1 id="target2"></h1>';
+      MockIntersectionObserver.instances = [];
+
+      const cu1 = new CountUp('target1', 50, { autoAnimate: true, animationDelay: 0 });
+      const cu2 = new CountUp('target2', 200, { autoAnimate: true, animationDelay: 0 });
+
+      expect(MockIntersectionObserver.instances.length).toBe(2);
+
+      const obs1 = MockIntersectionObserver.instances[0];
+      const obs2 = MockIntersectionObserver.instances[1];
+
+      expect(obs1.elements).toContain(cu1.el);
+      expect(obs2.elements).toContain(cu2.el);
+      expect(obs1).not.toBe(obs2);
+
+      resetRAF();
+      obs1.trigger(true);
+      jest.advanceTimersByTime(0);
+      expect(document.getElementById('target1')!.innerHTML).toEqual('50');
+      expect(cu2.paused).toBe(true);
+    });
+
+    it('should allow cleanup via unobserve()', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true });
+      const observer = MockIntersectionObserver.instances[0];
+      const disconnectSpy = jest.spyOn(observer, 'disconnect');
+
+      countUp.unobserve();
+      expect(disconnectSpy).toHaveBeenCalled();
+    });
+
+    it('should map deprecated enableScrollSpy to autoAnimate', () => {
+      countUp = new CountUp('target', 100, { enableScrollSpy: true });
+      expect(countUp.options.autoAnimate).toBe(true);
+      expect(MockIntersectionObserver.instances.length).toBe(1);
     });
   });
 });

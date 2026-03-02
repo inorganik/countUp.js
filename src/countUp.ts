@@ -81,6 +81,7 @@ export class CountUp {
   private finalEndVal: number = null; // for smart easing
   private useEasing = true;
   private countDown = false;
+  private observer: IntersectionObserver;
   el: HTMLElement | HTMLInputElement;
   formattingFn: (num: number) => string;
   easingFn?: (t: number, b: number, c: number, d: number) => number;
@@ -133,41 +134,35 @@ export class CountUp {
       this.error = '[CountUp] target is null or undefined';
     }
 
-    // scroll spy
     if (typeof window !== 'undefined' && this.options.autoAnimate) {
       if (!this.error) {
-        // set up global array of onscroll functions to handle multiple instances
-        window['onScrollFns'] = window['onScrollFns'] || [];
-        window['onScrollFns'].push(() => this.handleScroll(this));
-        window.onscroll = () => {
-          window['onScrollFns'].forEach((fn) => fn());
-        };
-        this.handleScroll(this);
+        this.setupObserver();
       } else {
         console.error(this.error, target);
       }
     }
   }
 
-  handleScroll(self: CountUp): void {
-    if (!self || !window || self.once) return;
-    const bottomOfScroll = window.innerHeight + window.scrollY;
-    const rect = self.el.getBoundingClientRect();
-    const topOfEl = rect.top + window.pageYOffset;
-    const bottomOfEl = rect.top + rect.height + window.pageYOffset;
-    if (bottomOfEl < bottomOfScroll && bottomOfEl > window.scrollY && self.paused) {
-      // in view
-      self.paused = false;
-      setTimeout(() => self.start(), self.options.animationDelay);
-      if (self.options.animateOnce)
-        self.once = true;
-    } else if (
-      (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
-      !self.paused
-    ) {
-      // out of view
-      self.reset();
-    }
+  private setupObserver(): void {
+    this.observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting && this.paused && !this.once) {
+          this.paused = false;
+          setTimeout(() => this.start(), this.options.animationDelay);
+          if (this.options.animateOnce) {
+            this.once = true;
+            this.observer.disconnect();
+          }
+        } else if (!entry.isIntersecting && !this.paused) {
+          this.reset();
+        }
+      }
+    }, { threshold: 0 });
+    this.observer.observe(this.el);
+  }
+
+  unobserve(): void {
+    this.observer?.disconnect();
   }
 
   /**

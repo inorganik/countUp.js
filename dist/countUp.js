@@ -15,7 +15,7 @@ var CountUp = /** @class */ (function () {
         var _this = this;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.9.0';
+        this.version = '2.10.0';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,
@@ -29,9 +29,9 @@ var CountUp = /** @class */ (function () {
             decimal: '.',
             prefix: '',
             suffix: '',
-            enableScrollSpy: false,
-            scrollSpyDelay: 200,
-            scrollSpyOnce: false,
+            autoAnimate: false,
+            animationDelay: 200,
+            animateOnce: false,
         };
         this.finalEndVal = null; // for smart easing
         this.useEasing = true;
@@ -116,6 +116,15 @@ var CountUp = /** @class */ (function () {
             return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
         };
         this.options = __assign(__assign({}, this.defaults), options);
+        if (this.options.enableScrollSpy) {
+            this.options.autoAnimate = true;
+        }
+        if (this.options.scrollSpyDelay) {
+            this.options.animationDelay = this.options.scrollSpyDelay;
+        }
+        if (this.options.scrollSpyOnce) {
+            this.options.animateOnce = true;
+        }
         this.formattingFn = (this.options.formattingFn) ?
             this.options.formattingFn : this.formatNumber;
         this.easingFn = (this.options.easingFn) ?
@@ -138,41 +147,38 @@ var CountUp = /** @class */ (function () {
         else {
             this.error = '[CountUp] target is null or undefined';
         }
-        // scroll spy
-        if (typeof window !== 'undefined' && this.options.enableScrollSpy) {
+        if (typeof window !== 'undefined' && this.options.autoAnimate) {
             if (!this.error) {
-                // set up global array of onscroll functions to handle multiple instances
-                window['onScrollFns'] = window['onScrollFns'] || [];
-                window['onScrollFns'].push(function () { return _this.handleScroll(_this); });
-                window.onscroll = function () {
-                    window['onScrollFns'].forEach(function (fn) { return fn(); });
-                };
-                this.handleScroll(this);
+                this.setupObserver();
             }
             else {
                 console.error(this.error, target);
             }
         }
     }
-    CountUp.prototype.handleScroll = function (self) {
-        if (!self || !window || self.once)
-            return;
-        var bottomOfScroll = window.innerHeight + window.scrollY;
-        var rect = self.el.getBoundingClientRect();
-        var topOfEl = rect.top + window.pageYOffset;
-        var bottomOfEl = rect.top + rect.height + window.pageYOffset;
-        if (bottomOfEl < bottomOfScroll && bottomOfEl > window.scrollY && self.paused) {
-            // in view
-            self.paused = false;
-            setTimeout(function () { return self.start(); }, self.options.scrollSpyDelay);
-            if (self.options.scrollSpyOnce)
-                self.once = true;
-        }
-        else if ((window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
-            !self.paused) {
-            // out of view
-            self.reset();
-        }
+    CountUp.prototype.setupObserver = function () {
+        var _this = this;
+        this.observer = new IntersectionObserver(function (entries) {
+            for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
+                var entry = entries_1[_i];
+                if (entry.isIntersecting && _this.paused && !_this.once) {
+                    _this.paused = false;
+                    setTimeout(function () { return _this.start(); }, _this.options.animationDelay);
+                    if (_this.options.animateOnce) {
+                        _this.once = true;
+                        _this.observer.disconnect();
+                    }
+                }
+                else if (!entry.isIntersecting && !_this.paused) {
+                    _this.reset();
+                }
+            }
+        }, { threshold: 0 });
+        this.observer.observe(this.el);
+    };
+    CountUp.prototype.unobserve = function () {
+        var _a;
+        (_a = this.observer) === null || _a === void 0 ? void 0 : _a.disconnect();
     };
     /**
      * Smart easing works by breaking the animation into 2 parts, the second part being the

@@ -123,7 +123,7 @@ window.onload = function () {
       startVal: el('startVal').value,
       decimalPlaces: el('decimalPlaces').value,
       duration: Number(el('duration').value),
-      useEasing: el('useEasing').checked,
+      autoAnimate: el('autoAnimate').checked,
       useGrouping: el('useGrouping').checked,
       useIndianSeparators: el('useIndianSeparators').checked,
       easingFn: typeof getEasingFn() === 'undefined' ? null : getEasingFn(),
@@ -146,7 +146,7 @@ window.onload = function () {
   function updateCodeVisualizer() {
     establishOptionsFromInputs();
     code = '';
-    if (options.useEasing && options.easingFn) {
+    if (options.easingFn) {
       code += 'const easingFn = ';
       var split = getEasingFnBody(options.easingFn).split('\n');
       for (var line in split) {
@@ -164,8 +164,8 @@ window.onload = function () {
     opts += (options.startVal !== '0') ? indentedLine("startVal: " + options.startVal) : '';
     opts += (options.decimalPlaces !== '0') ? indentedLine("decimalPlaces: " + options.decimalPlaces) : '';
     opts += (options.duration !== 2) ? indentedLine("duration: " + options.duration) : '';
-    opts += (options.useEasing) ? '' : indentedLine("useEasing: " + options.useEasing);
-    opts += (options.useEasing && options.easingFn) ? indentedLine("easingFn") : '';
+    opts += (options.autoAnimate) ? indentedLine("autoAnimate: " + options.autoAnimate) : '';
+    opts += (options.easingFn) ? indentedLine("easingFn") : '';
     opts += (options.useGrouping) ? '' : indentedLine("useGrouping: " + options.useGrouping);
     opts += (options.useIndianSeparators) ? indentedLine("useIndianSeparators: " + options.useIndianSeparators) : '';
     opts += (options.separator !== ',') ? indentedLine("separator: '" + options.separator + "'") : '';
@@ -190,6 +190,57 @@ window.onload = function () {
     code += '}';
     codeVisualizer.innerHTML = code;
   }
+  // SCROLL SPY TEST
+  function createScrollSpyCountUp() {
+    establishOptionsFromInputs();
+    var scrollSpyOptions = Object.assign({}, options, { autoAnimate: true });
+    delete scrollSpyOptions.onCompleteCallback;
+    var scrollSpyCountUp = new CountUp('scrollSpyTarget', endVal, scrollSpyOptions);
+    if (scrollSpyCountUp.error) {
+      console.error('scrollSpyCountUp error:', scrollSpyCountUp.error);
+    }
+  }
+  createScrollSpyCountUp();
+  el('apply').addEventListener('click', createScrollSpyCountUp);
+  el('start').addEventListener('click', createScrollSpyCountUp);
+
+  // HIDDEN AT INIT TEST
+  function createHiddenAtInitCountUp() {
+    establishOptionsFromInputs();
+    var hiddenOptions = Object.assign({}, options, { autoAnimate: true });
+    delete hiddenOptions.onCompleteCallback;
+    var hiddenAtInitCountUp = new CountUp('hiddenAtInitTarget', endVal, hiddenOptions);
+    if (hiddenAtInitCountUp.error) {
+      console.error('hiddenAtInitCountUp error:', hiddenAtInitCountUp.error);
+    }
+  }
+  createHiddenAtInitCountUp();
+  el('apply').addEventListener('click', createHiddenAtInitCountUp);
+  el('start').addEventListener('click', createHiddenAtInitCountUp);
+  el('showHiddenElement').onclick = function () {
+    el('hiddenAtInitTarget').style.display = '';
+  };
+
+  // INSIDE MODAL TEST
+  function createInsideModalCountUp() {
+    establishOptionsFromInputs();
+    var modalOptions = Object.assign({}, options, { autoAnimate: true });
+    delete modalOptions.onCompleteCallback;
+    var insideModalCountUp = new CountUp('modalTarget', endVal, modalOptions);
+    if (insideModalCountUp.error) {
+      console.error('insideModalCountUp error:', insideModalCountUp.error);
+    }
+  }
+  createInsideModalCountUp();
+  el('apply').addEventListener('click', createInsideModalCountUp);
+  el('start').addEventListener('click', createInsideModalCountUp);
+  el('openModal').onclick = function () {
+    el('modalDialog').showModal();
+  };
+  el('closeModal').onclick = function () {
+    el('modalDialog').close();
+  };
+
   // get current star count
   var repoInfoUrl = 'https://api.github.com/repos/inorganik/CountUp.js';
   var getStars = new XMLHttpRequest();
@@ -206,6 +257,9 @@ window.onload = function () {
             // change input values
             el('endVal').value = stars;
             createCountUp();
+            createScrollSpyCountUp();
+            createHiddenAtInitCountUp();
+            createInsideModalCountUp();
           }
         }
       }

@@ -1,26 +1,53 @@
-export interface CountUpOptions { // (default)
-  startVal?: number; // number to start at (0)
-  decimalPlaces?: number; // number of decimal places (0)
-  duration?: number; // animation duration in seconds (2)
-  useGrouping?: boolean; // example: 1,000 vs 1000 (true)
-  useIndianSeparators?: boolean; // example: 1,00,000 vs 100,000 (false)
-  useEasing?: boolean; // ease animation (true)
-  smartEasingThreshold?: number; // smooth easing for large numbers above this if useEasing (999)
-  smartEasingAmount?: number; // amount to be eased for numbers above threshold (333)
-  separator?: string; // grouping separator (,)
-  decimal?: string; // decimal (.)
-  // easingFn: easing function for animation (easeOutExpo)
+export interface CountUpOptions {
+  /** Number to start at @default 0 */
+  startVal?: number;
+  /** Number of decimal places @default 0 */
+  decimalPlaces?: number;
+  /** Animation duration in seconds @default 2 */
+  duration?: number;
+  /** Example: 1,000 vs 1000 @default true */
+  useGrouping?: boolean;
+  /** Example: 1,00,000 vs 100,000 @default false */
+  useIndianSeparators?: boolean;
+  /** Ease animation @default true */
+  useEasing?: boolean;
+  /** Smooth easing for large numbers above this if useEasing @default 999 */
+  smartEasingThreshold?: number;
+  /** Amount to be eased for numbers above threshold @default 333 */
+  smartEasingAmount?: number;
+  /** Grouping separator @default ',' */
+  separator?: string;
+  /** Decimal character @default '.' */
+  decimal?: string;
+  /** Easing function for animation @default easeOutExpo */
   easingFn?: (t: number, b: number, c: number, d: number) => number;
-  formattingFn?: (n: number) => string; // this function formats result
-  prefix?: string; // text prepended to result
-  suffix?: string; // text appended to result
-  numerals?: string[]; // numeral glyph substitution
-  enableScrollSpy?: boolean; // start animation when target is in view
-  scrollSpyDelay?: number; // delay (ms) after target comes into view
-  scrollSpyOnce?: boolean; // run only once
-  onCompleteCallback?: () => any; // gets called when animation completes
-  onStartCallback?: () => any; // gets called when animation starts
-  plugin?: CountUpPlugin; // for alternate animations
+  /** Custom function to format the result */
+  formattingFn?: (n: number) => string;
+  /** Text prepended to result */
+  prefix?: string;
+  /** Text appended to result */
+  suffix?: string;
+  /** Numeral glyph substitution */
+  numerals?: string[];
+  /** Callback called when animation completes */
+  onCompleteCallback?: () => any;
+  /** Callback called when animation starts */
+  onStartCallback?: () => any;
+  /** Plugin for alternate animations */
+  plugin?: CountUpPlugin;
+  /** Trigger animation when target becomes visible @default false */
+  autoAnimate?: boolean;
+  /** Delay in ms after target comes into view @default 200 */
+  animationDelay?: number;
+  /** Run animation only once @default false */
+  animateOnce?: boolean;
+
+  /** @deprecated Please use autoAnimate instead */
+  enableScrollSpy?: boolean;
+  /** @deprecated Please use animationDelay instead */
+  scrollSpyDelay?: number;
+  /** @deprecated Please use animateOnce instead */
+  scrollSpyOnce?: boolean;
 }
 
 export declare interface CountUpPlugin {
@@ -30,7 +57,7 @@ export declare interface CountUpPlugin {
 // playground: stackblitz.com/edit/countup-typescript
 export class CountUp {
 
-  version = '2.9.0';
+  version = '2.10.0';
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -44,9 +71,9 @@ export class CountUp {
     decimal: '.',
     prefix: '',
     suffix: '',
-    enableScrollSpy: false,
-    scrollSpyDelay: 200,
-    scrollSpyOnce: false,
+    autoAnimate: false,
+    animationDelay: 200,
+    animateOnce: false,
   };
   private rAF: any;
   private startTime: number;
@@ -73,6 +100,15 @@ export class CountUp {
       ...this.defaults,
       ...options
     };
+    if (this.options.enableScrollSpy) {
+      this.options.autoAnimate = true;
+    }
+    if (this.options.scrollSpyDelay) {
+      this.options.animationDelay = this.options.scrollSpyDelay;
+    }
+    if (this.options.scrollSpyOnce) {
+      this.options.animateOnce = true;
+    }
     this.formattingFn = (this.options.formattingFn) ?
       this.options.formattingFn : this.formatNumber;
     this.easingFn = (this.options.easingFn) ?
@@ -98,7 +134,7 @@ export class CountUp {
     }
 
     // scroll spy
-    if (typeof window !== 'undefined' && this.options.enableScrollSpy) {
+    if (typeof window !== 'undefined' && this.options.autoAnimate) {
       if (!this.error) {
         // set up global array of onscroll functions to handle multiple instances
         window['onScrollFns'] = window['onScrollFns'] || [];
@@ -115,20 +151,20 @@ export class CountUp {
 
   handleScroll(self: CountUp): void {
     if (!self || !window || self.once) return;
-    const bottomOfScroll = window.innerHeight +  window.scrollY;
+    const bottomOfScroll = window.innerHeight + window.scrollY;
     const rect = self.el.getBoundingClientRect();
     const topOfEl = rect.top + window.pageYOffset;
     const bottomOfEl = rect.top + rect.height + window.pageYOffset;
-    if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
+    if (bottomOfEl < bottomOfScroll && bottomOfEl > window.scrollY && self.paused) {
       // in view
       self.paused = false;
-      setTimeout(() => self.start(), self.options.scrollSpyDelay);
-      if (self.options.scrollSpyOnce)
+      setTimeout(() => self.start(), self.options.animationDelay);
+      if (self.options.animateOnce)
         self.once = true;
     } else if (
-        (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
-        !self.paused
-      ) {
+      (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
+      !self.paused
+    ) {
       // out of view
       self.reset();
     }

@@ -55,6 +55,7 @@ export declare class CountUp {
     private endVal?;
     options?: CountUpOptions;
     version: string;
+    private static observedElements;
     private defaults;
     private rAF;
     private startTime;

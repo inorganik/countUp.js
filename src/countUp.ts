@@ -58,6 +58,7 @@ export declare interface CountUpPlugin {
 export class CountUp {
 
   version = '2.10.0';
+  private static observedElements = new WeakMap<HTMLElement, CountUp>();
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -144,6 +145,11 @@ export class CountUp {
   }
 
   private setupObserver(): void {
+    const existing = CountUp.observedElements.get(this.el as HTMLElement);
+    if (existing) {
+      existing.unobserve();
+    }
+    CountUp.observedElements.set(this.el as HTMLElement, this);
     this.observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting && this.paused && !this.once) {
@@ -163,6 +169,7 @@ export class CountUp {
 
   unobserve(): void {
     this.observer?.disconnect();
+    CountUp.observedElements.delete(this.el as HTMLElement);
   }
 
   /**

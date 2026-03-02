@@ -158,6 +158,11 @@ var CountUp = /** @class */ (function () {
     }
     CountUp.prototype.setupObserver = function () {
         var _this = this;
+        var existing = CountUp.observedElements.get(this.el);
+        if (existing) {
+            existing.unobserve();
+        }
+        CountUp.observedElements.set(this.el, this);
         this.observer = new IntersectionObserver(function (entries) {
             for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
                 var entry = entries_1[_i];
@@ -177,8 +182,12 @@ var CountUp = /** @class */ (function () {
         this.observer.observe(this.el);
     };
     CountUp.prototype.unobserve = function () {
-        var _a;
-        (_a = this.observer) === null || _a === void 0 ? void 0 : _a.disconnect();
+        var _a, _b;
+        if (this.observer) {
+            console.log("[CountUp] unobserving ".concat(((_a = this.el) === null || _a === void 0 ? void 0 : _a.id) || 'element', ", endVal: ").concat(this.endVal));
+        }
+        (_b = this.observer) === null || _b === void 0 ? void 0 : _b.disconnect();
+        CountUp.observedElements.delete(this.el);
     };
     /**
      * Smart easing works by breaking the animation into 2 parts, the second part being the
@@ -313,6 +322,7 @@ var CountUp = /** @class */ (function () {
         var num = number.replace(new RegExp(sep, 'g'), '').replace(new RegExp(dec, 'g'), '.');
         return parseFloat(num);
     };
+    CountUp.observedElements = new WeakMap();
     return CountUp;
 }());
 export { CountUp };

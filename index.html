@@ -19,6 +19,15 @@
 			background-image:radial-gradient(circle, #898989 1px, transparent 1px);
 			background-size:1em 1em;
 		}
+		[type="button"].indigo {
+			background-color: #4d63bc	;
+			color: #fff;
+		}
+		@media (prefers-color-scheme: dark) {
+			[type="button"].indigo {
+				background-color: #6e90da;
+			}
+		}
   </style>
 
   <script src="demo/demo.js" type="module"></script>
@@ -49,7 +58,7 @@
 				<h1>CountUp.js &nbsp;<small id="version" class="lt-gray"></small></h1>
 			</div>
 			<div class="col full">
-				<p>CountUp.js is a dependency-free, lightweight JavaScript class that can be used to quickly create animations that display numerical data in a more interesting way.</p>
+				<p>CountUp.js is a dependency-free, lightweight JavaScript class that animates a numerical value by counting to it.</p>
 				<p>Install via npm/yarn using the package name &nbsp;<code class="indigo large">countup.js</code>.</p>
 				<h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/CountUp.js">View on Github</a></h3>
 			</div>
@@ -110,7 +119,7 @@
 		<section id="methodsSection">
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Methods:</h4>
-				<input type="button" value="Start" id="start" class="inlineLeft marginLeft marginRight">
+				<input type="button" value="Start" id="start" class="inlineLeft marginLeft marginRight indigo">
 				<input type="button" value="Pause/Resume" id="pauseResume" class="inlineLeft marginRight">
 				<input type="button" value="Reset" id="reset" class="inlineLeft marginRight">
 				<input type="button" value="Update:" id="update" class="inlineLeft" style="margin-right:5px">

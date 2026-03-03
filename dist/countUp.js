@@ -276,6 +276,7 @@ var CountUp = /** @class */ (function () {
     CountUp.prototype.reset = function () {
         cancelAnimationFrame(this.rAF);
         this.paused = true;
+        this.once = false;
         this.resetDuration();
         this.startVal = this.validateValue(this.options.startVal);
         this.frameVal = this.startVal;

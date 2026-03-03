@@ -16,7 +16,7 @@
       line-height: 200px;
     }
 		.dot-matrix {
-			background-image:radial-gradient(circle, #ccc 1px, transparent 1px);
+			background-image:radial-gradient(circle, #898989 1px, transparent 1px);
 			background-size:1em 1em;
 		}
   </style>
@@ -61,7 +61,7 @@
 		<section id="errorSection" style="background-color:#FFDCDC; display:none" class="col-inner">
 			<h4 id="error" style="color: red" class="noMargin"></h4>
 		</section>
-		<section>
+		<section id="paramsSection">
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Params:</h4>
 				<div class="inlineLeft marginLeft marginRight">
@@ -83,7 +83,7 @@
 				</div>
 			</form>
 		</section>
-		<section>
+		<section id="optionsSection">
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Options:</h4>
 				<div class="inlineLeft marginLeft marginRight">
@@ -107,7 +107,7 @@
 			<h4 class="inlineLeft noMargin weight300">+ 10 more</h4>
 			</form>
 		</section>
-		<section>
+		<section id="methodsSection">
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Methods:</h4>
 				<input type="button" value="Start" id="start" class="inlineLeft marginLeft marginRight">
@@ -146,15 +146,24 @@
 				</div>
 			</form>
 		</section>
-		<section class="marginBottom">
+		<section id="codeVisualizeerSection">
 			<div class="col full marginBottom marginTop">
 				<div class="code-contain indigo">
 					<code id="codeVisualizer" class="indigo"></code>
 				</div>
 			</div>
 		</section>
-		<section id="scrollSpySection" style="padding:20px 0;">
-			<h3>Auto animate demos (scroll down)</h3>
+		<section id="scrollSpySection">
+			<form>
+				<h3 class="inlineLeft noMargin">Auto animate demos (scroll down)</h3>
+				<div class="inlineLeft marginLeft marginRight">
+					<input id="autoAnimateOnce" type="checkbox"><label class="inlineLabel">Once</label>
+				</div>
+				<div class="inlineLeft marginRight">
+					<input type="number" value="0" id="autoAnimateDelay" step="100" min="0" style="width:70px">
+					<label class="inlineLabel">Delay (ms)</label>
+				</div>
+			</form>
 			<p>Use the <code class="indigo">autoAnimate</code> option to animate when the target element appears.</p>
 			<div class="dot-matrix" style="height:60vh;"></div>
 			<h1 class="jumbo" id="scrollSpyTarget">0</h1>
@@ -167,7 +176,7 @@
 			<h1 class="jumbo" id="hiddenAtInitTarget" style="display:none;">0</h1>
 			</div>
 		</section>
-		<section id="modalSection" style="padding-top:20px;">
+		<section id="modalSection" style="padding-top:20px;"  class="marginBottom">
 			<h3>Inside a modal</h3>
 			<p><input type="button" value="Open modal" id="openModal"></p>
 			<dialog id="modalDialog" style="width: 650px; padding:40px 60px; border:1px solid #ccc; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,.2); text-align:center;">

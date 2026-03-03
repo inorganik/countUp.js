@@ -68,8 +68,8 @@ On npm as `countup.js`. You can import as a module, or include the UMD script an
 | `onStartCallback` | `function` | — | Callback called when animation starts |
 | `plugin` | `CountUpPlugin` | — | Plugin for alternate animations |
 | `autoAnimate` | `boolean` | `false` | Trigger animation when target becomes visible |
-| `animationDelay` | `number` | `200` | Delay in ms after target comes into view |
-| `animateOnce` | `boolean` | `false` | Run animation only once |
+| `autoAnimateDelay` | `number` | `200` | Animation delay in ms after auto-animate triggers |
+| `autoAnimateOnce` | `boolean` | `false` | Run animation only once for auto-animate triggers |
 | `enableScrollSpy` | `boolean` | — | _(deprecated)_ Use `autoAnimate` instead |
 | `scrollSpyDelay` | `number` | — | _(deprecated)_ Use `animationDelay` instead |
 | `scrollSpyOnce` | `boolean` | — | _(deprecated)_ Use `animateOnce` instead |

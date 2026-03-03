@@ -37,16 +37,16 @@ export interface CountUpOptions {
   plugin?: CountUpPlugin;
   /** Trigger animation when target becomes visible @default false */
   autoAnimate?: boolean;
-  /** Delay in ms after target comes into view @default 200 */
-  animationDelay?: number;
-  /** Run animation only once @default false */
-  animateOnce?: boolean;
+  /** Animation delay in ms after auto-animate triggers @default 200 */
+  autoAnimateDelay?: number;
+  /** Run animation only once for auto-animate triggers @default false */
+  autoAnimateOnce?: boolean;
 
   /** @deprecated Please use autoAnimate instead */
   enableScrollSpy?: boolean;
-  /** @deprecated Please use animationDelay instead */
+  /** @deprecated Please use autoAnimateDelay instead */
   scrollSpyDelay?: number;
-  /** @deprecated Please use animateOnce instead */
+  /** @deprecated Please use autoAnimateOnce instead */
   scrollSpyOnce?: boolean;
 }
 
@@ -80,8 +80,8 @@ export class CountUp {
     prefix: '',
     suffix: '',
     autoAnimate: false,
-    animationDelay: 200,
-    animateOnce: false,
+    autoAnimateDelay: 200,
+    autoAnimateOnce: false,
   };
   private rAF: any;
   private startTime: number;
@@ -113,10 +113,10 @@ export class CountUp {
       this.options.autoAnimate = true;
     }
     if (this.options.scrollSpyDelay) {
-      this.options.animationDelay = this.options.scrollSpyDelay;
+      this.options.autoAnimateDelay = this.options.scrollSpyDelay;
     }
     if (this.options.scrollSpyOnce) {
-      this.options.animateOnce = true;
+      this.options.autoAnimateOnce = true;
     }
     this.formattingFn = (this.options.formattingFn) ?
       this.options.formattingFn : this.formatNumber;
@@ -162,8 +162,8 @@ export class CountUp {
       for (const entry of entries) {
         if (entry.isIntersecting && this.paused && !this.once) {
           this.paused = false;
-          setTimeout(() => this.start(), this.options.animationDelay);
-          if (this.options.animateOnce) {
+          setTimeout(() => this.start(), this.options.autoAnimateDelay);
+          if (this.options.autoAnimateOnce) {
             this.once = true;
             this.observer.disconnect();
           }

@@ -188,11 +188,28 @@ window.onload = function () {
     code += '}';
     codeVisualizer.innerHTML = code;
   }
+  // AUTO ANIMATE OPTIONS
+  function getAutoAnimateOptions() {
+    return {
+      autoAnimate: true,
+      autoAnimateOnce: el('autoAnimateOnce').checked,
+      autoAnimateDelay: Number(el('autoAnimateDelay').value),
+      onCompleteCallback: null,
+    };
+  }
+  function recreateAutoAnimateDemos() {
+    createScrollSpyCountUp();
+    createHiddenAtInitCountUp();
+    createInsideModalCountUp();
+  }
+  el('autoAnimateOnce').onchange = recreateAutoAnimateDemos;
+  el('autoAnimateDelay').onchange = recreateAutoAnimateDemos;
+
   // SCROLL SPY TEST
   function createScrollSpyCountUp() {
     if (scrollSpyCountUp) scrollSpyCountUp.onDestroy();
     establishOptionsFromInputs();
-    var scrollSpyOptions = Object.assign({}, options, { autoAnimate: true, onCompleteCallback: null });
+    var scrollSpyOptions = Object.assign({}, options, getAutoAnimateOptions());
     scrollSpyCountUp = new CountUp('scrollSpyTarget', endVal, scrollSpyOptions);
     if (scrollSpyCountUp.error) {
       console.error('scrollSpyCountUp error:', scrollSpyCountUp.error);
@@ -206,7 +223,7 @@ window.onload = function () {
   function createHiddenAtInitCountUp() {
     if (hiddenAtInitCountUp) hiddenAtInitCountUp.onDestroy();
     establishOptionsFromInputs();
-    var hiddenOptions = Object.assign({}, options, { autoAnimate: true, onCompleteCallback: null });
+    var hiddenOptions = Object.assign({}, options, getAutoAnimateOptions());
     hiddenAtInitCountUp = new CountUp('hiddenAtInitTarget', endVal, hiddenOptions);
     if (hiddenAtInitCountUp.error) {
       console.error('hiddenAtInitCountUp error:', hiddenAtInitCountUp.error);
@@ -224,7 +241,7 @@ window.onload = function () {
   function createInsideModalCountUp() {
     if (insideModalCountUp) insideModalCountUp.onDestroy();
     establishOptionsFromInputs();
-    var modalOptions = Object.assign({}, options, { autoAnimate: true, onCompleteCallback: null });
+    var modalOptions = Object.assign({}, options, getAutoAnimateOptions());
     insideModalCountUp = new CountUp('modalTarget', endVal, modalOptions);
     if (insideModalCountUp.error) {
       console.error('insideModalCountUp error:', insideModalCountUp.error);

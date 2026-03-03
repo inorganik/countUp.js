@@ -37,8 +37,8 @@ var CountUp = /** @class */ (function () {
             prefix: '',
             suffix: '',
             autoAnimate: false,
-            animationDelay: 200,
-            animateOnce: false,
+            autoAnimateDelay: 200,
+            autoAnimateOnce: false,
         };
         this.finalEndVal = null; // for smart easing
         this.useEasing = true;
@@ -134,10 +134,10 @@ var CountUp = /** @class */ (function () {
             this.options.autoAnimate = true;
         }
         if (this.options.scrollSpyDelay) {
-            this.options.animationDelay = this.options.scrollSpyDelay;
+            this.options.autoAnimateDelay = this.options.scrollSpyDelay;
         }
         if (this.options.scrollSpyOnce) {
-            this.options.animateOnce = true;
+            this.options.autoAnimateOnce = true;
         }
         this.formattingFn = (this.options.formattingFn) ?
             this.options.formattingFn : this.formatNumber;
@@ -183,8 +183,8 @@ var CountUp = /** @class */ (function () {
                 var entry = entries_1[_i];
                 if (entry.isIntersecting && _this.paused && !_this.once) {
                     _this.paused = false;
-                    setTimeout(function () { return _this.start(); }, _this.options.animationDelay);
-                    if (_this.options.animateOnce) {
+                    setTimeout(function () { return _this.start(); }, _this.options.autoAnimateDelay);
+                    if (_this.options.autoAnimateOnce) {
                         _this.once = true;
                         _this.observer.disconnect();
                     }

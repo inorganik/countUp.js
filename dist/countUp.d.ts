@@ -37,15 +37,15 @@ export interface CountUpOptions {
     plugin?: CountUpPlugin;
     /** Trigger animation when target becomes visible @default false */
     autoAnimate?: boolean;
-    /** Delay in ms after target comes into view @default 200 */
-    animationDelay?: number;
-    /** Run animation only once @default false */
-    animateOnce?: boolean;
+    /** Animation delay in ms after auto-animate triggers @default 200 */
+    autoAnimateDelay?: number;
+    /** Run animation only once for auto-animate triggers @default false */
+    autoAnimateOnce?: boolean;
     /** @deprecated Please use autoAnimate instead */
     enableScrollSpy?: boolean;
-    /** @deprecated Please use animationDelay instead */
+    /** @deprecated Please use autoAnimateDelay instead */
     scrollSpyDelay?: number;
-    /** @deprecated Please use animateOnce instead */
+    /** @deprecated Please use autoAnimateOnce instead */
     scrollSpyOnce?: boolean;
 }
 export declare interface CountUpPlugin {

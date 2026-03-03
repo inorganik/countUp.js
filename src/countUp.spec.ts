@@ -7,7 +7,7 @@ class MockIntersectionObserver {
   elements: Element[] = [];
   static instances: MockIntersectionObserver[] = [];
 
-  constructor(callback: IntersectionCallback, _options?: IntersectionObserverInit) {
+  constructor(callback: IntersectionCallback) {
     this.callback = callback;
     MockIntersectionObserver.instances.push(this);
   }
@@ -504,6 +504,48 @@ describe('CountUp', () => {
       jest.advanceTimersByTime(0);
 
       expect(disconnectSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not re-animate after first run when autoAnimateOnce is true', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true, autoAnimateOnce: true, autoAnimateDelay: 0 });
+      resetRAF();
+      const observer = MockIntersectionObserver.instances[MockIntersectionObserver.instances.length - 1];
+
+      observer.trigger(true);
+      jest.advanceTimersByTime(0);
+      expect(getTargetHtml()).toEqual('100');
+
+      // observer was disconnected so subsequent triggers process no entries
+      observer.trigger(false);
+      expect(getTargetHtml()).toEqual('100');
+
+      observer.trigger(true);
+      jest.advanceTimersByTime(0);
+      expect(getTargetHtml()).toEqual('100');
+    });
+
+    it('should allow re-animation after manual reset when autoAnimateOnce is true', () => {
+      countUp = new CountUp('target', 100, { autoAnimate: true, autoAnimateOnce: true, autoAnimateDelay: 0 });
+      resetRAF();
+      const observer = MockIntersectionObserver.instances[MockIntersectionObserver.instances.length - 1];
+
+      observer.trigger(true);
+      jest.advanceTimersByTime(0);
+      expect(getTargetHtml()).toEqual('100');
+      expect(countUp.once).toBe(true);
+
+      // manual reset clears the once flag
+      countUp.reset();
+      expect(getTargetHtml()).toEqual('0');
+      expect(countUp.once).toBe(false);
+
+      // re-observe and trigger — animation should play again
+      observer.observe(countUp.el);
+      resetRAF();
+      observer.trigger(true);
+      jest.advanceTimersByTime(0);
+
+      expect(getTargetHtml()).toEqual('100');
     });
 
     it('should support multiple independent instances', () => {

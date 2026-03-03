@@ -255,6 +255,7 @@ export class CountUp {
   reset(): void {
     cancelAnimationFrame(this.rAF);
     this.paused = true;
+    this.once = false;
     this.resetDuration();
     this.startVal = this.validateValue(this.options.startVal);
     this.frameVal = this.startVal;

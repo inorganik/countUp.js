@@ -1,8 +1,8 @@
 # CountUp.js
 
-CountUp.js is a dependency-free, lightweight Javascript class that can be used to quickly create animations that display numerical data in a more interesting way.
+CountUp.js is a dependency-free, lightweight Javascript class that animates a numerical value by counting to it.
 
-Despite its name, CountUp can count in either direction, depending on the start and end values that you pass.
+Despite its name, CountUp can count in either direction, depending on the start and end values that you provide.
 
 CountUp.js supports all browsers. MIT license.
 
@@ -19,7 +19,7 @@ Or tinker with CountUp in [Stackblitz](https://stackblitz.com/edit/countup-types
 
 ## Features
 
-- **Animate when element scrolls into view or appears.** Use option `autoAnimate`.
+- **Auto-animate when element becomes visible.** Use option `autoAnimate = true`.
 - **Highly customizable** with a large range of options, you can even substitute numerals.
 - **Smart easing**: CountUp intelligently defers easing to make it visually noticeable. Configurable in the [options](#options).
 - **Plugins** allow for alternate animations like the [Odometer plugin](https://www.npmjs.com/package/odometer_countup)

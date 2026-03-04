@@ -162,6 +162,16 @@ const countUp = new CountUp('targetId', 5234, {
 
 If you'd like to make your own plugin, see [the docs](#creating-animation-plugins) below!
 
+### Tabular nums
+
+To optimize the styling of counting number animations, you can take advantage of an OpenType feature called tabular nums which stabilizes jitteryness by using equal-width numbers.
+
+In my experience, most OpenType fonts already use tabular nums, so this isn't needed. But it may help to add this style if they don't:
+
+```css
+font-variant-numeric: tabular-nums;
+```
+
 ---
 
 ## Including CountUp

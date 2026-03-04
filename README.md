@@ -137,11 +137,13 @@ countUp.onDestroy();
 
 ### **Auto animate when element becomes visible**
 
-Use the `autoAnimate` option to animate when the element is scrolled into view or appears on screen. When using autoAnimate, just initialize CountUp but do not call start();
+Use the `autoAnimate` option to animate when the element is scrolled into view or appears on screen. When using autoAnimate, just initialize CountUp but do not call start(). 
 
 ```js
 const countUp = new CountUp('targetId', 989, { autoAnimate: true });
 ```
+
+**Note** - Auto-animate uses IntersectionObserver which is broadly supported, but if you need to support some very old browsers, v2.9.0 and earlier use a window on-scroll handler when `enableScrollSpy` is set to true.
 
 ---
 

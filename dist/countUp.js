@@ -133,7 +133,7 @@ var CountUp = /** @class */ (function () {
         if (this.options.enableScrollSpy) {
             this.options.autoAnimate = true;
         }
-        if (this.options.scrollSpyDelay) {
+        if (this.options.scrollSpyDelay !== undefined) {
             this.options.autoAnimateDelay = this.options.scrollSpyDelay;
         }
         if (this.options.scrollSpyOnce) {
@@ -162,11 +162,16 @@ var CountUp = /** @class */ (function () {
             this.error = '[CountUp] target is null or undefined';
         }
         if (typeof window !== 'undefined' && this.options.autoAnimate) {
-            if (!this.error) {
+            if (!this.error && typeof IntersectionObserver !== 'undefined') {
                 this.setupObserver();
             }
             else {
-                console.error(this.error, target);
+                if (this.error) {
+                    console.error(this.error, target);
+                }
+                else {
+                    console.error('IntersectionObserver is not supported by this browser');
+                }
             }
         }
     }
@@ -183,13 +188,14 @@ var CountUp = /** @class */ (function () {
                 var entry = entries_1[_i];
                 if (entry.isIntersecting && _this.paused && !_this.once) {
                     _this.paused = false;
-                    setTimeout(function () { return _this.start(); }, _this.options.autoAnimateDelay);
+                    _this.autoAnimateTimeout = setTimeout(function () { return _this.start(); }, _this.options.autoAnimateDelay);
                     if (_this.options.autoAnimateOnce) {
                         _this.once = true;
                         _this.observer.disconnect();
                     }
                 }
                 else if (!entry.isIntersecting && !_this.paused) {
+                    clearTimeout(_this.autoAnimateTimeout);
                     _this.reset();
                 }
             }
@@ -199,11 +205,13 @@ var CountUp = /** @class */ (function () {
     /** Disconnect the IntersectionObserver and stop watching this element. */
     CountUp.prototype.unobserve = function () {
         var _a;
+        clearTimeout(this.autoAnimateTimeout);
         (_a = this.observer) === null || _a === void 0 ? void 0 : _a.disconnect();
         CountUp.observedElements.delete(this.el);
     };
     /** Teardown: cancel animation, disconnect observer, clear callbacks. */
     CountUp.prototype.onDestroy = function () {
+        clearTimeout(this.autoAnimateTimeout);
         cancelAnimationFrame(this.rAF);
         this.paused = true;
         this.unobserve();
@@ -274,6 +282,7 @@ var CountUp = /** @class */ (function () {
     };
     /** Reset to startVal so the animation can be run again. */
     CountUp.prototype.reset = function () {
+        clearTimeout(this.autoAnimateTimeout);
         cancelAnimationFrame(this.rAF);
         this.paused = true;
         this.once = false;

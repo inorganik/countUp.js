@@ -84,6 +84,7 @@ export class CountUp {
     autoAnimateOnce: false,
   };
   private rAF: any;
+  private autoAnimateTimeout: any;
   private startTime: number;
   private remaining: number;
   private finalEndVal: number = null; // for smart easing
@@ -112,7 +113,7 @@ export class CountUp {
     if (this.options.enableScrollSpy) {
       this.options.autoAnimate = true;
     }
-    if (this.options.scrollSpyDelay) {
+    if (this.options.scrollSpyDelay !== undefined) {
       this.options.autoAnimateDelay = this.options.scrollSpyDelay;
     }
     if (this.options.scrollSpyOnce) {
@@ -143,10 +144,14 @@ export class CountUp {
     }
 
     if (typeof window !== 'undefined' && this.options.autoAnimate) {
-      if (!this.error) {
+      if (!this.error && typeof IntersectionObserver !== 'undefined') {
         this.setupObserver();
       } else {
-        console.error(this.error, target);
+        if (this.error) {
+          console.error(this.error, target);
+        } else {
+          console.error('IntersectionObserver is not supported by this browser');
+        }
       }
     }
   }
@@ -162,12 +167,13 @@ export class CountUp {
       for (const entry of entries) {
         if (entry.isIntersecting && this.paused && !this.once) {
           this.paused = false;
-          setTimeout(() => this.start(), this.options.autoAnimateDelay);
+          this.autoAnimateTimeout = setTimeout(() => this.start(), this.options.autoAnimateDelay);
           if (this.options.autoAnimateOnce) {
             this.once = true;
             this.observer.disconnect();
           }
         } else if (!entry.isIntersecting && !this.paused) {
+          clearTimeout(this.autoAnimateTimeout);
           this.reset();
         }
       }
@@ -177,12 +183,14 @@ export class CountUp {
 
   /** Disconnect the IntersectionObserver and stop watching this element. */
   unobserve(): void {
+    clearTimeout(this.autoAnimateTimeout);
     this.observer?.disconnect();
     CountUp.observedElements.delete(this.el as HTMLElement);
   }
 
   /** Teardown: cancel animation, disconnect observer, clear callbacks. */
   onDestroy(): void {
+    clearTimeout(this.autoAnimateTimeout);
     cancelAnimationFrame(this.rAF);
     this.paused = true;
     this.unobserve();
@@ -253,6 +261,7 @@ export class CountUp {
 
   /** Reset to startVal so the animation can be run again. */
   reset(): void {
+    clearTimeout(this.autoAnimateTimeout);
     cancelAnimationFrame(this.rAF);
     this.paused = true;
     this.once = false;

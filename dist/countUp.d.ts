@@ -66,6 +66,7 @@ export declare class CountUp {
     private static observedElements;
     private defaults;
     private rAF;
+    private autoAnimateTimeout;
     private startTime;
     private remaining;
     private finalEndVal;

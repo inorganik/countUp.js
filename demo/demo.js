@@ -1,220 +1,256 @@
 import { CountUp } from '../dist/countUp.js';
 
-window.onload = function () {
-  var el = function (id) {
-    return document.getElementById(id);
-  };
-  var code, stars, endVal, options;
-  var demo = new CountUp('myTargetElement', 100);
-  var codeVisualizer = el('codeVisualizer');
-  var errorSection = el('errorSection');
-  var startTime;
-  el('version').innerHTML = demo.version;
+const el = (id) => document.getElementById(id);
 
-  document.querySelectorAll('.updateCodeVis').forEach(elem => elem.onchange = updateCodeVisualizer);
+let code, stars, endVal, options;
+let demo = new CountUp('myTargetElement', 100);
+let scrollSpyCountUp, hiddenAtInitCountUp, insideModalCountUp;
+const codeVisualizer = el('codeVisualizer');
+const errorSection = el('errorSection');
+let startTime;
+el('version').textContent = demo.version;
 
-  el('swapValues').onclick = function () {
-    var oldStartVal = el('startVal').value;
-    var oldEndVal = el('endVal').value;
-    el('startVal').value = oldEndVal;
-    el('endVal').value = oldStartVal;
-    updateCodeVisualizer();
-  };
-  el('start').onclick = createCountUp;
-  el('apply').onclick = createCountUp;
-  el('pauseResume').onclick = function () {
-    code += '<br>demo.pauseResume();';
-    codeVisualizer.innerHTML = code;
-    demo.pauseResume();
-  };
-  el('reset').onclick = function () {
-    code += '<br>demo.reset();';
-    codeVisualizer.innerHTML = code;
-    demo.reset();
-  };
-  el('update').onclick = function () {
-    var updateVal = el('updateVal').value;
-    var num = updateVal ? updateVal : 0;
-    code += "<br>demo.update(" + num + ");";
-    codeVisualizer.innerHTML = code;
-    demo.update(num);
-  };
-  el('updateVal').onchange = function () {
-    var updateVal = el('updateVal').value;
-    var num = updateVal ? updateVal : 0;
-    code += '<br>demo.update(' + num + ');';
-    codeVisualizer.innerHTML = code;
-  };
-  // OPTION VALUES
-  var easingFunctions = {
-    easeOutExpo: function (t, b, c, d) {
-      return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
-    },
-    outQuintic: function (t, b, c, d) {
-      var ts = (t /= d) * t;
-      var tc = ts * t;
-      return b + c * (tc * ts + -5 * ts * ts + 10 * tc + -10 * ts + 5 * t);
-    },
-    outCubic: function (t, b, c, d) {
-      var ts = (t /= d) * t;
-      var tc = ts * t;
-      return b + c * (tc + -3 * ts + 3 * t);
-    }
-  };
-  function getEasingFn() {
-    var fn = el('easingFnsDropdown').value;
-    if (fn === 'easeOutExpo') {
+document.querySelectorAll('.updateCodeVis').forEach((elem) => {
+  elem.addEventListener('change', updateCodeVisualizer);
+});
+
+el('swapValues').addEventListener('click', () => {
+  const oldStartVal = el('startVal').value;
+  const oldEndVal = el('endVal').value;
+  el('startVal').value = oldEndVal;
+  el('endVal').value = oldStartVal;
+  updateCodeVisualizer();
+});
+el('start').addEventListener('click', createCountUp);
+el('apply').addEventListener('click', createCountUp);
+el('pauseResume').addEventListener('click', () => {
+  code += '<br>demo.pauseResume();';
+  codeVisualizer.innerHTML = code;
+  demo.pauseResume();
+});
+el('reset').addEventListener('click', () => {
+  code += '<br>demo.reset();';
+  codeVisualizer.innerHTML = code;
+  demo.reset();
+});
+el('update').addEventListener('click', () => {
+  const num = el('updateVal').value || 0;
+  code += `<br>demo.update(${num});`;
+  codeVisualizer.innerHTML = code;
+  demo.update(num);
+});
+el('updateVal').addEventListener('change', () => {
+  const num = el('updateVal').value || 0;
+  code += `<br>demo.update(${num});`;
+  codeVisualizer.innerHTML = code;
+});
+
+const easingFunctions = {
+  easeOutExpo: (t, b, c, d) => c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b,
+  outQuintic: (t, b, c, d) => {
+    const ts = (t /= d) * t;
+    const tc = ts * t;
+    return b + c * (tc * ts + -5 * ts * ts + 10 * tc + -10 * ts + 5 * t);
+  },
+  outCubic: (t, b, c, d) => {
+    const ts = (t /= d) * t;
+    const tc = ts * t;
+    return b + c * (tc + -3 * ts + 3 * t);
+  }
+};
+
+function getEasingFn() {
+  const fn = el('easingFnsDropdown').value;
+  if (fn === 'easeOutExpo') return null;
+  if (easingFunctions[fn] === undefined) return undefined;
+  return easingFunctions[fn];
+}
+
+function getEasingFnBody(fn = getEasingFn()) {
+  if (fn === undefined) return 'undefined function';
+  if (fn !== null) return fn.toString().replace(/^ {4}/gm, '');
+  return '';
+}
+
+function getNumerals() {
+  const numeralsCode = el('numeralsDropdown').value;
+  switch (numeralsCode) {
+    case 'ea':
+      return ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    case 'fa':
+      return ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    default:
       return null;
-    }
-    if (typeof easingFunctions[fn] === 'undefined') {
-      return undefined;
-    }
-    return easingFunctions[fn];
   }
-  function getEasingFnBody(fn) {
-    fn = typeof fn === 'undefined' ? getEasingFn() : fn;
-    if (typeof fn === 'undefined') {
-      return 'undefined function';
-    }
-    if (fn !== null) {
-      return fn.toString().replace(/^ {8}/gm, '');
-    }
-    return '';
-  }
-  function getNumerals() {
-    var numeralsCode = el('numeralsDropdown').value;
-    // optionally provide alternates for 0-9
-    switch (numeralsCode) {
-      case 'ea': // Eastern Arabic
-        return ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-      case 'fa': // Farsi
-        return ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-      default:
-        return null;
-    }
-  }
-  var stringifyArray = function (arr) { return '[\'' + arr.join('\', \'') + '\']'; };
+}
 
-  // COUNTUP AND CODE VISUALIZER
+const stringifyArray = (arr) => `['${arr.join("', '")}']`;
 
-  function createCountUp() {
-    establishOptionsFromInputs();
-    demo = new CountUp('myTargetElement', endVal, options);
-    if (!demo.error) {
-      errorSection.style.display = 'none';
-      startTime = Date.now();
-      demo.start();
-      updateCodeVisualizer();
-    }
-    else {
-      errorSection.style.display = 'block';
-      document.getElementById('error').innerHTML = demo.error;
-      console.error(demo.error);
-    }
-  }
-  function calculateAnimationTime() {
-    const duration = Date.now() - startTime;
-    console.log('actual animation duration (ms):', duration);
-    alert('COMPLETE!');
-  }
-  function establishOptionsFromInputs() {
-    endVal = Number(el('endVal').value);
-    options = {
-      startVal: el('startVal').value,
-      decimalPlaces: el('decimalPlaces').value,
-      duration: Number(el('duration').value),
-      useEasing: el('useEasing').checked,
-      useGrouping: el('useGrouping').checked,
-      useIndianSeparators: el('useIndianSeparators').checked,
-      easingFn: typeof getEasingFn() === 'undefined' ? null : getEasingFn(),
-      separator: el('separator').value,
-      decimal: el('decimal').value,
-      prefix: el('prefix').value,
-      suffix: el('suffix').value,
-      numerals: getNumerals(),
-      onCompleteCallback: el('useOnComplete').checked ? calculateAnimationTime : null
-    };
-    // unset null values so they don't overwrite defaults
-    for (var key in options) {
-      if (options.hasOwnProperty(key)) {
-        if (options[key] === null) {
-          delete options[key];
-        }
-      }
-    }
-  }
-  function updateCodeVisualizer() {
-    establishOptionsFromInputs();
-    code = '';
-    if (options.useEasing && options.easingFn) {
-      code += 'const easingFn = ';
-      var split = getEasingFnBody(options.easingFn).split('\n');
-      for (var line in split) {
-        if (split.hasOwnProperty(line)) {
-          code += split[line].replace(' ', '&nbsp;') + '<br>';
-        }
-      }
-    }
-    function indentedLine(keyPair, singleLine) {
-      if (singleLine === void 0) { singleLine = false; }
-      var delimeter = (singleLine) ? ';' : ',';
-      return "&emsp;&emsp;" + keyPair + delimeter + "<br>";
-    }
-    var opts = '';
-    opts += (options.startVal !== '0') ? indentedLine("startVal: " + options.startVal) : '';
-    opts += (options.decimalPlaces !== '0') ? indentedLine("decimalPlaces: " + options.decimalPlaces) : '';
-    opts += (options.duration !== 2) ? indentedLine("duration: " + options.duration) : '';
-    opts += (options.useEasing) ? '' : indentedLine("useEasing: " + options.useEasing);
-    opts += (options.useEasing && options.easingFn) ? indentedLine("easingFn") : '';
-    opts += (options.useGrouping) ? '' : indentedLine("useGrouping: " + options.useGrouping);
-    opts += (options.useIndianSeparators) ? indentedLine("useIndianSeparators: " + options.useIndianSeparators) : '';
-    opts += (options.separator !== ',') ? indentedLine("separator: '" + options.separator + "'") : '';
-    opts += (options.decimal !== '.') ? indentedLine("decimal: '" + options.decimal + "'") : '';
-    opts += (options.prefix.length) ? indentedLine("prefix: '" + options.prefix + "'") : '';
-    opts += (options.suffix.length) ? indentedLine("suffix: '" + options.suffix + "'") : '';
-    opts += (options.numerals && options.numerals.length) ?
-      indentedLine("numerals: " + stringifyArray(options.numerals)) : '';
-    opts += (options.onCompleteCallback) ? indentedLine("onCompleteCallback: methodToCallOnComplete") : '';
-
-    if (opts.length) {
-      code += "const options = {<br>" + opts + "};<br>";
-      code += "let demo = new CountUp('myTargetElement', " + endVal + ", options);<br>";
-    }
-    else {
-      code += "let demo = new CountUp('myTargetElement', " + endVal + ");<br>";
-    }
-    code += 'if (!demo.error) {<br>';
-    code += indentedLine('demo.start()', true);
-    code += '} else {<br>';
-    code += indentedLine('console.error(demo.error)', true);
-    code += '}';
-    codeVisualizer.innerHTML = code;
-  }
-  // get current star count
-  var repoInfoUrl = 'https://api.github.com/repos/inorganik/CountUp.js';
-  var getStars = new XMLHttpRequest();
-  getStars.open('GET', repoInfoUrl, true);
-  getStars.timeout = 5000;
-  getStars.onreadystatechange = function () {
-    // 2: received headers,  3: loading, 4: done
-    if (getStars.readyState === 4) {
-      if (getStars.status === 200) {
-        if (getStars.responseText !== 'undefined') {
-          if (getStars.responseText.length > 0) {
-            var data = JSON.parse(getStars.responseText);
-            stars = data.stargazers_count;
-            // change input values
-            el('endVal').value = stars;
-            createCountUp();
-          }
-        }
-      }
-    }
-  };
-  getStars.onerror = function () {
-    console.error('error getting stars:', getStars.status);
-    stars = getStars.status;
+function createCountUp() {
+  demo.onDestroy();
+  establishOptionsFromInputs();
+  demo = new CountUp('myTargetElement', endVal, options);
+  if (!demo.error) {
+    errorSection.style.display = 'none';
+    startTime = Date.now();
     demo.start();
+    updateCodeVisualizer();
+  } else {
+    errorSection.style.display = 'block';
+    el('error').textContent = demo.error;
+    console.error(demo.error);
+  }
+}
+
+function calculateAnimationTime() {
+  const duration = Date.now() - startTime;
+  console.log('actual animation duration (ms):', duration);
+  alert('COMPLETE!');
+}
+
+function establishOptionsFromInputs() {
+  endVal = Number(el('endVal').value);
+  options = {
+    startVal: el('startVal').value,
+    decimalPlaces: el('decimalPlaces').value,
+    duration: Number(el('duration').value),
+    useGrouping: el('useGrouping').checked,
+    useIndianSeparators: el('useIndianSeparators').checked,
+    easingFn: getEasingFn() ?? null,
+    separator: el('separator').value,
+    decimal: el('decimal').value,
+    prefix: el('prefix').value,
+    numerals: getNumerals(),
+    onCompleteCallback: el('useOnComplete').checked ? calculateAnimationTime : null
   };
-  getStars.send();
+  for (const [key, value] of Object.entries(options)) {
+    if (value === null) delete options[key];
+  }
+}
+
+function updateCodeVisualizer() {
+  establishOptionsFromInputs();
+  code = '';
+  if (options.easingFn) {
+    code += 'const easingFn = ';
+    for (const line of getEasingFnBody(options.easingFn).split('\n')) {
+      code += `${line.replace(' ', '&nbsp;')}<br>`;
+    }
+  }
+  const indentedLine = (keyPair, singleLine = false) => {
+    const delimiter = singleLine ? ';' : ',';
+    return `&emsp;&emsp;${keyPair}${delimiter}<br>`;
+  };
+  let opts = '';
+  opts += (options.startVal !== '0') ? indentedLine(`startVal: ${options.startVal}`) : '';
+  opts += (options.decimalPlaces !== '0') ? indentedLine(`decimalPlaces: ${options.decimalPlaces}`) : '';
+  opts += (options.duration !== 2) ? indentedLine(`duration: ${options.duration}`) : '';
+  opts += options.easingFn ? indentedLine('easingFn') : '';
+  opts += options.useGrouping ? '' : indentedLine(`useGrouping: ${options.useGrouping}`);
+  opts += options.useIndianSeparators ? indentedLine(`useIndianSeparators: ${options.useIndianSeparators}`) : '';
+  opts += (options.separator !== ',') ? indentedLine(`separator: '${options.separator}'`) : '';
+  opts += (options.decimal !== '.') ? indentedLine(`decimal: '${options.decimal}'`) : '';
+  opts += options.prefix.length ? indentedLine(`prefix: '${options.prefix}'`) : '';
+  opts += (options.numerals && options.numerals.length) ?
+    indentedLine(`numerals: ${stringifyArray(options.numerals)}`) : '';
+  opts += options.onCompleteCallback ? indentedLine('onCompleteCallback: methodToCallOnComplete') : '';
+
+  if (opts.length) {
+    code += `const options = {<br>${opts}};<br>`;
+    code += `const demo = new CountUp('myTargetElement', ${endVal}, options);<br>`;
+  } else {
+    code += `const demo = new CountUp('myTargetElement', ${endVal});<br>`;
+  }
+  code += 'if (!demo.error) {<br>';
+  code += indentedLine('demo.start()', true);
+  code += '} else {<br>';
+  code += indentedLine('console.error(demo.error)', true);
+  code += '}';
+  codeVisualizer.innerHTML = code;
+}
+
+// auto animate options
+function getAutoAnimateOptions() {
+  return {
+    autoAnimate: true,
+    autoAnimateOnce: el('autoAnimateOnce').checked,
+    autoAnimateDelay: Number(el('autoAnimateDelay').value),
+    onCompleteCallback: null,
+  };
+}
+
+function recreateAutoAnimateDemos() {
+  createScrollSpyCountUp();
+  createHiddenAtInitCountUp();
+  createInsideModalCountUp();
+}
+
+el('autoAnimateOnce').addEventListener('change', recreateAutoAnimateDemos);
+el('autoAnimateDelay').addEventListener('change', recreateAutoAnimateDemos);
+
+// scroll spy
+function createScrollSpyCountUp() {
+  if (scrollSpyCountUp) scrollSpyCountUp.onDestroy();
+  establishOptionsFromInputs();
+  const scrollSpyOptions = { ...options, ...getAutoAnimateOptions() };
+  scrollSpyCountUp = new CountUp('scrollSpyTarget', endVal, scrollSpyOptions);
+  if (scrollSpyCountUp.error) {
+    console.error('scrollSpyCountUp error:', scrollSpyCountUp.error);
+  }
+}
+createScrollSpyCountUp();
+el('apply').addEventListener('click', createScrollSpyCountUp);
+el('start').addEventListener('click', createScrollSpyCountUp);
+
+// hidden at init
+function createHiddenAtInitCountUp() {
+  if (hiddenAtInitCountUp) hiddenAtInitCountUp.onDestroy();
+  establishOptionsFromInputs();
+  const hiddenOptions = { ...options, ...getAutoAnimateOptions() };
+  hiddenAtInitCountUp = new CountUp('hiddenAtInitTarget', endVal, hiddenOptions);
+  if (hiddenAtInitCountUp.error) {
+    console.error('hiddenAtInitCountUp error:', hiddenAtInitCountUp.error);
+  }
+}
+createHiddenAtInitCountUp();
+el('apply').addEventListener('click', createHiddenAtInitCountUp);
+el('start').addEventListener('click', createHiddenAtInitCountUp);
+
+el('toggleVisibility').addEventListener('click', () => {
+  const target = el('hiddenAtInitTarget');
+  target.style.display = target.style.display === 'none' ? '' : 'none';
+});
+
+// inside modal
+function createInsideModalCountUp() {
+  if (insideModalCountUp) insideModalCountUp.onDestroy();
+  establishOptionsFromInputs();
+  const modalOptions = { ...options, ...getAutoAnimateOptions() };
+  insideModalCountUp = new CountUp('modalTarget', endVal, modalOptions);
+  if (insideModalCountUp.error) {
+    console.error('insideModalCountUp error:', insideModalCountUp.error);
+  }
+}
+createInsideModalCountUp();
+el('apply').addEventListener('click', createInsideModalCountUp);
+el('start').addEventListener('click', createInsideModalCountUp);
+
+el('openModal').addEventListener('click', () => el('modalDialog').showModal());
+el('closeModal').addEventListener('click', () => el('modalDialog').close());
+
+// get current star count
+try {
+  const response = await fetch('https://api.github.com/repos/inorganik/CountUp.js');
+  if (response.ok) {
+    const data = await response.json();
+    stars = data.stargazers_count;
+    el('endVal').value = stars;
+    createCountUp();
+    createScrollSpyCountUp();
+    createHiddenAtInitCountUp();
+    createInsideModalCountUp();
+  }
+} catch (error) {
+  console.error('error getting stars:', error);
+  demo.start();
 }

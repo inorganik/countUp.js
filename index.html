@@ -4,13 +4,31 @@
 
 	<meta charset="UTF-8">
 	<meta name="robots" content="index,follow">
-	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta name="description" content="A javascript class that animates a numerical value by counting to it.">
 
 	<title>CountUp.js</title>
 
   <link rel="stylesheet" type="text/css" href="https://inorganik.github.io/assets/css/style.css">
+  <style>
+    h1.jumbo {
+      line-height: 200px;
+    }
+		.dot-matrix {
+			background-image:radial-gradient(circle, #898989 1px, transparent 1px);
+			background-size:1em 1em;
+		}
+		[type="button"].indigo {
+			background-color: #4d63bc	;
+			color: #fff;
+		}
+		@media (prefers-color-scheme: dark) {
+			[type="button"].indigo {
+				background-color: #6e90da;
+			}
+		}
+  </style>
 
   <script src="demo/demo.js" type="module"></script>
   <script nomodule src="dist/countUp.umd.js"></script>
@@ -40,9 +58,9 @@
 				<h1>CountUp.js &nbsp;<small id="version" class="lt-gray"></small></h1>
 			</div>
 			<div class="col full">
-				<p>CountUp.js is a dependency-free, lightweight JavaScript class that can be used to quickly create animations that display numerical data in a more interesting way.</p>
+				<p>CountUp.js is a dependency-free, lightweight JavaScript class that animates a numerical value by counting to it.</p>
 				<p>Install via npm/yarn using the package name &nbsp;<code class="indigo large">countup.js</code>.</p>
-				<h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/CountUp.js">View on Github</a></h3>
+				<h3 class="marginTop marginBottom"><a class="lime weight700" href="https://github.com/inorganik/CountUp.js">View on GitHub</a></h3>
 			</div>
 		</section>
 		<section>
@@ -52,7 +70,7 @@
 		<section id="errorSection" style="background-color:#FFDCDC; display:none" class="col-inner">
 			<h4 id="error" style="color: red" class="noMargin"></h4>
 		</section>
-		<section>
+		<section id="paramsSection">
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Params:</h4>
 				<div class="inlineLeft marginLeft marginRight">
@@ -74,13 +92,10 @@
 				</div>
 			</form>
 		</section>
-		<section>
+		<section id="optionsSection">
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Options:</h4>
 				<div class="inlineLeft marginLeft marginRight">
-					<input id="useEasing" type="checkbox" checked><label class="inlineLabel updateCodeVis">Use easing</label>
-				</div>
-				<div class="inlineLeft marginRight">
 					<input id="useGrouping" type="checkbox" checked><label class="inlineLabel updateCodeVis">Use grouping</label>
 				</div>
 				<div class="inlineLeft marginRight">
@@ -98,16 +113,13 @@
 					<input type="text" value="" id="prefix" style="width:50px; padding:0 5px;" class="updateCodeVis">
 					<label class="inlineLabel">Prefix</label>
 				</div>
-				<div class="inlineLeft marginRight">
-					<input type="text" value="" id="suffix" style="width:50px; padding:0 5px;" class="updateCodeVis">
-					<label class="inlineLabel">Suffix</label>
-				</div>
+			<h4 class="inlineLeft noMargin weight300">+ many more</h4>
 			</form>
 		</section>
-		<section>
+		<section id="methodsSection">
 			<form>
 				<h4 class="inlineLeft noMargin weight300">Methods:</h4>
-				<input type="button" value="Start" id="start" class="inlineLeft marginLeft marginRight">
+				<input type="button" value="Start" id="start" class="inlineLeft marginLeft marginRight indigo">
 				<input type="button" value="Pause/Resume" id="pauseResume" class="inlineLeft marginRight">
 				<input type="button" value="Reset" id="reset" class="inlineLeft marginRight">
 				<input type="button" value="Update:" id="update" class="inlineLeft" style="margin-right:5px">
@@ -143,12 +155,44 @@
 				</div>
 			</form>
 		</section>
-		<section class="marginBottom">
+		<section id="codeVisualizerSection">
 			<div class="col full marginBottom marginTop">
 				<div class="code-contain indigo">
 					<code id="codeVisualizer" class="indigo"></code>
 				</div>
 			</div>
+		</section>
+		<section id="scrollSpySection">
+			<form>
+				<h3 class="inlineLeft noMargin">Auto animate demos (scroll down)</h3>
+				<div class="inlineLeft marginLeft marginRight">
+					<input id="autoAnimateOnce" type="checkbox"><label class="inlineLabel">Once</label>
+				</div>
+				<div class="inlineLeft marginRight">
+					<input type="number" value="0" id="autoAnimateDelay" step="100" min="0" style="width:70px">
+					<label class="inlineLabel">Delay (ms)</label>
+				</div>
+			</form>
+			<p>Use the <code class="indigo">autoAnimate</code> option to animate when the target element appears.</p>
+			<div class="dot-matrix" style="height:60vh;"></div>
+			<h1 class="jumbo" id="scrollSpyTarget">0</h1>
+			<div class="dot-matrix" style="height:20vh;"></div>
+		</section>
+		<section id="hiddenAtInitSection" style="padding-top:20px;">
+			<h3>Hidden at init</h3>
+			<p><input type="button" value="Toggle visibility" id="toggleVisibility"></p>
+			<div style="height: 200px;">
+			<h1 class="jumbo" id="hiddenAtInitTarget" style="display:none;">0</h1>
+			</div>
+		</section>
+		<section id="modalSection" style="padding-top:20px;"  class="marginBottom">
+			<h3>Inside a modal</h3>
+			<p><input type="button" value="Open modal" id="openModal"></p>
+			<dialog id="modalDialog" style="width: 650px; padding:40px 60px; border:1px solid #ccc; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,.2); text-align:center;">
+				<h1 class="jumbo" id="modalTarget">0</h1>
+				<p><input type="button" value="Close" id="closeModal"></p>
+			</dialog>
+			<div class="dot-matrix" style="height:20vh"></div>
 		</section>
 	</div>
 </body>

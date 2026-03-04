@@ -1,36 +1,71 @@
-export interface CountUpOptions { // (default)
-  startVal?: number; // number to start at (0)
-  decimalPlaces?: number; // number of decimal places (0)
-  duration?: number; // animation duration in seconds (2)
-  useGrouping?: boolean; // example: 1,000 vs 1000 (true)
-  useIndianSeparators?: boolean; // example: 1,00,000 vs 100,000 (false)
-  useEasing?: boolean; // ease animation (true)
-  smartEasingThreshold?: number; // smooth easing for large numbers above this if useEasing (999)
-  smartEasingAmount?: number; // amount to be eased for numbers above threshold (333)
-  separator?: string; // grouping separator (,)
-  decimal?: string; // decimal (.)
-  // easingFn: easing function for animation (easeOutExpo)
+export interface CountUpOptions {
+  /** Number to start at @default 0 */
+  startVal?: number;
+  /** Number of decimal places @default 0 */
+  decimalPlaces?: number;
+  /** Animation duration in seconds @default 2 */
+  duration?: number;
+  /** Example: 1,000 vs 1000 @default true */
+  useGrouping?: boolean;
+  /** Example: 1,00,000 vs 100,000 @default false */
+  useIndianSeparators?: boolean;
+  /** Ease animation @default true */
+  useEasing?: boolean;
+  /** Smooth easing for large numbers above this if useEasing @default 999 */
+  smartEasingThreshold?: number;
+  /** Amount to be eased for numbers above threshold @default 333 */
+  smartEasingAmount?: number;
+  /** Grouping separator @default ',' */
+  separator?: string;
+  /** Decimal character @default '.' */
+  decimal?: string;
+  /** Easing function for animation @default easeOutExpo */
   easingFn?: (t: number, b: number, c: number, d: number) => number;
-  formattingFn?: (n: number) => string; // this function formats result
-  prefix?: string; // text prepended to result
-  suffix?: string; // text appended to result
-  numerals?: string[]; // numeral glyph substitution
-  enableScrollSpy?: boolean; // start animation when target is in view
-  scrollSpyDelay?: number; // delay (ms) after target comes into view
-  scrollSpyOnce?: boolean; // run only once
-  onCompleteCallback?: () => any; // gets called when animation completes
-  onStartCallback?: () => any; // gets called when animation starts
-  plugin?: CountUpPlugin; // for alternate animations
+  /** Custom function to format the result */
+  formattingFn?: (n: number) => string;
+  /** Text prepended to result */
+  prefix?: string;
+  /** Text appended to result */
+  suffix?: string;
+  /** Numeral glyph substitution */
+  numerals?: string[];
+  /** Callback called when animation completes */
+  onCompleteCallback?: () => any;
+  /** Callback called when animation starts */
+  onStartCallback?: () => any;
+  /** Plugin for alternate animations */
+  plugin?: CountUpPlugin;
+  /** Trigger animation when target becomes visible @default false */
+  autoAnimate?: boolean;
+  /** Animation delay in ms after auto-animate triggers @default 200 */
+  autoAnimateDelay?: number;
+  /** Run animation only once for auto-animate triggers @default false */
+  autoAnimateOnce?: boolean;
+
+  /** @deprecated Please use autoAnimate instead */
+  enableScrollSpy?: boolean;
+  /** @deprecated Please use autoAnimateDelay instead */
+  scrollSpyDelay?: number;
+  /** @deprecated Please use autoAnimateOnce instead */
+  scrollSpyOnce?: boolean;
 }
 
 export declare interface CountUpPlugin {
   render(elem: HTMLElement, formatted: string): void;
 }
 
-// playground: stackblitz.com/edit/countup-typescript
+/**
+ * Animates a number by counting to it.
+ * playground: stackblitz.com/edit/countup-typescript
+ * 
+ * @param target - id of html element, input, svg text element, or DOM element reference where counting occurs.
+ * @param endVal - the value you want to arrive at.
+ * @param options - optional configuration object for fine-grain control
+ */
 export class CountUp {
 
-  version = '2.9.0';
+  version = '2.10.0';
+  private static observedElements = new WeakMap<HTMLElement, CountUp>();
   private defaults: CountUpOptions = {
     startVal: 0,
     decimalPlaces: 0,
@@ -44,16 +79,18 @@ export class CountUp {
     decimal: '.',
     prefix: '',
     suffix: '',
-    enableScrollSpy: false,
-    scrollSpyDelay: 200,
-    scrollSpyOnce: false,
+    autoAnimate: false,
+    autoAnimateDelay: 200,
+    autoAnimateOnce: false,
   };
   private rAF: any;
+  private autoAnimateTimeout: any;
   private startTime: number;
   private remaining: number;
   private finalEndVal: number = null; // for smart easing
   private useEasing = true;
   private countDown = false;
+  private observer: IntersectionObserver;
   el: HTMLElement | HTMLInputElement;
   formattingFn: (num: number) => string;
   easingFn?: (t: number, b: number, c: number, d: number) => number;
@@ -73,6 +110,15 @@ export class CountUp {
       ...this.defaults,
       ...options
     };
+    if (this.options.enableScrollSpy) {
+      this.options.autoAnimate = true;
+    }
+    if (this.options.scrollSpyDelay !== undefined) {
+      this.options.autoAnimateDelay = this.options.scrollSpyDelay;
+    }
+    if (this.options.scrollSpyOnce) {
+      this.options.autoAnimateOnce = true;
+    }
     this.formattingFn = (this.options.formattingFn) ?
       this.options.formattingFn : this.formatNumber;
     this.easingFn = (this.options.easingFn) ?
@@ -97,41 +143,59 @@ export class CountUp {
       this.error = '[CountUp] target is null or undefined';
     }
 
-    // scroll spy
-    if (typeof window !== 'undefined' && this.options.enableScrollSpy) {
-      if (!this.error) {
-        // set up global array of onscroll functions to handle multiple instances
-        window['onScrollFns'] = window['onScrollFns'] || [];
-        window['onScrollFns'].push(() => this.handleScroll(this));
-        window.onscroll = () => {
-          window['onScrollFns'].forEach((fn) => fn());
-        };
-        this.handleScroll(this);
+    if (typeof window !== 'undefined' && this.options.autoAnimate) {
+      if (!this.error && typeof IntersectionObserver !== 'undefined') {
+        this.setupObserver();
       } else {
-        console.error(this.error, target);
+        if (this.error) {
+          console.error(this.error, target);
+        } else {
+          console.error('IntersectionObserver is not supported by this browser');
+        }
       }
     }
   }
 
-  handleScroll(self: CountUp): void {
-    if (!self || !window || self.once) return;
-    const bottomOfScroll = window.innerHeight +  window.scrollY;
-    const rect = self.el.getBoundingClientRect();
-    const topOfEl = rect.top + window.pageYOffset;
-    const bottomOfEl = rect.top + rect.height + window.pageYOffset;
-    if (bottomOfEl < bottomOfScroll && bottomOfEl >  window.scrollY && self.paused) {
-      // in view
-      self.paused = false;
-      setTimeout(() => self.start(), self.options.scrollSpyDelay);
-      if (self.options.scrollSpyOnce)
-        self.once = true;
-    } else if (
-        (window.scrollY > bottomOfEl || topOfEl > bottomOfScroll) &&
-        !self.paused
-      ) {
-      // out of view
-      self.reset();
+  /** Set up an IntersectionObserver to auto-animate when the target element appears. */
+  private setupObserver(): void {
+    const existing = CountUp.observedElements.get(this.el as HTMLElement);
+    if (existing) {
+      existing.unobserve();
     }
+    CountUp.observedElements.set(this.el as HTMLElement, this);
+    this.observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting && this.paused && !this.once) {
+          this.paused = false;
+          this.autoAnimateTimeout = setTimeout(() => this.start(), this.options.autoAnimateDelay);
+          if (this.options.autoAnimateOnce) {
+            this.once = true;
+            this.observer.disconnect();
+          }
+        } else if (!entry.isIntersecting && !this.paused) {
+          clearTimeout(this.autoAnimateTimeout);
+          this.reset();
+        }
+      }
+    }, { threshold: 0 });
+    this.observer.observe(this.el);
+  }
+
+  /** Disconnect the IntersectionObserver and stop watching this element. */
+  unobserve(): void {
+    clearTimeout(this.autoAnimateTimeout);
+    this.observer?.disconnect();
+    CountUp.observedElements.delete(this.el as HTMLElement);
+  }
+
+  /** Teardown: cancel animation, disconnect observer, clear callbacks. */
+  onDestroy(): void {
+    clearTimeout(this.autoAnimateTimeout);
+    cancelAnimationFrame(this.rAF);
+    this.paused = true;
+    this.unobserve();
+    this.options.onCompleteCallback = null;
+    this.options.onStartCallback = null;
   }
 
   /**
@@ -161,7 +225,7 @@ export class CountUp {
     }
   }
 
-  // start animation
+  /** Start the animation. Optionally pass a callback that fires on completion. */
   start(callback?: (args?: any) => any): void {
     if (this.error) {
       return;
@@ -181,7 +245,7 @@ export class CountUp {
     }
   }
 
-  // pause/resume animation
+  /** Toggle pause/resume on the animation. */
   pauseResume(): void {
     if (!this.paused) {
       cancelAnimationFrame(this.rAF);
@@ -195,17 +259,19 @@ export class CountUp {
     this.paused = !this.paused;
   }
 
-  // reset to startVal so animation can be run again
+  /** Reset to startVal so the animation can be run again. */
   reset(): void {
+    clearTimeout(this.autoAnimateTimeout);
     cancelAnimationFrame(this.rAF);
     this.paused = true;
+    this.once = false;
     this.resetDuration();
     this.startVal = this.validateValue(this.options.startVal);
     this.frameVal = this.startVal;
     this.printValue(this.startVal);
   }
 
-  // pass a new endVal and start animation
+  /** Pass a new endVal and start the animation. */
   update(newEndVal: string | number): void {
     cancelAnimationFrame(this.rAF);
     this.startTime = null;
@@ -222,6 +288,7 @@ export class CountUp {
     this.rAF = requestAnimationFrame(this.count);
   }
 
+  /** Animation frame callback — advances the value each frame. */
   count = (timestamp: number): void => {
     if (!this.startTime) { this.startTime = timestamp; }
 
@@ -262,6 +329,7 @@ export class CountUp {
     }
   }
 
+  /** Format and render the given value to the target element. */
   printValue(val: number): void {
     if (!this.el) return;
     const result = this.formattingFn(val);
@@ -279,10 +347,12 @@ export class CountUp {
     }
   }
 
+  /** Return true if the value is a finite number. */
   ensureNumber(n: any): boolean {
     return (typeof n === 'number' && !isNaN(n));
   }
 
+  /** Validate and convert a value to a number, setting an error if invalid. */
   validateValue(value: string | number): number {
     const newValue = Number(value);
     if (!this.ensureNumber(newValue)) {
@@ -293,14 +363,14 @@ export class CountUp {
     }
   }
 
+  /** Reset startTime, duration, and remaining to their initial values. */
   private resetDuration(): void {
     this.startTime = null;
     this.duration = Number(this.options.duration) * 1000;
     this.remaining = this.duration;
   }
 
-  // default format and easing functions
-
+  /** Default number formatter with grouping, decimals, prefix/suffix, and numeral substitution. */
   formatNumber = (num: number): string => {
     const neg = (num < 0) ? '-' : '';
     let result: string, x1: string, x2: string, x3: string;
@@ -333,10 +403,17 @@ export class CountUp {
     return neg + this.options.prefix + x1 + x2 + this.options.suffix;
   }
 
-  // t: current time, b: beginning value, c: change in value, d: duration
+  /**
+   * Default easing function (easeOutExpo).
+   * @param t current time
+   * @param b beginning value
+   * @param c change in value
+   * @param d duration
+   */
   easeOutExpo = (t: number, b: number, c: number, d: number): number =>
     c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
 
+  /** Parse a formatted string back to a number using the current separator/decimal options. */
   parse(number: string): number {
     // eslint-disable-next-line no-irregular-whitespace
     const escapeRegExp = (s: string) => s.replace(/([.,'  ])/g, '\\$1');

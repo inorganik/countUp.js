@@ -1,7 +1,7 @@
 {
 	"name": "countup.js",
 	"description": "Animates a numerical value by counting to it",
-	"version": "2.9.0",
+	"version": "2.10.0",
 	"license": "MIT",
 	"author": "Jamie Perkins",
 	"main": "./dist/countUp.umd.js",

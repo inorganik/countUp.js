@@ -48,7 +48,7 @@ On npm as `countup.js`. You can import as a module, or include the UMD script an
 - `endVal: number | null` - the value you want to arrive at. Leave null to use the number in the target element.
 - `options?: CountUpOptions` - optional configuration object for fine-grain control
 
-**Options**: 
+### Options 
 
 
 | Option                 | Type            | Default       | Description                                             |

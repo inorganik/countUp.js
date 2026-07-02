@@ -225,7 +225,7 @@ var CountUp = /** @class */ (function () {
      * useEasing is true and the total animation amount exceeds the smartEasingThreshold.
      */
     CountUp.prototype.determineDirectionAndSmartEasing = function () {
-        var end = (this.finalEndVal) ? this.finalEndVal : this.endVal;
+        var end = (this.finalEndVal !== null) ? this.finalEndVal : this.endVal;
         this.countDown = (this.startVal > end);
         var animateAmount = end - this.startVal;
         if (Math.abs(animateAmount) > this.options.smartEasingThreshold && this.options.useEasing) {
@@ -270,6 +270,8 @@ var CountUp = /** @class */ (function () {
     CountUp.prototype.pauseResume = function () {
         if (!this.paused) {
             cancelAnimationFrame(this.rAF);
+            var totalRem = (this.finalEndVal !== null) ? this.duration + this.remaining : this.remaining;
+            this.remaining = totalRem;
         }
         else {
             this.startTime = null;

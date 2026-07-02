@@ -233,6 +233,74 @@ describe('CountUp', () => {
     });
   });
 
+  describe('smart easing', () => {
+    let rafQueue: FrameRequestCallback[] = [];
+
+    const setupControllableRAF = () => {
+      rafQueue = [];
+      time = 0;
+      jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => {
+        rafQueue.push(cb);
+        return rafQueue.length;
+      });
+      jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined);
+    };
+
+    const advanceTime = (ms: number) => {
+      time += ms;
+      const cb = rafQueue.shift();
+      if (cb) cb(time);
+    };
+
+    const runToCompletion = (frameMs = 100, maxFrames = 50) => {
+      let frames = 0;
+      while (rafQueue.length > 0 && frames < maxFrames) {
+        advanceTime(frameMs);
+        frames++;
+      }
+    };
+
+    beforeEach(() => {
+      setupControllableRAF();
+    });
+
+    it('should use finalEndVal of 0 when determining direction during smart easing', () => {
+      countUp = new CountUp('target', 333, { startVal: 1500, duration: 2 });
+      countUp.finalEndVal = 0;
+      countUp.endVal = 333;
+
+      countUp.determineDirectionAndSmartEasing();
+
+      expect(countUp.finalEndVal).toBe(0);
+      expect(countUp.endVal).toBe(333);
+      expect(countUp.countDown).toBe(true);
+    });
+
+    it('should preserve full remaining duration when pausing a smart easing animation', () => {
+      countUp = new CountUp('target', 0, { startVal: 2000, duration: 2 });
+      countUp.start();
+      advanceTime(100);
+
+      const phaseDuration = countUp.duration;
+      const phaseRemaining = countUp.remaining;
+      countUp.pauseResume();
+
+      expect(countUp.finalEndVal).toBe(0);
+      expect(countUp.remaining).toBe(phaseDuration + phaseRemaining);
+    });
+
+    it('should count down to zero after pause and resume during smart easing', () => {
+      countUp = new CountUp('target', 0, { startVal: 2000, duration: 2 });
+      countUp.start();
+      advanceTime(100);
+      countUp.pauseResume();
+      countUp.pauseResume();
+      runToCompletion();
+
+      expect(getTargetHtml()).toEqual('0');
+    });
+  });
+
   describe('various use-cases', () => {
     it('should handle large numbers', () => {
       countUp = new CountUp('target', 6000);

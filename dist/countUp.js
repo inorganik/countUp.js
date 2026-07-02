@@ -22,7 +22,7 @@ var CountUp = /** @class */ (function () {
         var _this = this;
         this.endVal = endVal;
         this.options = options;
-        this.version = '2.10.0';
+        this.version = '2.10.1';
         this.defaults = {
             startVal: 0,
             decimalPlaces: 0,

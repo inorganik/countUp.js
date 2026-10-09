@@ -64,7 +64,7 @@ export declare interface CountUpPlugin {
  */
 export class CountUp {
 
-  version = '2.10.1';
+  version = '2.10.2';
   private static observedElements = new WeakMap<HTMLElement, CountUp>();
   private defaults: CountUpOptions = {
     startVal: 0,

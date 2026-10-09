@@ -18,7 +18,7 @@
 	},
 	"scripts": {
 		"build": "npm run clean && tsc && rollup -c rollup.config.mjs",
-		"clean": "rimraf dist/countUp.*",
+		"clean": "rimraf --glob dist/countUp.*",
 		"lint": "eslint -c .eslintrc.js --ext .ts ./src",
 		"serve": "http-server -o -c-1 ./",
 		"start": "npm run build && npm run serve",
